@@ -6,7 +6,14 @@
  */
 (function () {
   const VO = window.VO || { durs: [], anchors: [] };          // written by tools/vo_prep.py into vo.js
-  const CFG = Object.assign({ voOffset: 0.3, pad: 0.55, transition: 0.45, safeBottom: 1795, width: 1080, height: 1920 }, window.PROJECT || {});
+  const P0 = window.PROJECT || {};
+  const LAND = (P0.width || 1080) > (P0.height || 1920);
+  const CFG = Object.assign({ voOffset: 0.3, pad: 0.55, transition: 0.45, width: 1080, height: 1920,
+    safeTop: LAND ? 60 : 150, safeBottom: LAND ? 1020 : 1795, twos: 0 }, P0);
+  // canvas size → CSS variables (engine.css reads --W/--H); .land switches landscape chrome
+  document.documentElement.style.setProperty('--W', CFG.width + 'px');
+  document.documentElement.style.setProperty('--H', CFG.height + 'px');
+  if (LAND) document.documentElement.classList.add('land');
   const TR = CFG.transition;
   const BN = '০১২৩৪৫৬৭৮৯';
   const digits = (n) => (CFG.lang === 'en' ? String(n) : String(n).replace(/\d/g, (d) => BN[d]));
@@ -86,7 +93,10 @@
     s._els = [...s.querySelectorAll('[data-a]')]; s._cam = s.querySelector('.cam');
     s._keys = (s.dataset.cam || '0:1:0:0').split('|').map((k) => k.split(':').map(Number));
     s._kb = [...s.querySelectorAll('[data-kb] img')];
+    s._twos = +(s.dataset.twos || CFG.twos || 0);        // stop-motion cadence: step element time at N fps
+    s._shake = +(s.dataset.shake || 0);                   // hand-held jitter of the photo layer, px
   });
+  const jit = (k, t) => Math.sin(t * 12.9898 + k * 78.233) * 0.5 + Math.sin(t * 4.1 + k * 3.7) * 0.5;
 
   function cam(s, lt) {
     const K = s._keys; if (lt <= K[0][0]) return K[0]; if (lt >= K[K.length - 1][0]) return K[K.length - 1];
@@ -129,13 +139,18 @@
       if (!last && lt >= s._dur) { const p = eio((lt - s._dur) / TR); tx = -p * 420; op = 1 - p * 0.6; }
       if (last && lt > s._dur - 1.1) op = Math.max(0, 1 - (lt - (s._dur - 1.1)) / 1.1);
       s.style.opacity = op; s.style.transform = `translateX(${tx}px) rotate(${rot}deg)`; s.style.zIndex = i;
-      if (s._cam) { const c = cam(s, lt); s._cam.style.transform = `translate(${c[2]}px,${c[3]}px) scale(${c[1]})`; }
-      s._els.forEach((e) => applyEl(e, lt));
-      s._kb.forEach((im) => { im.style.transform = `scale(${1.02 + 0.08 * cl(lt / s._dur)})`; });
+      const st = s._twos ? Math.floor(lt * s._twos + 1e-6) / s._twos : lt;
+      if (s._cam) {
+        const c = cam(s, lt); let jx = 0, jy = 0;
+        if (s._shake) { const q = Math.floor(lt * 12) / 12; jx = jit(1, q) * s._shake; jy = jit(2, q) * s._shake; }
+        s._cam.style.transform = `translate(${c[2] + jx}px,${c[3] + jy}px) scale(${c[1]})`;
+      }
+      s._els.forEach((e) => applyEl(e, st));
+      s._kb.forEach((im) => { im.style.transform = `scale(${1.02 + 0.08 * cl(st / s._dur)})`; });
     });
   };
   window.TOTAL = TOTAL;
-  window.SCENES = scenes.map((s) => ({ start: s._start, dur: s._dur, vo: s._vo, voMissing: !!s._voMiss, mood: s.dataset.mood || null }));
+  window.SCENES = scenes.map((s) => ({ start: s._start, dur: s._dur, vo: s._vo, voMissing: !!s._voMiss, mood: s.dataset.mood || null, type: (s.dataset.type || '').toUpperCase() || null, tag: (s.querySelector('.tag') || {}).textContent || null }));
   window.CUES = (function () {
     const c = [];
     scenes.forEach((s, i) => {
@@ -166,15 +181,16 @@
     }
     return bad;
   };
-  // Density: share of a 18x30 grid (content area y 150..1790) hit by a visible photo/graphic/text element.
+  // Density: share of a grid over the content area (safeTop..safeBottom) hit by a visible photo/graphic/text element.
   window.DENSITY = function (step) {
-    const out = []; const xs = 18, ys = 30;
+    const out = []; const xs = LAND ? 32 : 18, ys = LAND ? 18 : 30;
+    const x0 = 40, xw = CFG.width - 80, y0 = CFG.safeTop, yh = CFG.safeBottom - CFG.safeTop;
     for (let t = 0; t < TOTAL; t += step) {
       seek(t);
       const s = scenes.find((sc) => t >= sc._start + TR && t < sc._start + sc._dur - 0.05); if (!s) continue;
       let hit = 0, tot = 0;
       for (let yi = 0; yi < ys; yi++) for (let xi = 0; xi < xs; xi++) {
-        const x = 40 + (xi + 0.5) * (1000 / xs), y = 150 + (yi + 0.5) * (1640 / ys); tot++;
+        const x = x0 + (xi + 0.5) * (xw / xs), y = y0 + (yi + 0.5) * (yh / ys); tot++;
         const els = document.elementsFromPoint(x, y);
         const e = els.find((el) => el.closest('.scene') === s && !el.matches('.scene,.cam,.fix,.bgp,.bgd') && visibleOpacity(el, s) > 0.3);
         if (e) hit++;

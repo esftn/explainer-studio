@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="{{LANG}}">
+<head>
+<meta charset="utf-8">
+<title>thumbnail</title>
+<link rel="stylesheet" href="fonts/noto-sans-bengali/900.css">
+<link rel="stylesheet" href="fonts/noto-serif-bengali/700.css">
+<link rel="stylesheet" href="engine/presets/{{PRESET}}.css">
+<link rel="stylesheet" href="engine/engine.css">
+<style>
+/* YouTube thumbnail 1280x720. Rules (checked by thumbnail.py): ≤ 2 text blocks (.tw), ≤ 3 words each,
+   one dominant subject, one highlight device, readable at 200 px wide. No small details. */
+:root{--W:1280px;--H:720px}
+.thumb{position:absolute;inset:0;overflow:hidden}
+.tw{position:absolute;font:900 120px/1.02 var(--font-sans);letter-spacing:-1px}
+</style>
+</head>
+<body>
+<div class="thumb">
+  <div class="bgp"></div>
+  <!-- dominant subject: a cutout (prep_photos.py --cut) or a strong photo -->
+  <img class="sh" src="img/hero.jpg" style="position:absolute;right:-20px;bottom:0;height:720px;width:720px;object-fit:cover">
+  <!-- highlight device -->
+  <svg style="position:absolute;right:60px;top:40px" width="600" height="600" viewBox="0 0 600 600" fill="none">
+    <ellipse cx="300" cy="300" rx="270" ry="250" stroke="var(--accent2)" stroke-width="16" transform="rotate(-8 300 300)"/>
+  </svg>
+  <!-- text: max 2 blocks, max 3 words each -->
+  <div class="tw" style="left:56px;top:150px;width:640px"><span class="blk">হাদি কে?</span></div>
+  <div class="tw" style="left:56px;top:420px;width:640px;font-size:96px"><span class="blkr">মূল তথ্য</span></div>
+</div>
+</body>
+</html>

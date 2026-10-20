@@ -1,9 +1,9 @@
 """Render the video (frames → H.264) and mux the audio mix. Refuses to run unless audit.py passed on THIS timeline.
 usage: python render.py <project> [--workers 2] [--crf 18] [--silent] [--cover 2.0] [--name Hadi_Ke_v4]
-       python render.py <project> --preview      (15 fps, 540x960, ~4x faster: for the creator's preview gate)
+       python render.py <project> --preview      (15 fps, half size, ~4x faster: for the creator's preview gate)
 Output: out/<name>_final.mp4 (+ out/<name>_cover.png) or out/<name>_preview.mp4."""
 import argparse, json, subprocess, sys, pathlib, time
-from es import project, cfg, timeline_hash, page, FPS, TOOLS
+from es import project, cfg, timeline_hash, page, size, FPS, TOOLS
 
 
 def worker(P, a, b, out, crf, fps=FPS, scale=None):
@@ -27,7 +27,7 @@ if __name__ == '__main__':
     ap.add_argument('--_w', nargs=3, type=int, help=argparse.SUPPRESS)
     a = ap.parse_args(); P = project(a.project); O = P / 'out'; O.mkdir(exist_ok=True)
     if a._w:
-        worker(P, a._w[0], a._w[1], O / f'seg_{a._w[2]}.mp4', a.crf, 15 if a.preview else FPS, 540 if a.preview else None); sys.exit()
+        worker(P, a._w[0], a._w[1], O / f'seg_{a._w[2]}.mp4', a.crf, 15 if a.preview else FPS, size(P)[0] // 2 if a.preview else None); sys.exit()
     qa = P / '.qa_pass'
     if not a.force:
         if not qa.exists(): sys.exit('BLOCKED: run audit.py first (no .qa_pass).')
@@ -62,4 +62,4 @@ if __name__ == '__main__':
     # verify
     pr = json.loads(subprocess.check_output(['ffprobe', '-v', 'error', '-show_entries', 'stream=codec_type,width,height,nb_frames:format=duration', '-of', 'json', str(final)]))
     print(f'rendered {final} in {time.time() - t0:.0f}s  duration {float(pr["format"]["duration"]):.2f}s (timeline {total:.2f}s)')
-    print('next: python tools/check_final.py', P, '(loudness, peaks, A/V length, end silence)')
+    print('next: check_final.py → thumbnail.py → publish.py (Gate 4 checklist)')

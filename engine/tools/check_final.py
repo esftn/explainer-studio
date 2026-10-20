@@ -1,7 +1,7 @@
 """Final file check: resolution, fps, A/V length match, loudness, true peak, clean silent ending, frames at cut points.
 usage: python check_final.py <project> [--file out/X_final.mp4]"""
 import argparse, json, subprocess, sys, re
-from es import project, cfg
+from es import project, cfg, size
 
 ap = argparse.ArgumentParser(); ap.add_argument('project', nargs='?'); ap.add_argument('--file')
 a = ap.parse_args(); P = project(a.project)
@@ -12,7 +12,7 @@ v = next(s for s in pr['streams'] if s['codec_type'] == 'video'); au = next((s f
 ok = True
 def chk(cond, msg):
     global ok; print(('PASS ' if cond else 'FAIL ') + msg); ok &= cond
-chk((v['width'], v['height']) == (1080, 1920), f"resolution {v['width']}x{v['height']}")
+chk((v['width'], v['height']) == size(P), f"resolution {v['width']}x{v['height']}")
 chk(v['r_frame_rate'] in ('30/1', '30000/1001'), f"fps {v['r_frame_rate']}")
 chk(v['pix_fmt'] == 'yuv420p', f"pix_fmt {v['pix_fmt']}")
 chk(au is not None, 'audio track present')

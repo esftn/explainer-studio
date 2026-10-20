@@ -19,12 +19,13 @@
 <!--
   One <section class="scene"> per VO clip. data-vo="N" = vo/vo_NN.wav; duration is set from the VO.
   data-mood = music section from this scene on (intro|build|drive|somber|elegy|answer|end).
+  data-type = beat type (PHOTO|MAP|CHART|DOCUMENT|TEXT|TIMELINE|COLLAGE); optional data-twos="12" / data-shake="2".
   Inside .cam: photos (move with the camera). Everything without an <img> is moved to the fixed text layer.
   Timing: data-t="1.2" (seconds into scene) or data-at="a2" (VO pause #2; a0 = VO start).
   Copy blocks from engine/scenes/*.html. Keep text inside x 56..1024, y 150..1790 (source band below).
 -->
 
-<section class="scene" data-vo="1" data-mood="intro" data-cam="0:1.06:0:0|6:1:0:0">
+<section class="scene" data-type="PHOTO" data-vo="1" data-mood="intro" data-cam="0:1.06:0:0|6:1:0:0">
   <div class="bgp"></div>
   <div class="cam">
     <div class="a ph ht sh" style="left:90px;top:330px;width:900px;height:1000px" data-a="fade" data-t="0"><img src="img/hero.jpg"></div>
@@ -34,7 +35,7 @@
   <div class="src">সূত্র: …</div>
 </section>
 
-<section class="scene" data-vo="2" data-mood="end" data-cam="0:1:0:0">
+<section class="scene" data-type="TEXT" data-vo="2" data-mood="end" data-cam="0:1:0:0">
   <div class="bgd"></div>
   <div class="cam dark">
     <div class="a h2" style="left:70px;top:760px;width:940px;text-align:center" data-a="up" data-t="0.3">শেষ</div>

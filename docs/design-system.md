@@ -1,12 +1,21 @@
 # Design System (style-independent rules + engine conventions)
 
 ## 1. Canvas & layers
-- 1080×1920, 30 fps. Each `<section class="scene">` has:
+- **9:16** 1080×1920 (Reels, Shorts, TikTok) or **16:9** 1920×1080 (YouTube long-form), 30 fps. Set with
+  `new_project.py --aspect 16:9`; for both, make two projects that share `vo/` and `photos/`.
+  Each `<section class="scene">` has:
   1. `.bgp`/`.bgd` texture background (paper / dark)
   2. `.cam` — **camera layer**: photos, cutouts, full-bleed images, decorative shapes (`data-layer="cam"`). Camera keyframes (`data-cam="t:scale:x:y|..."`) move only this layer.
   3. `.fix` — **text/graphics layer** (auto-created): every element without an `<img>` moves here unless `data-layer="cam"`. Never zoomed.
   4. `.tag` chapter chip (top-left) and `.src` source band (bottom, always on top, own background).
-- Safe area for text: x 56–1024, y 150–1790. Platform UI covers the bottom ~20% on Reels/TikTok; the source band lives there because it's low-priority text.
+- Safe area for text: **9:16** x 56–1024, y 150–1790 (platform UI covers the bottom ~20% on Reels/TikTok;
+  the source band lives there because it's low-priority text). **16:9** x 64–1856, y 60–1020 (source band
+  below 1020; keep key text out of the bottom-right corner, where YouTube shows end-screen elements in the
+  last 20 s).
+- Scene attributes: `data-vo` (VO clip) · `data-mood` (music section) · `data-type` (beat type: PHOTO, MAP,
+  CHART, DOCUMENT, TEXT, TIMELINE or COLLAGE; `audit.py` reports the mix) · `data-twos="12"` (stop-motion
+  cadence: animations step at 12 fps) · `data-shake="2"` (subtle hand-held jitter of the photo layer, in px)
+  · `data-density="off"` (skip the density check, e.g. a deliberate black pause).
 
 ## 2. Motion vocabulary (`data-a`)
 | Anim | Use | Limits |
@@ -45,8 +54,23 @@ Timing attributes: `data-t` (start, s from scene start), `data-d` (duration), `d
 | `split-portrait` | two portraits + linking phrase |
 | `ending-mural` | full-bleed photo, dark gradient, 3 closing lines |
 | `credits` | sources + photo credits |
+| `document-clip` | recreated headline/report with a highlighted phrase, labelled **পুনর্নির্মিত** (recreation) |
+| `collage-parallax` | AI or photo layers (plate, hero, supporting) entering back to front, then a living-poster hold |
+
+16:9 versions live in `engine/template/scenes16/` (`hook-quote`, `big-number`, `comparison-bar`,
+`map-pin`, `document-clip`, `collage-parallax`, `ending-mural`). Landscape layouts put the photo on one side
+and text on the other, rather than stacking them.
+
+**Beat types → templates.** PHOTO: `photo-collage`, `split-portrait`, `ending-mural` · MAP: `map-pin` ·
+CHART: `big-number`, `comparison-bar`, `icon-grid`, `tick-timeline` · DOCUMENT: `document-clip` · TEXT:
+`hook-quote` · TIMELINE: `timeline-vertical`, `calendar-clock` · COLLAGE: `collage-parallax` (rules in
+`ai-visuals.md`). Reuse templates instead of building one-off scenes; add a scene type that proves useful back
+to the repo.
 
 ## 6. Infographic rules
+- Facts are drawn by the engine from the source ledger: maps from open data (Natural Earth is public domain,
+  OpenStreetMap needs attribution), numbers from F-numbers. Never use an AI image for a map, chart or document.
+- Disputed borders and names: check them, and say whose map it is.
 - One number per screen as the hero; always give a comparison or unit (“২০ বার”, “৩২ বনাম ৭২.৩”).
 - Annotate: arrows, half-marks, brackets, labels — explain the chart in the chart.
 - Draw in the order the voice explains it.

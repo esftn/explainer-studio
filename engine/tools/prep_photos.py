@@ -57,6 +57,18 @@ for i, f in enumerate(srcs, 1):
     d = ImageDraw.Draw(c); d.rectangle([0, 300, 300, 330], fill='black'); d.text((6, 308), f'{name} {im.size[0]}x{im.size[1]}', fill='yellow')
     thumbs.append(c)
 (IMG / '_index.txt').write_text('\n'.join(index) + '\n')
+# licence ledger: one row per prepared image; the creator/Claude fills source, licence, commercial (yes/no), ai (yes/no)
+import csv
+L = P / 'licences.csv'
+rows = list(csv.DictReader(L.open(encoding='utf-8'))) if L.exists() else []
+have = {r['file'] for r in rows}; added = 0
+with L.open('a', encoding='utf-8', newline='') as fh:
+    w = csv.writer(fh)
+    if not rows and (not L.exists() or L.stat().st_size == 0): w.writerow(['file', 'source', 'licence', 'commercial', 'ai', 'notes'])
+    for line in index:
+        name, orig = line.split('\t')[:2]
+        if f'img/{name}.jpg' not in have: w.writerow([f'img/{name}.jpg', orig, '?', '?', '?', '']); added += 1
+if added: print(f'licences.csv: {added} new rows with licence "?" — fill source, licence, commercial (yes/no), ai (yes/no)')
 C, R = 6, 5
 for k in range(0, len(thumbs), C * R):
     sh = Image.new('RGB', (C * 300, R * 330), 'white')

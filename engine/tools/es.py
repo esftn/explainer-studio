@@ -18,10 +18,16 @@ def cfg(p):
     return json.loads(f.read_text()) if f.exists() else {}
 
 
+def size(p):
+    """(width, height) of the project's canvas: 1080x1920 (9:16, default) or 1920x1080 (16:9)."""
+    c = cfg(p)
+    return int(c.get('width', W)), int(c.get('height', H))
+
+
 def timeline_hash(p):
     """Hash of everything that changes what a frame looks like or when."""
     h = hashlib.sha256()
-    files = [p / 'index.html', p / 'vo.js', p / 'project.json']
+    files = [p / 'index.html', p / 'vo.js', p / 'project.json', p / 'licences.csv']
     files += sorted((p / 'engine').rglob('*.js')) + sorted((p / 'engine').rglob('*.css'))
     for f in files:
         if f.exists():
@@ -30,9 +36,10 @@ def timeline_hash(p):
 
 
 @contextlib.contextmanager
-def page(p, w=W, h=H):
+def page(p, w=None, h=None):
     from playwright.sync_api import sync_playwright
     with sync_playwright() as pw:
+        if w is None: w, h = size(p)
         br = pw.chromium.launch()
         pg = br.new_page(viewport={'width': w, 'height': h})
         errs = []

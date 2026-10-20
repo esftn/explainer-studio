@@ -1,9 +1,19 @@
 {
   "name": "explainer-studio",
-  "version": "0.1.0",
-  "description": "Make industry-grade explainer videos (Bangla first) with Claude: brief → research → script → voiceover → Vox-style HTML animation → original music/SFX → QA-gated render.",
-  "author": { "name": "Esoft" },
+  "version": "0.2.0",
+  "description": "Make industry-grade explainer videos (Bangla first) with Claude: brief → source ledger → script + beat table → voiceover → Vox/Harris-style HTML animation (9:16 or 16:9) → original music/SFX → QA-gated render → thumbnail + publish pack.",
+  "author": {
+    "name": "Esoft"
+  },
   "repository": "https://github.com/esftn/explainer-studio",
   "license": "MIT",
-  "keywords": ["video", "explainer", "bangla", "animation", "voiceover", "reels", "shorts"]
+  "keywords": [
+    "video",
+    "explainer",
+    "bangla",
+    "animation",
+    "voiceover",
+    "reels",
+    "shorts"
+  ]
 }

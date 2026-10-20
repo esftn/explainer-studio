@@ -1,7 +1,7 @@
 """QA gate. Runs every automatic check; on success writes .qa_pass (render.py refuses to run without it).
 Also exports cues.json + scenes.json so the audio is always built from the audited timeline.
 usage: python audit.py <project> [--step 0.1] [--density 0.55] [--max-len 0]
-Checks: text inside frame & above source band at every step · no missing images · fonts loaded ·
+Checks: text inside frame & above source band at every step · no missing images · fonts loaded · licences ·
         every data-vo scene has a VO duration · no console errors · visual density per scene · total length."""
 import argparse, json, time, sys
 from es import project, cfg, page, timeline_hash
@@ -41,7 +41,38 @@ with page(P) as pg:
     # source band present on scenes with facts
     nosrc = pg.evaluate("[...document.querySelectorAll('.scene')].map((s,i)=>[i+1,!!s.querySelector('.src'),s.querySelectorAll('[data-a=count],.blk,.blkr,.stamp').length]).filter(x=>!x[1]&&x[2]>0).map(x=>x[0])")
     warns += [f'scene {n}: has numbers/claims but no .src source band' for n in nosrc]
+    used = sorted(set(pg.evaluate("[...document.querySelectorAll('.scene img')].map(i=>i.getAttribute('src'))")))
 if a.max_len and total > a.max_len: fails.append(f'length {total:.1f}s > max {a.max_len}s')
+
+# ---- licence ledger: every image used needs a row; monetised projects need commercial=yes on all of them ----
+import csv, re
+C = cfg(P); mon = bool(C.get('monetized'))
+L = P / 'licences.csv'
+led = {r['file'].strip(): r for r in csv.DictReader(L.open(encoding='utf-8'))} if L.exists() else {}
+ai_n = 0
+for src in used:
+    if not src or src.startswith('data:') or re.search(r'img/paper(_dark)?\.jpg$', src): continue
+    base = re.sub(r'^img/cut_(.+)\.png$', r'img/\1.jpg', src)            # a cutout inherits its photo's licence
+    r = led.get(src) or led.get(base)
+    if not r: fails.append(f'licence: {src} has no row in licences.csv (file,source,licence,commercial,ai,notes)'); continue
+    lic, com, ai = (r.get('licence') or '?').strip(), (r.get('commercial') or '?').strip().lower(), (r.get('ai') or '?').strip().lower()
+    ai_n += ai == 'yes'
+    if mon and com != 'yes': fails.append(f'licence: {src} is commercial={com or "?"} on a monetised project ({lic})')
+    elif lic == '?' or com == '?': warns.append(f'licence: {src} source/licence unknown — fill licences.csv before publishing')
+    elif com == 'no': warns.append(f'licence: {src} is non-commercial ({lic}) — fine only while the video is not monetised')
+
+# ---- beat mix (data-type on scenes) ----
+types = [s.get('type') for s in scenes]
+if any(types):
+    from collections import Counter
+    cnt = Counter(t or '?' for t in types); n = len(types)
+    print('beat mix: ' + ' · '.join(f'{k} {v} ({v / n:.0%})' for k, v in cnt.most_common()))
+    run = mx = 0
+    for t in types:
+        run = run + 1 if t == 'COLLAGE' else 0; mx = max(mx, run)
+    if mx > 3: warns.append(f'beat mix: {mx} COLLAGE (AI) scenes in a row — max 3; swap one for a MAP/CHART/PHOTO')
+    if cnt.get('COLLAGE', 0) / n > 0.6: warns.append(f'beat mix: COLLAGE {cnt["COLLAGE"] / n:.0%} of scenes — over 60% even for the VOX look')
+if ai_n: print(f'AI assets in use: {ai_n} → tick YouTube\'s altered/synthetic setting if any looks realistic')
 print(f'TOTAL {total:.2f}s, {len(scenes)} scenes')
 for w in warns: print('WARN ', w)
 for f in fails: print('FAIL ', f)
