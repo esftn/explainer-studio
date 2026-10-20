@@ -1,0 +1,11 @@
+{
+  "name": "esftn-explainer-studio",
+  "owner": { "name": "Esoft" },
+  "plugins": [
+    {
+      "name": "explainer-studio",
+      "source": "./",
+      "description": "Industry-grade explainer videos (Bangla first) with Claude: brief → research → script → VO → Vox-style animation → original music/SFX → QA-gated render."
+    }
+  ]
+}

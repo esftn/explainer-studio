@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>হাদি কে?</title>
+<link rel="stylesheet" href="node_modules/@fontsource/noto-sans-bengali/500.css">
+<link rel="stylesheet" href="node_modules/@fontsource/noto-sans-bengali/600.css">
+<link rel="stylesheet" href="node_modules/@fontsource/noto-sans-bengali/700.css">
+<link rel="stylesheet" href="node_modules/@fontsource/noto-sans-bengali/900.css">
+<link rel="stylesheet" href="node_modules/@fontsource/noto-serif-bengali/500.css">
+<link rel="stylesheet" href="node_modules/@fontsource/noto-serif-bengali/700.css">
+<style>
+:root{--ink:#151515;--cream:#efe7d6;--yel:#ffc93c;--red:#e2333f;--mut:#5f5a52;--white:#fbf8f1}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#efe7d6}
+body{font-family:'Noto Sans Bengali',sans-serif;color:var(--ink);position:relative}
+.scene{position:absolute;inset:0;display:none;overflow:hidden}
+.bgp{position:absolute;inset:-40px;background:url(img/paper.jpg) center/cover}
+.bgd{position:absolute;inset:-40px;background:url(img/paper_dark.jpg) center/cover}
+.cam{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 960px}
+.a{position:absolute}
+.tag{position:absolute;left:56px;top:78px;z-index:20;background:var(--ink);color:var(--yel);font:900 28px 'Noto Sans Bengali';padding:6px 18px 8px;border-radius:4px;letter-spacing:.5px}
+.dark .tag{background:var(--yel);color:var(--ink)}
+.src{position:absolute;left:0;right:0;bottom:0;z-index:30;font:500 22px/1.4 'Noto Sans Bengali';color:rgba(21,21,21,.7);background:rgba(239,231,214,.95);border-top:2px solid rgba(21,21,21,.25);padding:12px 56px 58px}
+.fix{position:absolute;left:0;top:0;width:1080px;height:1920px;z-index:10}
+.dark .src{color:rgba(255,255,255,.66);border-color:rgba(255,255,255,.25);background:rgba(30,28,26,.95)}
+.dark{color:#f4efe4}
+.h0{font:900 170px/1.05 'Noto Sans Bengali';letter-spacing:-2px}
+.h1{font:900 112px/1.12 'Noto Sans Bengali';letter-spacing:-1px}
+.h2{font:900 76px/1.2 'Noto Sans Bengali'}
+.h3{font:800 54px/1.3 'Noto Sans Bengali';font-weight:900}
+.b{font:600 46px/1.45 'Noto Sans Bengali'}
+.s{font:500 34px/1.45 'Noto Sans Bengali'}
+.lab{font:900 30px 'Noto Sans Bengali';letter-spacing:.5px;color:var(--red)}
+.serif{font-family:'Noto Serif Bengali',serif}
+.yel{color:var(--yel)} .red{color:var(--red)} .mut{color:var(--mut)}
+.blk{display:inline-block;background:var(--yel);color:var(--ink);padding:0 22px;transform:rotate(-1.5deg);box-shadow:8px 8px 0 var(--ink)}
+.blkr{display:inline-block;background:var(--red);color:#fff;padding:0 22px;box-shadow:8px 8px 0 var(--ink)}
+.mk{background-image:linear-gradient(var(--yel),var(--yel));background-repeat:no-repeat;background-position:0 88%;background-size:calc(var(--m,0)*100%) 46%;padding:0 6px;margin:0 -6px}
+.mkr{background-image:linear-gradient(rgba(226,51,63,.85),rgba(226,51,63,.85));color:inherit}
+.strip{background:var(--white);padding:18px 30px 22px;box-shadow:0 14px 30px -14px rgba(0,0,0,.45)}
+.ystrip{background:var(--yel);padding:10px 34px 18px}
+.kstrip{background:var(--ink);color:#fff;padding:12px 30px 18px}
+.note{background:#ffe27a;padding:30px 34px;box-shadow:0 22px 34px -18px rgba(0,0,0,.5)}
+.clip{background:#f7f3ea;padding:30px 36px;box-shadow:0 18px 40px -18px rgba(0,0,0,.55);border-left:10px solid var(--ink)}
+.sh{filter:drop-shadow(0 18px 22px rgba(0,0,0,.35))}
+.ph{position:relative;overflow:hidden}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:contrast(1.06) saturate(.82)}
+.ph.bw img{filter:grayscale(1) contrast(1.12)}
+.ht::after{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(0,0,0,.28) 1.3px,transparent 1.8px);background-size:8px 8px;mix-blend-mode:multiply;pointer-events:none}
+.redtint::before{content:'';position:absolute;inset:0;background:var(--red);mix-blend-mode:multiply;opacity:.55;z-index:1}
+.pol{background:#fff;padding:12px 12px 16px}
+.pol .ph{width:100%}
+.pin{display:inline-flex;align-items:center;gap:14px;background:var(--ink);color:#fff;font:700 38px 'Noto Sans Bengali';padding:10px 26px 14px 18px;border-radius:60px}
+.pin svg{width:40px;height:40px;fill:var(--red)}
+.chip{display:inline-block;background:var(--ink);color:#fff;font:700 38px 'Noto Sans Bengali';padding:8px 24px 12px;margin:0 10px 12px 0}
+.chip b{color:var(--yel)}
+.stamp{display:inline-block;color:var(--red);border:7px solid var(--red);font:900 64px 'Noto Sans Bengali';padding:4px 26px 12px;border-radius:10px;opacity:.92}
+.cut{display:block;width:100%}
+svg.ico{display:block}
+.grid{display:grid}
+.ann{font:700 32px 'Noto Sans Bengali'}
+</style>
+</head>
+<body>
+
+<!-- S1 HOOK -->
+<section class="scene" data-dur="11.35" data-cam="0:1.12:0:70|2.8:1:0:0|11.35:1.05:0:-30">
+ <div class="bgp"></div>
+ <div class="cam">
+  <div class="a" data-layer="cam" style="left:330px;top:760px;width:900px;height:900px;border-radius:50%;background:var(--red);" data-a="pop" data-t="0.15" data-d="0.5"></div>
+  <div class="a ht" data-layer="cam" style="left:330px;top:760px;width:900px;height:900px;border-radius:50%;overflow:hidden;opacity:.6" data-a="fade" data-t="0.3"></div>
+  <div class="a sh" style="left:260px;top:770px;width:860px" data-a="up" data-t="0.35" data-d="0.7"><img class="cut" src="img/cut_speak_bw.png"></div>
+  <div class="a" style="left:40px;top:170px" data-a="slam" data-t="0.25" data-sfx="impact" style2="" ><div class="ystrip torn" style="transform:rotate(-2deg)"><span class="h0">হু ইজ হাদি?</span></div></div>
+  <div class="a clip" style="left:56px;top:470px;width:700px" data-a="left" data-t="1.6" data-sfx="whoosh">
+   <div class="serif" style="font:700 41px/1.55 'Noto Serif Bengali'">“নজরুলের পাশে হাদিকে সমাহিত করা উচিত হয়নি। আজ থেকে <span class="mk" data-a="mark" data-t="5.1" data-d="0.6" data-sfx="tone">পাঁচ বা ১০ বছর পর</span> মানুষ প্রশ্ন তুলতে পারে— হু ইজ হাদি?”</div>
+   <div class="s" style="margin-top:14px;font-size:28px;color:var(--mut)">— নুরুল হক নুর, প্রতিমন্ত্রী · টিভি টকশো, অক্টোবর ২০২৬</div>
+  </div>
+  <!-- annotated time ruler -->
+  <div class="a strip" style="left:56px;top:1250px;width:610px;padding:24px 30px 26px" data-a="up" data-t="5.4" data-sfx="click">
+   <div class="lab" style="margin-bottom:16px">সময়ের মাপকাঠিতে</div>
+   <div style="position:relative;height:110px">
+    <div style="position:absolute;left:10px;right:20px;top:30px;height:6px;background:var(--ink);transform-origin:left" data-a="growx" data-t="5.6" data-d="1.1"></div>
+    <div style="position:absolute;left:4px;top:16px;width:20px;height:34px;background:var(--ink)" data-a="pop" data-t="5.6"></div>
+    <div style="position:absolute;left:265px;top:16px;width:10px;height:34px;background:var(--ink)" data-a="pop" data-t="6.1" data-sfx="tick"></div>
+    <div style="position:absolute;left:520px;top:16px;width:10px;height:34px;background:var(--red)" data-a="pop" data-t="6.6" data-sfx="tick"></div>
+    <div class="ann" style="position:absolute;left:0;top:58px" data-a="fade" data-t="5.7">আজ<br><span class="s" style="font-size:24px">২০২৬</span></div>
+    <div class="ann" style="position:absolute;left:220px;top:58px" data-a="fade" data-t="6.1">+৫ বছর<br><span class="s" style="font-size:24px">২০৩১</span></div>
+    <div class="ann red" style="position:absolute;left:430px;top:58px;white-space:nowrap" data-a="fade" data-t="6.6">+১০ বছর<br><span class="s" style="font-size:24px">২০৩৬ ?</span></div>
+   </div>
+  </div>
+  <div class="a" style="left:56px;top:1530px;width:640px" data-a="up" data-t="8.0" data-sfx="click"><div class="kstrip b" style="font-size:40px">আপত্তি: <span class="mk mkr" data-a="mark" data-t="8.3" data-d="0.6">নজরুলের পাশে</span> কবর</div></div>
+ </div>
+ <div class="src">সূত্র: এনপিবি নিউজ; রূপালী বাংলাদেশ (অক্টোবর ২০২৬) · ছবি: hadiarchive.com (CC BY-SA 4.0)</div>
+</section>
+
+<!-- S2 CLARIFY + COLLAGE -->
+<section class="scene" data-dur="9.68" data-cam="0:1.06:0:120|3.9:1:0:60|5.6:0.94:0:0|9.68:1.04:0:-20">
+ <div class="bgp"></div>
+ <div class="cam">
+  <div class="a note" style="left:90px;top:190px;width:720px;transform:rotate(-2.5deg)" data-a="slam" data-t="0.3" data-sfx="stamp" style2="">
+   <div class="lab" style="color:var(--ink)">১০ অক্টোবর · পরে নুরের ব্যাখ্যা</div>
+   <div class="serif" style="font:700 52px/1.45 'Noto Serif Bengali';margin-top:8px">“আপত্তিটা ছিল কবরের <span class="mk mkr" data-a="mark" data-t="2.0" data-d="0.6" style="color:#fff">জায়গা</span> নিয়ে।”</div>
+  </div>
+  <div class="a pol sh" style="left:120px;top:620px;width:840px;transform:rotate(2deg)" data-a="up" data-t="1.0" data-sfx="whoosh" data-out="3.9"><div class="ph" style="height:560px"><img src="img/hX_017.jpg"></div></div>
+  <div class="a" style="left:120px;top:1230px" data-a="left" data-t="1.6" data-sfx="click" data-out="3.9"><span class="kstrip b" style="font-size:40px">প্রশ্ন: কবর কোথায় হবে</span></div>
+  <!-- collage -->
+  <div class="a pol sh" style="left:50px;top:610px;width:430px;transform:rotate(-5deg)" data-a="pop" data-t="4.15" data-sfx="tick"><div class="ph" style="height:300px"><img src="img/hX_002.jpg"></div></div>
+  <div class="a pol sh" style="left:520px;top:560px;width:470px;transform:rotate(4deg)" data-a="pop" data-t="4.35" data-sfx="tick"><div class="ph" style="height:330px"><img src="img/hS_p3_18.jpg"></div></div>
+  <div class="a pol sh" style="left:80px;top:960px;width:360px;transform:rotate(3deg)" data-a="pop" data-t="4.55" data-sfx="tick"><div class="ph" style="height:430px"><img src="img/hS_p2_12.jpg" style="object-position:50% 30%"></div></div>
+  <div class="a pol sh" style="left:470px;top:950px;width:500px;transform:rotate(-3deg)" data-a="pop" data-t="4.75" data-sfx="tick"><div class="ph" style="height:330px"><img src="img/hS_p3_12.jpg"></div></div>
+  <div class="a pol sh" style="left:610px;top:1240px;width:400px;transform:rotate(6deg)" data-a="pop" data-t="4.95" data-sfx="tick"><div class="ph" style="height:300px"><img src="img/hO_funeral_funeral_9.jpg"></div></div>
+  <div class="a sh" style="left:-10px;top:1250px;width:430px" data-a="pop" data-t="5.15" data-sfx="tick"><img class="cut" src="img/cut_smile.png"></div>
+  <div class="a" style="left:40px;top:1520px;width:1000px" data-a="up" data-t="6.35" data-sfx="click"><div class="strip torn" style="transform:rotate(-1deg)"><span class="h3" style="font-size:62px">উত্তরটা <span class="mk" data-a="mark" data-t="6.8" data-d="0.6">এখনই</span> লিখে রাখি।</span></div></div>
+  <div class="a" style="left:300px;top:380px" data-a="stamp" data-t="8.35" data-d="0.35" data-sfx="impact"><span class="stamp" style="font-size:120px;transform:rotate(-8deg);background:rgba(239,231,214,.85)">হাদি কে?</span></div>
+ </div>
+ <div class="src">সূত্র: এনপিবি নিউজ, অক্টোবর ২০২৬ · ছবি: sharifosmanhadi.info, osmanhadi.info</div>
+</section>
+
+<!-- S3 ROOTS -->
+<section class="scene" data-dur="9.95" data-cam="0:1.08:0:60|9.95:1:0:-20">
+ <div class="bgp"></div>
+ <div class="tag">০১ · শিকড়</div>
+ <div class="cam">
+  <div class="a" style="left:56px;top:180px" data-a="slam" data-t="0.3" data-sfx="impact"><span class="h0 blk" style="font-size:230px;line-height:1.15">১৯৯৩</span></div>
+  <div class="a sh" style="left:520px;top:520px;width:540px" data-a="up" data-t="0.6" data-d="0.7"><img class="cut" src="img/cut_smile.png"></div>
+  <div class="a" style="left:56px;top:520px" data-a="left" data-t="1.95" data-sfx="click"><span class="pin"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg>নলছিটি, ঝালকাঠি</span></div>
+  <div class="a strip" style="left:56px;top:660px;width:520px" data-a="up" data-t="3.45" data-sfx="click">
+   <div class="lab">বাবা</div>
+   <div class="b" style="font-size:44px">মাদ্রাসার শিক্ষক<br>ও মসজিদের ইমাম</div>
+  </div>
+  <!-- siblings -->
+  <div class="a strip" style="left:56px;top:1080px;width:968px;padding:30px 36px 34px" data-a="up" data-t="6.3" data-sfx="whoosh">
+   <div class="b" style="font-size:44px;margin-bottom:22px">ছয় ভাইবোনের মধ্যে <span class="mk" data-a="mark" data-t="7.7" data-d="0.6">সবার ছোট</span></div>
+   <div id="sibs" style="display:flex;gap:34px;align-items:flex-end;height:210px;padding-left:10px"></div>
+  </div>
+  <div class="a" style="left:690px;top:1440px" data-a="slam" data-t="9.15" data-sfx="tone"><span class="h2 blkr" style="font-size:70px">ওসমান</span></div>
+ </div>
+ <div class="src">সূত্র: উইকিপিডিয়া; প্রথম আলো, ১৮ ডিসেম্বর ২০২৫ · ছবি: sharifosmanhadi.info</div>
+</section>
+
+<!-- S4 STUDY + TEACHER -->
+<section class="scene" data-dur="8.24" data-cam="0:1.1:0:220|4.3:1:0:30|8.24:1.03:0:10">
+ <div class="bgp"></div>
+ <div class="tag">০২ · পড়াশোনা ও পেশা</div>
+ <div class="cam">
+  <div class="a" style="left:92px;top:250px;width:8px;height:880px;background:repeating-linear-gradient(var(--ink) 0 22px,transparent 22px 36px);transform-origin:top" data-a="drawy" data-t="0.4" data-d="4.6"></div>
+  <div class="a" style="left:66px;top:200px;width:60px;height:60px;border-radius:50%;background:var(--ink)" data-a="pop" data-t="0.3"></div>
+  <div class="a" style="left:160px;top:180px" data-a="left" data-t="0.35" data-sfx="click"><div class="lab">ধাপ ১</div><div class="h3">আলিম পাস</div><div class="s mut">ঝালকাঠির মাদ্রাসা</div></div>
+  <div class="a" style="left:66px;top:520px;width:60px;height:60px;border-radius:50%;background:var(--ink)" data-a="pop" data-t="1.6"></div>
+  <div class="a" style="left:160px;top:490px" data-a="left" data-t="1.7" data-sfx="click"><div class="lab">ধাপ ২</div><div class="h3">ঢাকা বিশ্ববিদ্যালয়</div><div class="b"><span class="mk" data-a="mark" data-t="3.2" data-d="0.6" data-sfx="tone">রাষ্ট্রবিজ্ঞান</span></div></div>
+  <div class="a" style="left:56px;top:880px;width:80px;height:80px;border-radius:50%;background:var(--red)" data-a="pop" data-t="4.6"></div>
+  <div class="a" style="left:160px;top:830px" data-a="slam" data-t="4.7" data-sfx="impact"><span class="h1 blk" style="font-size:120px">শিক্ষক</span></div>
+  <div class="a" style="left:160px;top:1010px" data-a="up" data-t="6.2" data-sfx="click"><div class="kstrip b" style="font-size:40px">ইউনিভার্সিটি অব স্কলার্সে পড়াতেন</div></div>
+  <div class="a pol sh" style="left:610px;top:200px;width:420px;transform:rotate(4deg)" data-a="up" data-t="2.2" data-sfx="whoosh"><div class="ph" style="height:440px"><img src="img/hS_000.jpg"></div></div>
+  <div class="a pol sh" style="left:60px;top:1170px;width:960px;transform:rotate(-1.5deg)" data-a="up" data-t="1.2" data-sfx="whoosh"><div class="ph" style="height:500px"><img src="img/hX_014.jpg" style="object-position:50% 30%"></div></div>
+ </div>
+ <div class="src">সূত্র: উইকিপিডিয়া; প্রথম আলো · ছবি: sharifosmanhadi.info, osmanhadi.info</div>
+</section>
+
+<!-- S5 POET -->
+<section class="scene" data-dur="8.89" data-cam="0:1:0:0|8.89:1.07:0:40">
+ <div class="bgp"></div>
+ <div class="tag">০৩ · কলম</div>
+ <div class="cam">
+  <div class="a pol sh" style="left:50px;top:160px;width:640px;transform:rotate(-2deg)" data-a="up" data-t="0.15" data-sfx="whoosh"><div class="ph" style="height:860px"><img src="img/hS_p5_06.jpg" style="object-position:50% 25%"></div></div>
+  <div class="a" style="left:520px;top:200px" data-a="slam" data-t="0.4" data-sfx="impact"><span class="h1 blk" style="font-size:110px">কবি</span></div>
+  <div class="a strip" style="left:420px;top:880px;width:610px;transform:rotate(1.5deg)" data-a="left" data-t="1.8" data-sfx="click">
+   <div class="lab">ছদ্মনাম</div>
+   <div class="serif" style="font:700 80px/1.3 'Noto Serif Bengali'"><span class="mk" data-a="mark" data-t="2.4" data-d="0.6" data-sfx="tone">‘সীমান্ত শরিফ’</span></div>
+  </div>
+  <div class="a" style="left:56px;top:1150px;width:600px" data-a="up" data-t="3.55" data-sfx="whoosh">
+   <div class="clip" style="border-left-color:var(--red);transform:rotate(-1deg)">
+    <div class="lab">কাব্যগ্রন্থ · অমর একুশে বইমেলা ২০২৪</div>
+    <div class="serif" style="font:700 58px/1.35 'Noto Serif Bengali';margin-top:8px"><span class="mk" data-a="mark" data-t="6.25" data-d="0.8" data-sfx="tone">লাভায় লালশাক পুবের আকাশ</span></div>
+   </div>
+  </div>
+  <div class="a pol sh" style="left:680px;top:1180px;width:350px;transform:rotate(5deg)" data-a="pop" data-t="4.6" data-sfx="tick"><div class="ph" style="height:400px"><img src="img/hS_p3_14.jpg"></div></div>
+ </div>
+ <div class="src">সূত্র: প্রথম আলো, ১৮ ডিসেম্বর ২০২৫; জাগো নিউজ · ছবি: sharifosmanhadi.info</div>
+</section>
+
+<!-- S6 JULY -->
+<section class="scene" data-dur="9.70" data-cam="0:1.14:0:260|4.6:1:0:0|9.7:1.02:0:-30">
+ <div class="bgp"></div>
+ <div class="tag">০৪ · জুলাই</div>
+ <div class="cam">
+  <div class="a ph ht redtint" style="left:0;top:0;width:1080px;height:1060px" data-a="fade" data-t="0" data-d="0.4"><img src="img/hX_002.jpg" style="object-position:60% 40%;filter:grayscale(1) contrast(1.2)"></div>
+  <div class="a" style="left:40px;top:860px" data-a="slam" data-t="0.35" data-sfx="impact"><div class="kstrip torn"><span class="h0 yel" style="font-size:160px">জুলাই ২০২৪</span></div></div>
+  <div class="a" style="left:56px;top:1110px" data-a="left" data-t="2.2" data-sfx="click"><span class="pin"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg>রামপুরা · এলাকার সমন্বয়ক</span></div>
+  <div class="a pol sh" style="left:56px;top:1230px;width:520px;transform:rotate(-2.5deg)" data-a="up" data-t="2.7" data-sfx="whoosh"><div class="ph" style="height:420px"><img src="img/hS_p3_12.jpg" style="object-position:40% 40%"></div></div>
+  <div class="a" style="left:610px;top:1250px;width:430px" data-a="left" data-t="5.6" data-sfx="click"><div class="strip"><div class="lab">আগস্ট ২০২৪</div><div class="h3" style="font-size:52px">ইনকিলাব মঞ্চ</div></div></div>
+  <div class="a" style="left:610px;top:1490px" data-a="slam" data-t="7.75" data-sfx="tone"><span class="h2 blk" style="font-size:80px">মুখপাত্র</span></div>
+  <svg class="a" style="left:470px;top:1440px" width="160" height="140" viewBox="0 0 160 140"><path d="M150 90 C110 120 60 110 30 60" fill="none" stroke="#151515" stroke-width="8" stroke-linecap="round" pathLength="1" data-a="draw" data-t="8.1" data-d="0.5"/><path d="M30 60 l6 32 M30 60 l30 -8" stroke="#151515" stroke-width="8" stroke-linecap="round" fill="none" data-a="fade" data-t="8.5"/></svg>
+ </div>
+ <div class="src">সূত্র: প্রথম আলো; দ্য ডেইলি ক্যাম্পাস; উইকিপিডিয়া · ছবি: sharifosmanhadi.info</div>
+</section>
+
+<!-- S7 SLOGAN -->
+<section class="scene dark" data-dur="9.54" data-cam="0:1:0:40|3.2:1.12:0:150|5.4:1:0:-40|9.54:1:0:-60">
+ <div class="bgd"></div>
+ <div class="tag">০৫ · কণ্ঠ</div>
+ <div class="cam">
+  <div class="a pol sh" style="left:60px;top:170px;width:960px;transform:rotate(-1deg)" data-a="up" data-t="0.1" data-sfx="whoosh"><div class="ph" style="height:900px"><img src="img/hX_026.jpg"></div></div>
+  <div class="a" style="left:36px;top:1090px;width:1010px" data-a="slam" data-t="3.3" data-sfx="impact"><div class="ystrip torn" style="transform:rotate(-1.5deg);color:var(--ink)"><span class="h2" style="font-size:64px">“জান দেবো, <span class="red">জুলাই দেবো না!</span>”</span></div></div>
+  <div class="a s" style="left:60px;top:1250px;color:#cfc8b8" data-a="fade" data-t="3.8">— মার্চ ২০২৫-এর এক সমাবেশে</div>
+  <div class="a" style="left:56px;top:1350px;width:520px" data-a="left" data-t="5.6" data-sfx="click"><div class="serif" style="font:700 50px/1.45 'Noto Serif Bengali';color:#fff">“আমি আমার শত্রুর সাথেও <span class="mk mkr" data-a="mark" data-t="7.6" data-d="0.6" data-sfx="tone">ইনসাফ</span> করতে চাই।”</div></div>
+  <div class="a pol sh" style="left:600px;top:1330px;width:430px;transform:rotate(3deg)" data-a="up" data-t="4.3" data-sfx="whoosh"><div class="ph" style="height:340px"><img src="img/hS_p6_00.jpg" style="object-position:50% 30%"></div></div>
+ </div>
+ <div class="src">সূত্র: জনকণ্ঠ, ২১ মার্চ ২০২৫; সময়ের কণ্ঠস্বর, ২৪ ফেব্রুয়ারি ২০২৬ · ছবি: sharifosmanhadi.info</div>
+</section>
+
+<!-- S8 POLITICS -->
+<section class="scene" data-dur="11.53" data-cam="0:1.1:0:200|3.8:1:0:0|11.53:1.03:0:-40">
+ <div class="bgp"></div>
+ <div class="tag">০৬ · ঢাকা-৮</div>
+ <div class="cam">
+  <div class="a" style="left:56px;top:190px" data-a="slam" data-t="0.3" data-sfx="impact"><span class="h0 blk" style="font-size:190px">ঢাকা-৮</span></div>
+  <div class="a" style="left:60px;top:460px" data-a="left" data-t="1.5" data-sfx="click"><span class="h3 kstrip" style="font-size:54px">স্বতন্ত্র প্রার্থী</span></div>
+  <div class="a pol sh" style="left:640px;top:160px;width:390px;transform:rotate(4deg)" data-a="up" data-t="0.8" data-sfx="whoosh"><div class="ph" style="height:480px"><img src="img/hS_p4_09.jpg" style="object-position:50% 40%"></div></div>
+  <div class="a" style="left:60px;top:600px" data-a="up" data-t="3.95" data-sfx="click"><span class="b" style="font-size:48px">প্রচারটাও ছিল <span class="mk" data-a="mark" data-t="4.4" data-d="0.6">অন্যরকম</span>—</span></div>
+  <div class="a pol sh" style="left:50px;top:720px;width:480px;transform:rotate(-2deg)" data-a="pop" data-t="4.2" data-sfx="tick"><div class="ph" style="height:360px"><img src="img/hS_p2_22.jpg" style="object-position:50% 35%"></div></div>
+  <div class="a pol sh" style="left:550px;top:730px;width:480px;transform:rotate(2deg)" data-a="pop" data-t="4.45" data-sfx="tick"><div class="ph" style="height:360px"><img src="img/hS_p2_11.jpg"></div></div>
+  <div class="a pol sh" style="left:60px;top:1110px;width:480px;transform:rotate(1.5deg)" data-a="pop" data-t="4.7" data-sfx="tick"><div class="ph" style="height:360px"><img src="img/hX_019.jpg"></div></div>
+  <div class="a pol sh" style="left:545px;top:1100px;width:480px;transform:rotate(-2.5deg)" data-a="pop" data-t="4.95" data-sfx="tick"><div class="ph" style="height:360px"><img src="img/hS_p2_12.jpg" style="object-position:50% 25%"></div></div>
+  <div class="a" style="left:56px;top:1500px;width:980px">
+   <span class="chip" data-a="pop" data-t="5.6" data-sfx="click">ফজরের পর <b>ভোট চাওয়া</b></span>
+   <span class="chip" data-a="pop" data-t="7.7" data-sfx="click">পাড়ায় পাড়ায় <b>লিফলেট</b></span>
+   <span class="chip" data-a="pop" data-t="9.3" data-sfx="click">অনুদান-খরচের <b>হিসাব প্রকাশ্যে</b></span>
+  </div>
+ </div>
+ <div class="src">সূত্র: প্রথম আলো, ১৮ ডিসেম্বর ২০২৫; উইকিপিডিয়া · ছবি: sharifosmanhadi.info</div>
+</section>
+
+<!-- S9 THREATS -->
+<section class="scene dark" data-dur="7.77" data-cam="0:1:0:0|7.77:1.06:0:0">
+ <div class="bgd"></div>
+ <div class="tag">০৭ · হুমকি</div>
+ <div class="cam">
+  <div class="a h1" style="left:56px;top:190px" data-a="up" data-t="0.3" data-sfx="click">বিপদও <span class="red">বাড়ছিল</span></div>
+  <div class="a lab" style="left:60px;top:360px;color:var(--yel);font-size:36px" data-a="fade" data-t="1.9">নভেম্বর ২০২৫ · তাঁর অভিযোগ</div>
+  <div class="a" id="phones" style="left:56px;top:450px;width:968px;display:grid;grid-template-columns:repeat(10,1fr);gap:16px 18px"></div>
+  <div class="a" style="left:56px;top:1000px" data-a="slam" data-t="3.5" data-sfx="impact"><span class="h1">অন্তত <span class="blk" data-a="count" data-t="3.5" data-d="2.7" data-to="30">৩০</span>টি নম্বর</span></div>
+  <div class="a h2" style="left:60px;top:1170px;color:#e9e2d2" data-a="up" data-t="4.6">থেকে <span class="red">হত্যার হুমকি</span></div>
+  <div class="a sh" style="left:680px;top:1250px;width:330px;opacity:.9" data-a="up" data-t="1.0"><img class="cut" src="img/cut_leaflet.png" style="filter:grayscale(1) brightness(.85)"></div>
+ </div>
+ <div class="src">সূত্র: উইকিপিডিয়া (ইনসাফ২৪, ১৪ নভেম্বর ২০২৫); প্রথম আলো</div>
+</section>
+
+<!-- S10 DEC 12 -->
+<section class="scene dark" data-dur="12.59" data-cam="0:1:0:0|12.59:1.07:0:20">
+ <div class="bgd"></div>
+ <div class="tag">০৮ · ১২ ডিসেম্বর</div>
+ <div class="cam">
+  <div class="a sh" style="left:56px;top:170px;width:470px" data-a="slam" data-t="0.3" data-sfx="stamp">
+   <div style="background:#fbf8f1;color:var(--ink);text-align:center;border-radius:10px;overflow:hidden;transform:rotate(-3deg)">
+    <div style="background:var(--red);color:#fff;font:900 40px 'Noto Sans Bengali';padding:10px 0 16px">ডিসেম্বর ২০২৫</div>
+    <div style="font:900 230px/1.1 'Noto Sans Bengali'">১২</div>
+    <div style="font:700 44px 'Noto Sans Bengali';padding-bottom:26px" data-a="fade" data-t="1.9">শুক্রবার</div>
+   </div>
+  </div>
+  <svg class="a" style="left:600px;top:200px" width="420" height="420" viewBox="0 0 420 420" data-a="pop" data-t="6.1" data-sfx="click">
+   <circle cx="210" cy="210" r="190" fill="#fbf8f1" stroke="#151515" stroke-width="14"/>
+   <g fill="#151515"><rect x="203" y="34" width="14" height="36"/><rect x="203" y="350" width="14" height="36"/><rect x="34" y="203" width="36" height="14"/><rect x="350" y="203" width="36" height="14"/></g>
+   <line x1="210" y1="210" x2="210" y2="105" stroke="#151515" stroke-width="16" stroke-linecap="round" style="transform-origin:210px 210px" data-a="rot" data-t="6.2" data-d="1.2" data-from="0" data-to="72"/>
+   <line x1="210" y1="210" x2="210" y2="60" stroke="#e2333f" stroke-width="9" stroke-linecap="round" style="transform-origin:210px 210px" data-a="rot" data-t="6.2" data-d="1.2" data-from="0" data-to="870"/>
+   <circle cx="210" cy="210" r="16" fill="#151515"/>
+  </svg>
+  <div class="a" style="left:640px;top:640px" data-a="up" data-t="6.6"><span class="kstrip" style="background:var(--yel);color:var(--ink);font:900 46px 'Noto Sans Bengali'">দুপুর ~২:২৫</span></div>
+  <div class="a b" style="left:56px;top:800px;width:980px" data-a="up" data-t="3.4" data-sfx="click">জুমার নামাজ শেষে, মসজিদ থেকে বেরিয়েছেন…</div>
+  <!-- street map -->
+  <div class="a" style="left:56px;top:960px;width:968px;height:420px;background:#2a2725;border-radius:12px;overflow:hidden" data-a="up" data-t="3.8" data-sfx="whoosh">
+   <svg width="968" height="420" viewBox="0 0 968 420"><g stroke="#4a4541" stroke-width="34" fill="none"><path d="M-20 300 L990 240"/><path d="M300 -20 L360 440"/><path d="M700 -20 L640 440"/></g><g stroke="#5c5650" stroke-width="12" fill="none"><path d="M-20 120 L990 80"/><path d="M120 -20 L160 440"/></g>
+   <path d="M-20 300 L990 240" stroke="#ffc93c" stroke-width="10" fill="none" stroke-dasharray="1" pathLength="1" data-a="draw" data-t="8.4" data-d="0.8"/></svg>
+   <div style="position:absolute;left:470px;top:150px" data-a="pop" data-t="8.2" data-sfx="tone"><svg width="70" height="90" viewBox="0 0 24 30"><path d="M12 1a9 9 0 0 0-9 9c0 7 9 19 9 19s9-12 9-19a9 9 0 0 0-9-9z" fill="#e2333f"/></svg></div>
+   <div style="position:absolute;left:24px;top:330px;font:700 38px 'Noto Sans Bengali';color:#fff" data-a="up" data-t="8.3">বিজয়নগর · বক্স কালভার্ট রোড</div>
+  </div>
+  <div class="a" style="left:40px;top:1430px" data-a="slam" data-t="9.6" data-sfx="impact"><span class="h2 blkr" style="font-size:76px">মোটরসাইকেল থেকে গুলি</span></div>
+  <div class="a h3" style="left:60px;top:1600px;color:#fff" data-a="up" data-t="11.2" data-sfx="click">সরাসরি মাথায়।</div>
+ </div>
+ <div class="src">সূত্র: প্রথম আলো; আল জাজিরা; ঢাকা ট্রিবিউন; উইকিপিডিয়া</div>
+</section>
+
+<!-- S11 DEATH + SCALE -->
+<section class="scene dark" data-dur="13.75" data-cam="0:1:0:0|6.8:1:0:0|7.3:1.06:0:30|13.75:1:0:0">
+ <div class="bgd"></div>
+ <div class="tag">০৯ · বিদায়</div>
+ <div class="cam">
+  <div class="a pol sh" style="left:56px;top:170px;width:968px;transform:rotate(-1deg)" data-a="up" data-t="0.25" data-sfx="whoosh" data-out="5.4"><div class="ph bw" style="height:360px"><img src="img/ambulance.jpg"></div></div>
+  <div class="a" style="left:60px;top:570px" data-a="left" data-t="0.6" data-sfx="click" data-out="5.4"><div class="lab yel" style="font-size:36px">১৫ ডিসেম্বর</div><div class="b" style="color:#fff">এয়ার অ্যাম্বুলেন্সে সিঙ্গাপুর</div></div>
+  <div class="a h1" style="left:56px;top:740px;color:#fff" data-a="up" data-t="3.55" data-sfx="click" data-out="6.6">১৮ ডিসেম্বর…</div>
+  <div class="a h2" style="left:56px;top:900px;color:#bdb6a8" data-a="fade" data-t="5.5" data-out="6.6">সব থেমে গেল।</div>
+  <!-- age -->
+  <div class="a" style="left:56px;top:200px" data-a="slam" data-t="6.95" data-sfx="impact"><span class="h0 blk" style="font-size:300px;line-height:1.05">৩২</span></div>
+  <div class="a h2" style="left:520px;top:300px;color:#fff;line-height:1.1" data-a="left" data-t="7.2">বছর<br>বয়স</div>
+  <div class="a sh" style="left:720px;top:1200px;width:300px" data-a="up" data-t="9.6"><img class="cut" src="img/cut_arms.png" style="filter:grayscale(1)"></div>
+  <!-- chart -->
+  <div class="a" style="left:56px;top:720px;width:968px" data-a="up" data-t="8.8" data-sfx="whoosh">
+   <div class="lab yel" style="font-size:34px;margin-bottom:20px">তুলনা: বাংলাদেশে গড় আয়ু</div>
+   <div style="position:relative;height:520px">
+    <div style="position:absolute;left:0;top:20px;font:700 36px 'Noto Sans Bengali';color:#fff">গড় আয়ু · ৭২.৩ বছর</div>
+    <div style="position:absolute;left:0;top:80px;height:90px;width:874px;background:#d9d2c3;transform-origin:left" data-a="growx" data-t="9.0" data-d="1.0"></div>
+    <div style="position:absolute;left:0;top:220px;font:700 36px 'Noto Sans Bengali';color:#fff">হাদি · ৩২ বছর</div>
+    <div style="position:absolute;left:0;top:280px;height:90px;width:387px;background:var(--red);transform-origin:left" data-a="growx" data-t="9.4" data-d="0.8" data-sfx="tone"></div>
+    <!-- half marker -->
+    <div style="position:absolute;left:437px;top:60px;width:0;height:340px;border-left:5px dashed var(--yel)" data-a="drawy" data-t="11.3" data-d="0.4"></div>
+    <div style="position:absolute;left:400px;top:400px;font:900 40px 'Noto Sans Bengali';color:var(--yel)" data-a="pop" data-t="11.5" data-sfx="click">↑ অর্ধেক</div>
+    <div style="position:absolute;left:0;top:460px;font:900 50px 'Noto Sans Bengali';color:#fff" data-a="up" data-t="11.7">হাদি পেলেন <span class="mk mkr" data-a="mark" data-t="12.0" data-d="0.6">অর্ধেকেরও কম</span></div>
+    <div style="position:absolute;left:0;top:395px;width:874px;height:4px;background:#6d665c"></div>
+   </div>
+  </div>
+ </div>
+ <div class="src">সূত্র: প্রথম আলো; ঢাকা ট্রিবিউন · গড় আয়ু: বিবিএস (ডেইলি স্টার) · ছবি: পিআইডি, পাবলিক ডোমেইন</div>
+</section>
+
+<!-- S12 FUNERAL -->
+<section class="scene" data-dur="10.19" data-cam="0:1.75:0:330|3.7:1:0:0|10.19:1.03:0:-20">
+ <div class="bgp"></div>
+ <div class="tag">১০ · জানাজা</div>
+ <div class="cam">
+  <div class="a ph" style="left:0;top:0;width:1080px;height:1350px"><img src="img/hO_funeral_funeral_9.jpg" style="object-position:50% 40%"></div>
+  <div class="a" style="left:40px;top:1080px" data-a="slam" data-t="0.3" data-sfx="impact"><span class="h1 blk" style="font-size:96px">২০ ডিসেম্বর</span></div>
+  <div class="a strip" style="left:40px;top:1370px;width:1000px" data-a="up" data-t="1.6" data-sfx="click"><div class="lab">জানাজা</div><div class="h3" style="font-size:52px">জাতীয় সংসদ ভবনের দক্ষিণ প্লাজা</div></div>
+  <div class="a pol sh" style="left:520px;top:640px;width:520px;transform:rotate(4deg)" data-a="up" data-t="4.2" data-sfx="whoosh"><div class="ph" style="height:340px"><img src="img/hX_038.jpg"></div></div>
+  <div class="a" style="left:560px;top:560px" data-a="left" data-t="4.5" data-sfx="click"><span class="pin" style="font-size:32px"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg>মানিক মিয়া অ্যাভিনিউ</span></div>
+  <div class="a" style="left:56px;top:1560px;width:980px" data-a="up" data-t="6.8" data-sfx="click"><span class="h3" style="font-size:56px">যতদূর চোখ যায়… <span class="mk" data-a="mark" data-t="8.3" data-d="0.6" data-sfx="tone">শুধু মানুষ</span></span></div>
+ </div>
+ <div class="src">সূত্র: টিবিএস; প্রথম আলো, ২০ ডিসেম্বর ২০২৫ · ছবি: osmanhadi.info, sharifosmanhadi.info</div>
+</section>
+
+<!-- S13 NAZRUL -->
+<section class="scene" data-dur="11.39" data-cam="0:1.05:0:40|8.8:1:0:0|11.39:1.04:0:-20">
+ <div class="bgp"></div>
+ <div class="tag">১১ · নজরুলের পাশে</div>
+ <div class="cam">
+  <div class="a pol sh" style="left:50px;top:160px;width:980px;transform:rotate(-1deg)" data-a="up" data-t="0.2" data-sfx="whoosh"><div class="ph" style="height:560px"><img src="img/hX_017.jpg"></div></div>
+  <div class="a" style="left:56px;top:770px;width:980px" data-a="up" data-t="0.9" data-sfx="click"><div class="strip torn"><span class="h3" style="font-size:50px">জাতীয় কবি <span class="mk" data-a="mark" data-t="1.8" data-d="0.7" data-sfx="tone">কাজী নজরুল ইসলামের</span> সমাধির পাশে</span></div></div>
+  <div class="a clip" style="left:56px;top:990px;width:760px" data-a="left" data-t="5.15" data-sfx="click">
+   <div class="lab">১৯ ডিসেম্বর রাত · সিদ্ধান্ত</div>
+   <div class="b" style="font-size:42px">ঢাবি সিন্ডিকেটের জরুরি সভা</div>
+   <div class="s mut" style="font-size:30px">আবেদন: মন্ত্রিপরিষদ বিভাগ ও ডাকসু</div>
+  </div>
+  <!-- poet beside poet -->
+  <div class="a pol sh" style="left:60px;top:1230px;width:380px;transform:rotate(-4deg)" data-a="up" data-t="2.0" data-sfx="whoosh"><div class="ph bw" style="height:440px"><img src="img/nazrul.jpg"></div></div>
+  <div class="a pol sh" style="left:640px;top:1230px;width:380px;transform:rotate(4deg)" data-a="up" data-t="10.3" data-sfx="whoosh"><div class="ph bw" style="height:440px"><img src="img/hX_004.jpg" style="object-position:50% 20%"></div></div>
+  <div class="a" style="left:290px;top:1330px;width:500px;text-align:center;z-index:5" data-a="pop" data-t="9.2"><span class="h3 kstrip" style="font-size:44px">এক কবির পাশে…</span></div>
+  <div class="a" style="left:340px;top:1520px;width:400px;text-align:center;z-index:5" data-a="slam" data-t="10.5" data-sfx="tone"><span class="h2 blk" style="font-size:66px">আরেক কবি</span></div>
+ </div>
+ <div class="src">সূত্র: বাংলা ট্রিবিউন; টিবিএস · ছবি: osmanhadi.info, sharifosmanhadi.info; নজরুল (১৯২২): পাবলিক ডোমেইন</div>
+</section>
+
+<!-- S14 CASE -->
+<section class="scene" data-dur="12.48" data-cam="0:1:0:0|12.48:1:0:0">
+ <div class="bgp"></div>
+ <div class="tag">১২ · বিচার</div>
+ <div class="cam">
+  <div class="a h1" style="left:56px;top:170px" data-a="slam" data-t="0.2" data-sfx="impact">আর বিচার?</div>
+  <div class="a strip" style="left:56px;top:360px;width:968px" data-a="up" data-t="1.4" data-sfx="whoosh">
+   <div class="lab">৬ জানুয়ারি ২০২৬ · ডিবির অভিযোগপত্র</div>
+   <div id="acc" style="display:flex;flex-wrap:wrap;gap:12px;margin:16px 0 8px"></div>
+   <div class="b" style="font-size:44px"><span class="mk" data-a="mark" data-t="2.6" data-d="0.5">১৭ জন</span> আসামি</div>
+  </div>
+  <div class="a" style="left:640px;top:330px" data-a="stamp" data-t="3.85" data-d="0.35" data-sfx="stamp"><span class="stamp" style="font-size:56px;transform:rotate(-10deg);background:rgba(251,248,241,.9)">বাদীর নারাজি</span></div>
+  <div class="a" style="left:56px;top:770px" data-a="left" data-t="5.35" data-sfx="click"><span class="kstrip b" style="font-size:42px">→ অধিকতর তদন্তে সিআইডি · ১৫ জানুয়ারি</span></div>
+  <!-- deferral timeline -->
+  <div class="a strip" style="left:56px;top:900px;width:968px;padding:30px 34px" data-a="up" data-t="6.7" data-sfx="whoosh">
+   <div class="lab">প্রতিবেদন জমার তারিখ পেছানো হয়েছে — প্রতিটি দাগ একবার</div>
+   <div style="position:relative;height:200px;margin-top:20px">
+    <div style="position:absolute;left:0;right:0;top:70px;height:8px;background:var(--ink);transform-origin:left" data-a="growx" data-t="6.9" data-d="0.6"></div>
+    <div id="ticks"></div>
+    <div style="position:absolute;left:0;top:120px;font:700 30px 'Noto Sans Bengali'">ফেব্রু ২০২৬</div>
+    <div style="position:absolute;right:0;top:120px;font:700 30px 'Noto Sans Bengali';text-align:right">২৭ সেপ্টে ২০২৬</div>
+    <div style="position:absolute;left:300px;top:160px;font:700 28px 'Noto Sans Bengali';color:var(--mut)" data-a="fade" data-t="9.4">⟵ প্রায় আট মাস ⟶</div>
+   </div>
+  </div>
+  <div class="a" style="left:56px;top:1300px" data-a="slam" data-t="10.15" data-sfx="impact"><span class="h0 blkr" style="font-size:220px;line-height:1.1"><span data-a="count" data-t="10.15" data-d="0.6" data-to="20" data-from="12">২০</span> বার</span></div>
+  <div class="a b" style="left:60px;top:1600px" data-a="up" data-t="11.3">পরের তারিখ: <b>৩ নভেম্বর ২০২৬</b></div>
+ </div>
+ <div class="src">সূত্র: ঢাকা ট্রিবিউন, ২০ আগস্ট ও ২৭ সেপ্টেম্বর ২০২৬; টিবিএস; justiceforhadi.org</div>
+</section>
+
+<!-- S15 NAMEPLATE -->
+<section class="scene" data-dur="5.68" data-cam="0:1:0:0|5.68:1.08:0:20">
+ <div class="bgp"></div>
+ <div class="tag">১৩ · নামফলক</div>
+ <div class="cam">
+  <div class="a" style="left:56px;top:180px" data-a="slam" data-t="0.25" data-sfx="impact"><span class="h2 blk" style="font-size:84px">৩০ সেপ্টেম্বর ২০২৬</span></div>
+  <div class="a pol sh" style="left:56px;top:420px;width:968px;transform:rotate(-1.5deg)" data-a="up" data-t="0.5" data-sfx="whoosh"><div class="ph bw" style="height:720px;position:relative"><img src="img/nameplate.jpg"><div style="position:absolute;left:-2%;top:48%;width:104%;height:16px;background:var(--red);transform-origin:left" data-a="strike" data-t="2.5" data-d="0.45" data-sfx="whoosh"></div></div></div>
+  <div class="a" style="left:56px;top:1210px;width:968px" data-a="up" data-t="1.2" data-sfx="click"><div class="b" style="font-size:46px">ঢাবির শেখ মুজিবুর রহমান হলের ফটক থেকে <span class="mk" data-a="mark" data-t="2.6" data-d="0.6">‘শহীদ ওসমান হাদি হল’</span> লেখা সরানো শুরু।</div></div>
+  <div class="a s mut" style="left:60px;top:1480px;width:960px" data-a="fade" data-t="3.4">প্রশাসনের ব্যাখ্যা: আগের নাম বদলের কোনো সিদ্ধান্ত সিনেট নেয়নি।</div>
+ </div>
+ <div class="src">সূত্র: বিডিনিউজ২৪, ৩০ সেপ্টেম্বর ২০২৬ · ছবি: Wasiul Bahar, CC BY-SA 4.0 (উইকিমিডিয়া কমন্স)</div>
+</section>
+
+<!-- S16 ANSWER -->
+<section class="scene" data-dur="10.34" data-cam="0:1:0:0|10.34:1.05:0:0">
+ <div class="bgp"></div>
+ <div class="cam">
+  <div class="a ph bw ht" style="left:0;top:0;width:1080px;height:960px" data-kb="1"><img src="img/hadi_test_portrait.jpg" style="object-position:62% 30%"></div>
+  <div class="a" style="left:40px;top:860px" data-a="slam" data-t="0.25" data-sfx="impact"><div class="ystrip torn"><span class="h1" style="font-size:104px">তাহলে, হাদি কে?</span></div></div>
+  <div class="a h3" style="left:60px;top:1060px;font-size:58px" data-a="left" data-t="2.1" data-sfx="tick">একজন শিক্ষক।</div>
+  <div class="a h3" style="left:60px;top:1150px;font-size:58px" data-a="left" data-t="3.4" data-sfx="tick">একজন কবি।</div>
+  <div class="a h3" style="left:60px;top:1240px;font-size:58px" data-a="left" data-t="4.45" data-sfx="tick">জুলাইয়ের এক কণ্ঠ।</div>
+  <div class="a h3" style="left:60px;top:1350px;font-size:58px" data-a="left" data-t="6.35" data-sfx="tone"><span class="mk" data-a="mark" data-t="6.8" data-d="0.8">বত্রিশে থেমে যাওয়া একটা জীবন—</span></div>
+  <div class="a" style="left:60px;top:1470px" data-a="slam" data-t="8.7" data-sfx="impact"><span class="h3 blkr" style="font-size:58px">যার বিচার এখনো বাকি।</span></div>
+ </div>
+ <div class="src">ছবি: hadiarchive.com (CC BY-SA 4.0)</div>
+</section>
+
+<!-- S17 ENDING -->
+<section class="scene dark" data-dur="8.70" data-cam="0:1.35:0:120|8.7:1:0:0">
+ <div class="bgd"></div>
+ <div class="cam">
+  <div class="a ph" style="left:0;top:0;width:1080px;height:1920px"><img src="img/hX_043.jpg" style="object-position:50% 45%;filter:contrast(1.05) saturate(.9) brightness(.55)"></div>
+  <div class="a" style="left:0;top:0;width:1080px;height:1920px;background:linear-gradient(rgba(21,21,21,.2),rgba(21,21,21,.85) 70%)"></div>
+  <div class="a h2" style="left:56px;top:1000px;width:980px;color:#fff;font-size:72px" data-a="up" data-t="0.3" data-sfx="click">ফটক থেকে নাম সরানো যায়।</div>
+  <div class="a b" style="left:56px;top:1210px;width:980px;color:#fff;font-size:52px" data-a="up" data-t="3.4" data-sfx="click">কিন্তু লাখো মানুষের মনে যে নামটা লেখা হয়ে গেছে…</div>
+  <div class="a" style="left:40px;top:1450px" data-a="slam" data-t="7.5" data-sfx="impact"><span class="h1 blk" style="font-size:104px">সেটা সরাবে কে?</span></div>
+ </div>
+ <div class="src">ছবি: sharifosmanhadi.info</div>
+</section>
+
+<!-- S18 CREDITS -->
+<section class="scene" data-dur="4.6" data-cam="0:1:0:0|4.6:1:0:0">
+ <div class="bgp"></div>
+ <div class="cam">
+  <div class="a" style="left:56px;top:200px;width:968px" data-a="up" data-t="0.1">
+   <div class="h2" style="font-size:64px">তথ্যসূত্র ও কৃতজ্ঞতা</div>
+   <div class="lab" style="margin-top:40px">তথ্য</div>
+   <div class="s" style="font-size:31px">প্রথম আলো · ঢাকা ট্রিবিউন · দ্য বিজনেস স্ট্যান্ডার্ড · বাংলা ট্রিবিউন · বিডিনিউজ২৪ · জনকণ্ঠ · দ্য ডেইলি ক্যাম্পাস · এনপিবি নিউজ · রূপালী বাংলাদেশ · আল জাজিরা · দ্য ডেইলি স্টার (বিবিএস) · উইকিপিডিয়া · justiceforhadi.org</div>
+   <div class="lab" style="margin-top:34px">ছবি</div>
+   <div class="s" style="font-size:31px">hadiarchive.com (CC BY-SA 4.0) · sharifosmanhadi.info ও osmanhadi.info আর্কাইভ · নামফলক: Wasiul Bahar (CC BY-SA 4.0) · পিআইডি ও নজরুলের প্রতিকৃতি: পাবলিক ডোমেইন</div>
+  </div>
+ </div>
+</section>
+
+<script>
+const scenes=[...document.querySelectorAll('.scene')];
+let acc=0; scenes.forEach(s=>{s._start=acc;s._dur=+s.dataset.dur;acc+=s._dur;});
+const TR=0.45; window.TOTAL=acc; window.VOFF=0.3;
+const BN='০১২৩৪৫৬৭৮৯'; const bn=n=>String(n).replace(/\d/g,d=>BN[d]);
+const cl=x=>x<0?0:x>1?1:x, eo=p=>1-Math.pow(1-cl(p),3), eio=p=>{p=cl(p);return p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2};
+const eb=p=>{p=cl(p);const c=1.70158,c3=c+1;return 1+c3*Math.pow(p-1,3)+c*Math.pow(p-1,2);};
+// seeded random
+let seed=7; const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647;};
+// torn edges
+document.querySelectorAll('.torn').forEach(el=>{
+  const pts=[]; const n=26;
+  for(let i=0;i<=n;i++) pts.push(`${(i/n*100).toFixed(2)}% ${(rnd()*3.5).toFixed(2)}%`);
+  for(let i=n;i>=0;i--) pts.push(`${(i/n*100).toFixed(2)}% ${(100-rnd()*3.5).toFixed(2)}%`);
+  el.style.clipPath=`polygon(${pts.join(',')})`;
+});
+// generated graphics
+(function(){
+  const person=(c,h)=>`<svg class="ico" width="${h*0.62}" height="${h}" viewBox="0 0 40 64"><circle cx="20" cy="12" r="11" fill="${c}"/><path d="M3 64V38a17 17 0 0 1 34 0v26z" fill="${c}"/></svg>`;
+  const sib=document.getElementById('sibs');
+  for(let i=0;i<6;i++){const d=document.createElement('div');d.innerHTML=person(i==5?'#e2333f':'#151515',i==5?150:190);d.dataset.a='pop';d.dataset.t=(6.6+i*0.16).toFixed(2);if(i<5)d.dataset.sfx='tick';sib.appendChild(d);}
+  const acc=document.getElementById('acc');
+  for(let i=0;i<17;i++){const d=document.createElement('div');d.innerHTML=person('#151515',70);d.dataset.a='pop';d.dataset.t=(1.7+i*0.05).toFixed(2);d.dataset.d='0.3';if(i%4==0)d.dataset.sfx='tick';acc.appendChild(d);}
+  acc.style.gap='9px';
+  const ph=document.getElementById('phones');
+  for(let i=0;i<30;i++){const d=document.createElement('div');d.innerHTML=`<svg class="ico" width="100%" viewBox="0 0 60 96"><rect x="3" y="3" width="54" height="90" rx="10" fill="#e2333f"/><rect x="10" y="14" width="40" height="62" rx="3" fill="#2a1416"/><circle cx="30" cy="85" r="4" fill="#2a1416"/><path d="M22 40l16 16M38 40L22 56" stroke="#ffc93c" stroke-width="5" stroke-linecap="round"/></svg>`;d.dataset.a='pop';d.dataset.t=(3.5+i*0.09).toFixed(2);d.dataset.d='0.28';if(i%3==0)d.dataset.sfx='tick';ph.appendChild(d);}
+  const tk=document.getElementById('ticks');
+  for(let i=0;i<20;i++){const d=document.createElement('div');const x=(i/19)*96+1;d.style.cssText=`position:absolute;left:${x}%;top:30px;width:10px;height:88px;margin-left:-5px;background:#e2333f;border-radius:3px`;d.dataset.a='pop';d.dataset.t=(7.3+i*0.13).toFixed(2);d.dataset.d='0.22';d.dataset.sfx='tick';tk.appendChild(d);}
+})();
+scenes.forEach(s=>{
+  const c=s.querySelector('.cam'); const fx=document.createElement('div'); fx.className='fix';
+  [...c.children].forEach(el=>{ const lay=el.dataset.layer || (el.querySelector('img')||el.tagName==='IMG' ? 'cam':'fix'); if(lay==='fix') fx.appendChild(el); });
+  c.after(fx);
+});
+scenes.forEach(s=>{
+  s._els=[...s.querySelectorAll('[data-a]')]; s._cam=s.querySelector('.cam');
+  s._keys=(s.dataset.cam||'0:1:0:0').split('|').map(k=>k.split(':').map(Number));
+  s._kb=[...s.querySelectorAll('[data-kb] img')];
+});
+function cam(s,lt){
+  const K=s._keys; if(lt<=K[0][0]) return K[0]; if(lt>=K[K.length-1][0]) return K[K.length-1];
+  for(let i=0;i<K.length-1;i++){ if(lt>=K[i][0]&&lt<=K[i+1][0]){ const p=eio((lt-K[i][0])/(K[i+1][0]-K[i][0])); return K[i].map((v,j)=>v+(K[i+1][j]-v)*p);} }
+  return K[0];
+}
+function applyEl(e,lt){
+  const a=e.dataset.a,t=+e.dataset.t||0,d=+(e.dataset.d||0.5);
+  const r=(lt-t)/d, p=eo(r);
+  let op=null;
+  switch(a){
+    case 'up': op=p; e.style.transform=`translateY(${(1-p)*46}px)`; break;
+    case 'left': op=p; e.style.transform=`translateX(${-(1-p)*34}px)`; break;
+    case 'fade': op=p; break;
+    case 'pop': {const q=eb(r); op=cl(r*3); e.style.transform=`scale(${r<=0?0.001:Math.max(0.001,q)})`; break;}
+    case 'slam': {const q=cl(r/0.9); const s=q<1?1.14-0.14*eb(q):1; op=cl(q*3); e.style.transform=`scale(${s})`; break;}
+    case 'stamp': {const q=cl(r); const s=q<1?1.25-0.25*eo(q):1; op=cl(q*2.5); e.style.transform=`scale(${s})`; break;}
+    case 'mark': e.style.setProperty('--m',p); break;
+    case 'drawy': e.style.transform=`scaleY(${p})`; break;
+    case 'growx': e.style.transform=`scaleX(${p})`; break;
+    case 'strike': e.style.transform=`rotate(-4deg) scaleX(${p})`; break;
+    case 'draw': e.style.strokeDasharray='1'; e.style.strokeDashoffset=String(1-p); break;
+    case 'rot': {const f=+e.dataset.from,to=+e.dataset.to; e.style.transform=`rotate(${f+(to-f)*eio(r)}deg)`; break;}
+    case 'count': {const f=+(e.dataset.from||0); e.textContent=bn(Math.round(f+(+e.dataset.to-f)*eo(r))); break;}
+  }
+  if(e.dataset.out){ const o=+e.dataset.out; const q=cl((lt-o)/0.35); if(op===null) op=1; op*= (1-q); }
+  if(op!==null) e.style.opacity=op;
+}
+window.seek=function(t){
+  scenes.forEach((s,i)=>{
+    const lt=t-s._start, last=i===scenes.length-1;
+    const vis= lt>=0 && lt< s._dur+(last?10:TR);
+    if(!vis){s.style.display='none';return;}
+    s.style.display='block';
+    let op=1,tx=0,rot=0;
+    if(i>0 && lt<TR){const p=eio(lt/TR); tx=(1-p)*1080; rot=(1-p)*3;}
+    if(!last && lt>=s._dur){const p=eio((lt-s._dur)/TR); tx=-p*420; op=1-p*0.6;}
+    if(last && lt>s._dur-1.1){op=Math.max(0,1-(lt-(s._dur-1.1))/1.1);}
+    s.style.opacity=op; s.style.transform=`translateX(${tx}px) rotate(${rot}deg)`; s.style.zIndex= i;
+    const c=cam(s,lt); s._cam.style.transform=`translate(${c[2]}px,${c[3]}px) scale(${c[1]})`;
+    s._els.forEach(e=>applyEl(e,lt));
+    s._kb.forEach(im=>{im.style.transform=`scale(${1.02+0.08*cl(lt/s._dur)})`;});
+  });
+};
+window.CUES=(function(){
+  const c=[];
+  scenes.forEach((s,i)=>{
+    if(i>0) c.push({t:s._start-0.05,type:'trans'});
+    s.querySelectorAll('[data-sfx]').forEach(e=>{const ty=e.dataset.sfx; if(ty&&ty!=='none') c.push({t:s._start+(+e.dataset.t||0),type:ty});});
+  });
+  return c.sort((a,b)=>a.t-b.t);
+})();
+window.AUDIT=function(step){
+  const bad=[]; const seen={};
+  for(let t=0;t<TOTAL;t+=step){ seek(t);
+    scenes.forEach((s,i)=>{ const lt=t-s._start; if(lt<TR||lt>s._dur-0.02) return; if(s.style.display==='none') return;
+      s.querySelectorAll('.fix *').forEach(el=>{
+        if(!el.childNodes.length) return; const own=[...el.childNodes].some(n=>n.nodeType===3&&n.textContent.trim()); if(!own) return;
+        let o=1,p=el; while(p&&p!==s){ const cs=getComputedStyle(p); o*=+cs.opacity; if(cs.display==='none') o=0; p=p.parentElement;} if(o<0.08) return;
+        const r=el.getBoundingClientRect(); const out=r.left< -1||r.right>1081||r.top< -1||r.bottom>1795;
+        if(out){ const k=i+'|'+el.textContent.trim().slice(0,24); if(!seen[k]){seen[k]=1; bad.push({scene:i+1,t:+lt.toFixed(2),txt:el.textContent.trim().slice(0,40),l:Math.round(r.left),r:Math.round(r.right),top:Math.round(r.top),b:Math.round(r.bottom)});} }
+      });
+    });
+  }
+  return bad;
+};
+window.SCENES=scenes.map(s=>({start:s._start,dur:s._dur}));
+seek(0);
+</script>
+</body>
+</html>

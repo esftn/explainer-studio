@@ -1,0 +1,60 @@
+/* Explainer Studio base styles — preset files set the CSS variables and textures. */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#000} /* black behind scenes: the final fade goes to black */
+body{font-family:var(--font-sans);color:var(--ink);position:relative}
+.scene{position:absolute;inset:0;display:none;overflow:hidden}
+.bgp{position:absolute;inset:-40px;background:var(--tex-light) center/cover,var(--bg)}
+.bgd{position:absolute;inset:-40px;background:var(--tex-dark) center/cover,var(--bg-dark)}
+.cam{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 960px}
+.fix{position:absolute;left:0;top:0;width:1080px;height:1920px;z-index:10}
+.a{position:absolute}
+.dark{color:var(--ink-on-dark)}
+
+/* chrome */
+.tag{position:absolute;left:56px;top:78px;z-index:20;background:var(--ink);color:var(--accent);font:900 28px var(--font-sans);padding:6px 18px 8px;border-radius:4px;letter-spacing:.5px}
+.dark .tag{background:var(--accent);color:var(--ink)}
+.src{position:absolute;left:0;right:0;bottom:0;z-index:30;font:500 22px/1.4 var(--font-sans);color:var(--src-ink);background:var(--src-bg);border-top:2px solid var(--rule);padding:12px 56px 58px}
+.dark .src{color:var(--src-ink-dark);border-color:var(--rule-dark);background:var(--src-bg-dark)}
+
+/* type scale */
+.h0{font:900 170px/1.05 var(--font-sans);letter-spacing:-2px}
+.h1{font:900 112px/1.12 var(--font-sans);letter-spacing:-1px}
+.h2{font:900 76px/1.2 var(--font-sans)}
+.h3{font:900 54px/1.3 var(--font-sans)}
+.b{font:600 46px/1.45 var(--font-sans)}
+.s{font:500 34px/1.45 var(--font-sans)}
+.lab{font:900 30px var(--font-sans);letter-spacing:.5px;color:var(--accent2)}
+.ann{font:700 32px var(--font-sans)}
+.serif{font-family:var(--font-serif)}
+.acc{color:var(--accent)} .acc2{color:var(--accent2)} .mut{color:var(--mut)}
+.yel{color:var(--accent)} .red{color:var(--accent2)}
+
+/* blocks & highlights */
+.blk{display:inline-block;background:var(--accent);color:var(--ink);padding:0 22px;transform:rotate(-1.5deg);box-shadow:8px 8px 0 var(--ink)}
+.blkr{display:inline-block;background:var(--accent2);color:#fff;padding:0 22px;box-shadow:8px 8px 0 var(--ink)}
+.mk{background-image:linear-gradient(var(--accent),var(--accent));background-repeat:no-repeat;background-position:0 88%;background-size:calc(var(--m,0)*100%) 46%;padding:0 6px;margin:0 -6px}
+.mkr{background-image:linear-gradient(var(--accent2-a),var(--accent2-a));color:inherit}
+.strip{background:var(--card);padding:18px 30px 22px;box-shadow:0 14px 30px -14px rgba(0,0,0,.45)}
+.ystrip{background:var(--accent);padding:10px 34px 18px;color:var(--ink)}
+.kstrip{background:var(--ink);color:#fff;padding:12px 30px 18px}
+.note{background:var(--note);padding:30px 34px;box-shadow:0 22px 34px -18px rgba(0,0,0,.5);color:var(--ink)}
+.clip{background:var(--card2);padding:30px 36px;box-shadow:0 18px 40px -18px rgba(0,0,0,.55);border-left:10px solid var(--ink);color:var(--ink)}
+.stamp{display:inline-block;color:var(--accent2);border:7px solid var(--accent2);font:900 64px var(--font-sans);padding:4px 26px 12px;border-radius:10px;opacity:.92}
+.chip{display:inline-block;background:var(--ink);color:#fff;font:700 38px var(--font-sans);padding:8px 24px 12px;margin:0 10px 12px 0}
+.chip b{color:var(--accent)}
+.pin{display:inline-flex;align-items:center;gap:14px;background:var(--ink);color:#fff;font:700 38px var(--font-sans);padding:10px 26px 14px 18px;border-radius:60px}
+.pin svg{width:40px;height:40px;fill:var(--accent2)}
+
+/* media */
+.sh{filter:drop-shadow(0 18px 22px rgba(0,0,0,.35))}
+.ph{overflow:hidden} .ph:not(.a){position:relative} /* never override .a absolute positioning */
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:var(--photo-filter)}
+.ph.bw img{filter:grayscale(1) contrast(1.12)}
+.ht::after{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(0,0,0,.28) 1.3px,transparent 1.8px);background-size:8px 8px;mix-blend-mode:multiply;pointer-events:none}
+.tint::before{content:'';position:absolute;inset:0;background:var(--accent2);mix-blend-mode:multiply;opacity:.55;z-index:1}
+.pol{background:#fff;padding:12px 12px 16px}
+.pol .ph{width:100%}
+.cut{display:block;width:100%}
+svg.ico{display:block}
+.grid{display:grid}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}

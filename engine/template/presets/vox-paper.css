@@ -1,0 +1,13 @@
+/* Preset: Vox-style editorial paper — cream paper, ink, yellow highlighter, red accent. */
+/* NOTE: url() inside a var resolves relative to engine/engine.css (where the var is used) → ../img = project/img */
+:root{
+  --bg:#efe7d6; --bg-dark:#1e1c1a;
+  --tex-light:url(../img/paper.jpg); --tex-dark:url(../img/paper_dark.jpg);
+  --ink:#151515; --ink-on-dark:#f4efe4; --mut:#5f5a52;
+  --accent:#ffc93c; --accent2:#e2333f; --accent2-a:rgba(226,51,63,.85);
+  --card:#fbf8f1; --card2:#f7f3ea; --note:#ffe27a;
+  --src-ink:rgba(21,21,21,.7); --src-bg:rgba(239,231,214,.95); --rule:rgba(21,21,21,.25);
+  --src-ink-dark:rgba(255,255,255,.66); --src-bg-dark:rgba(30,28,26,.95); --rule-dark:rgba(255,255,255,.25);
+  --photo-filter:contrast(1.06) saturate(.82);
+  --font-sans:'Noto Sans Bengali',sans-serif; --font-serif:'Noto Serif Bengali',serif;
+}

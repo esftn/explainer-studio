@@ -1,0 +1,28 @@
+{
+  "palette": "bangla",
+  "_palette_options": "bangla = tanpura drone + dotara + bansuri + tabla + harmonium (raga per mood) | cinematic = felt piano + pads + bass + soft kick (D minor)",
+  "sa_midi": 50,
+  "bpm": 80,
+  "moods": {
+    "intro":  {"raga": "bhupali",  "layers": ["drone", "bansuri"]},
+    "build":  {"raga": "yaman",    "layers": ["drone", "harmonium", "dotara"]},
+    "drive":  {"raga": "yaman",    "layers": ["drone", "harmonium", "dotara", "tabla"]},
+    "somber": {"raga": "bhairavi", "layers": ["drone", "harmonium"]},
+    "elegy":  {"raga": "bhairavi", "layers": ["drone", "bansuri"]},
+    "answer": {"raga": "bhupali",  "layers": ["drone", "harmonium", "dotara"]},
+    "end":    {"raga": "bhupali",  "layers": ["drone"]}
+  },
+  "levels": {
+    "music_lufs": -23.0,
+    "sfx_lufs": -21.0,
+    "vo_clip_lufs": -17.5,
+    "vo_bus_lufs": -16.0,
+    "master_lufs": -14.5,
+    "true_peak_db": -1.5,
+    "vo_duck": 0.6,
+    "impact_duck": 0.35
+  },
+  "sfx_gain": {"click": 0.32, "tick": 0.22, "whoosh": 0.30, "trans": 0.34, "impact": 0.55, "stamp": 0.5, "tone": 0.5, "bell": 0.4, "paper": 0.35, "pop": 0.3},
+  "end_fade_s": 4.6,
+  "seed": 7
+}

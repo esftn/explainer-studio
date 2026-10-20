@@ -1,0 +1,10 @@
+{
+  "name": "explainer-studio-engine",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Fonts for the Explainer Studio HTML-to-video engine",
+  "dependencies": {
+    "@fontsource/noto-sans-bengali": "^5.0.0",
+    "@fontsource/noto-serif-bengali": "^5.0.0"
+  }
+}

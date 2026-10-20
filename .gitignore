@@ -1,0 +1,10 @@
+node_modules/
+__pycache__/
+*.pyc
+.cache/
+.DS_Store
+# project outputs (keep projects outside the repo, or ignore their heavy files)
+out/
+*.mp4
+*.wav
+seg_*.mp4

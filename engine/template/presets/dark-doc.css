@@ -1,0 +1,14 @@
+/* Preset: dark documentary — charcoal, warm white, red + amber accents. Use .bgd backgrounds by default. */
+/* NOTE: url() inside a var resolves relative to engine/engine.css (where the var is used) → ../img = project/img */
+:root{
+  --bg:#1b1a19; --bg-dark:#121110;
+  --tex-light:url(../img/paper_dark.jpg); --tex-dark:url(../img/paper_dark.jpg);
+  --ink:#141414; --ink-on-dark:#f2ede4; --mut:#a59e92;
+  --accent:#f2b134; --accent2:#d63a2f; --accent2-a:rgba(214,58,47,.85);
+  --card:#f5f1e8; --card2:#ece6da; --note:#f2d27a;
+  --src-ink:rgba(255,255,255,.66); --src-bg:rgba(27,26,25,.95); --rule:rgba(255,255,255,.22);
+  --src-ink-dark:rgba(255,255,255,.66); --src-bg-dark:rgba(18,17,16,.95); --rule-dark:rgba(255,255,255,.22);
+  --photo-filter:contrast(1.08) saturate(.7) brightness(.95);
+  --font-sans:'Noto Sans Bengali',sans-serif; --font-serif:'Noto Serif Bengali',serif;
+}
+body{color:var(--ink-on-dark)}
