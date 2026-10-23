@@ -12,7 +12,7 @@ Every rule here exists because skipping it cost a rebuild, a re-render or credit
 
 | Cheap to change (approve first) | Expensive to change (build once) |
 |---|---|
-| Brief · fact sheet · script · emotion map · style frames | Voiceover · full layout · animation · render |
+| Title · facts · script · emotion map · image list | Voiceover · full layout · animation · render |
 
 A video is "first-try ready" when nothing in the right column is built on an unapproved left column.
 
@@ -29,7 +29,7 @@ A video is "first-try ready" when nothing in the right column is built on an una
 6. Voice: provider + paid account, or "I'll record it myself"; voice preference (gender, age, accent)
 7. Brand: colours, handle/logo, end card, CTA
 8. Rules: what must / must not appear; sensitivities (politics, religion, real people)
-9. Four approvals: **brief → script → style frames → preview**
+9. Three approvals (v0.7): **script → preview (look included) → cover pick**. A title alone is enough to start; no brief gate.
 
 **Claude does**: research + fact sheet with sources, script + emotion map, asset prep (resize, cutouts,
 textures, font test), voiceover generation + timing, layout + animation, music + SFX, automated QA,
@@ -37,20 +37,20 @@ contact-sheet review, render, mastering, captions/SRT, cover, caption text, deli
 
 ---
 
-## 2. Pipeline and gates (v0.6: claim/guard, facts gate, one-command Finish; tools check before the creator does)
+## 2. Pipeline and gates (v0.7: every chat starts with `studio.py next`; v0.6 claim/guard, facts gate, one-command Finish)
 
 | # | Phase | Output | Tool gate | Creator |
 |---|---|---|---|---|
-| 0 | **Brief** (Chat 1, batch 1–3 episodes) | `docs/brief.md`, Mac skeleton | — | ✅ brief |
+| 0 | **Title** (Chat 1, batch 1–3 episodes) | `studio.py new` → project, palette (`docs/look.md`), music preset; Claude writes `docs/brief.md` itself | — | gives the title |
 | 1 | **Research** | `facts.json` (+ `docs/fact-sheet.md`) — each fact: URL, exact quote, fetched date, second source/official/single-source note | `script_check.py` + facts gate (`factcheck.py`) | — |
 | 2 | **Script** | `script.json` + `docs/script.md` (with the spoken word each graphic lands on) | `script_check.py` PASS | ✅ script → `state.py approve script` |
 | 2b | **Image list** (after script approval) | table: filename · scene · REAL or AI · Gemini prompt (AI rows) | — | creator makes/finds images |
 | 3 | **VO text** | `vo/vo_paste.txt` (one take, scene-break lines, 2–3 tags) | `vo_text.py` (needs approval) | records one take → `vo/raw/vo_full.mp3` |
 | 4 | **Split + timing** (Chat 2) | `vo/raw/vo_NN.wav`, `vo.js` (durations, anchors, word times) | `vo_split.py` + `vo_prep.py` | — |
-| 5 | **Style frames** | 3 stills in a new look for this episode | — | ✅ style |
-| 6 | **Build + QA** | full timeline with `data-say` cues; key-moment sheet; 540p preview | `audit.py` PASS, `review.py --keys` | ✅ preview + sheet |
+| 5 | **Look** | assigned palette + motif (`studio.py look`); Claude checks its own stills, no separate gate | `studio.py check --stage build` | — |
+| 6 | **Build + QA** | full timeline with `data-say` cues (land 0.25 s early), auto SFX, rotating music; key-moment sheet; 540p preview | `audit.py` PASS (incl. text size + reading time), `review.py --keys`, `studio.py check` | ✅ preview |
 | 7 | **Final** (Chat 3) | reel + feed, `captions.bn_IN.srt` + `captions.en_US.srt`, `publish.txt` | `finish.py` (render, check_final + A/V fix, captions pair, `publint.py`) | — |
-| 8 | **Cover + delivery** | 2 concepts → pick → bake; verified offline copy; tidy; `docs/delivery.md`; generated tracker | `finish.py` then `finish.py --verify` on the Mac | ✅ cover |
+| 8 | **Cover + delivery** | 2 hand-designed concepts (`cover-design.md`, `cover_check.py` PASS) → pick → bake; verified offline copy; tidy; `docs/delivery.md`; generated tracker | `finish.py` then `finish.py --verify` on the Mac | ✅ cover |
 
 Rules:
 - A tool FAIL is fixed before anything is sent to the creator.
@@ -66,11 +66,11 @@ Rules:
 | 1 | **Research** | `fact-sheet.md`: every fact → date → source URL; conflicts flagged | ✅ creator |
 | 2 | **Script** | `script.md` table: scene · VO line · on-screen text · visual/infographic · emotion tag · photo · source | ✅ creator |
 | 3 | **Assets** | photos resized, contact sheet, cutouts, font test sheet, textures | auto-check |
-| 4 | **Style frames** | 3 stills: hook · data/infographic scene · ending | ✅ creator |
+| 4 | **Look** | palette assigned by `studio.py look`; approved with the preview | — |
 | 5 | **Voiceover** | 1–3 long takes → split → trimmed, level-matched clips + anchors | ✅ creator listens |
 | 6 | **Build + QA** | full timeline; `audit.py` (bounds, density, safe zone) passes; contact sheets reviewed by Claude; low-res preview MP4 | ✅ creator watches preview |
 | 7 | **Final** | full-res render (parallel, per-range), audio master, caption, SRT, delivery with md5 check | — |
-| 8 | **Cover** | 2–3 designed cover concepts per `cover-design.md` (topic palette, hero element, question title, trend check) | ✅ creator picks |
+| 8 | **Cover** | 2–3 designed cover concepts per `cover-design.md` (episode palette, real photo/cutout hero, question title without the answer; `cover_check.py` PASS) | ✅ creator picks |
 
 Rules:
 - Never generate VO before the script gate. Never render full-res before the preview gate.

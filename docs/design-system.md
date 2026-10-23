@@ -61,7 +61,8 @@ slight parallax (0.5 s). Counts accept `data-fmt="in"` for Indian grouping (২,
 - `vox-money` preset: **Tiro Bangla** everywhere (one weight; thicken headlines with `-webkit-text-stroke`, never faux bold; avoid ৳, it renders like ট).
 - Headlines: Noto Sans Bengali 900; body: Noto Sans Bengali 500–700; quotes: Noto Serif Bengali 700.
 - Run `tools/font_test.py` before design: digits ০–৯, conjuncts (ক্ষ ষ্ট্র জ্ঞ ন্দ্র ঙ্ক), ং ঃ ঁ, quotes “ ”, ‘ ’, ৳, %.
-- Min sizes at 1080 px width: body 40 px, labels 28 px, sources 22 px.
+- Min sizes at 1080 px width: running text 40 px, labels 34 px (audit FAILs < 30 px), sources 22 px.
+- **Reading time (v0.7.1):** every text stays on screen ≥ 0.6 s + 0.33 s per word (numbers / 1–2 word labels ≥ 1.2 s), counted from 0.25 s after it starts to its `data-out` or scene end. `audit.py` FAILs shorter. Appearing early is fine; appearing late is not. `data-say` lands 0.25 s before the word (`sayLead` in project.json).
 
 ## 8a. Palettes (v0.7) — Vox / Johnny Harris look
 Colours are NOT chosen per episode: `studio.py look` assigns one of 12 contrast-checked palettes (v0.7.1: rebuilt from the colours of episodes 1–5 — calm, printed-paper, no neon) from `engine/studio/palettes.json` (rotating by episode, skipping a family used by the last three episodes) and writes `docs/look.md` with ready-made scene themes (bg / text / highlight / pop) and a motif. Style = flat calm colour blocks, real paper/grain/halftone texture, cutout photos with a thin paper outline and soft shadow, no top/bottom bars, hand-made marks (arrows, circles, underlines, string, stamps, tape), 3–4 colours per scene, big bold type. Edit colours only in `engine/studio/build_palettes.py` (it re-validates contrast).

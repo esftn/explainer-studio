@@ -52,8 +52,8 @@ Re-read the description once against the script: any number or answer found ther
 ## 3. Cover (designed per video)
 **v0.7.1:** design each cover by hand as `cover_<name>.html` (cover-design.md), render with `cover.py`, then `python3 engine/tools/cover_check.py videoNN cover_<name>.html` must print `COVER PASS`; LOOK at the sheet before sending.
 
-Follow `cover-design.md`: the episode's own palette (`docs/look.md`) — and different from the last three covers (cover log, grep that section only), one hero element, question title, quick
-trend check, 2 concepts → `cover.py` review sheets → creator picks. Save `out/cover_reel_9x16.png` +
+Follow `cover-design.md`: the episode's own palette (`docs/look.md`) — and different from the last three covers (cover log, grep that section only), one real photo/cutout hero, question title without the answer,
+no top/bottom bars, 2 concepts → `cover.py` review sheets → creator picks. Save `out/cover_reel_9x16.png` +
 `out/cover_feed_4x5.png`; other concepts to `drafts/`. After confirmation `finish.py … --cover <NAME>` copies the chosen
 `out/_cover_<NAME>_9x16.png/_4x5.png` into place, bakes both videos (once — it checks frame 1 first) and records `approve cover`.
 

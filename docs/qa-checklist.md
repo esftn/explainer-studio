@@ -15,7 +15,9 @@
 - [ ] Bounds: no text outside the frame / into the source band at any 0.1 s step
 - [ ] 4:5 feed zone: all text inside y 285–1635 (except source line / `data-zone="band"`)
 - [ ] No text on text, no text covered by a graphic; text touching a graphic edge checked on the sheet
-- [ ] Contrast against what is actually behind each text (screenshot); size ≥ 26 px
+- [ ] Contrast against what is actually behind each text (screenshot); size ≥ 30 px (running text ≥ 40 px)
+- [ ] Reading time: each text on screen long enough to read (0.6 s + 0.33 s/word; labels/numbers ≥ 1.2 s)
+- [ ] `studio.py check videoNN --stage build` PASS (palette, music, SFX, moods, ending)
 - [ ] Key numbers tied to the spoken word (`data-say`), every `data-say` word found in its scene's VO
 - [ ] On-screen numbers found in `facts.json` · density ≥ 55 % · assets/fonts load · length ≤ max_len
 
@@ -26,5 +28,5 @@ highlighted spoken word under each cue frame matches the graphic; spelling of Ba
 
 **Delivery** (`tools/check_final.py`, `tools/pack.py`):
 - [ ] Reel 1080×1920 and feed 1080×1350 PASS · captions start on spoken words (`make_srt.py`)
-- [ ] Cover designed, picked, baked into both videos (`bake_cover.py` PASS)
+- [ ] Cover hand-designed, `cover_check.py` COVER PASS (size, zones, palette, no spoiler), picked, baked into both videos (`bake_cover.py` PASS)
 - [ ] `pack.py unpack` on the Mac prints VERIFIED · `pack.py check --final` prints LAYOUT OK (out/ = finals only)

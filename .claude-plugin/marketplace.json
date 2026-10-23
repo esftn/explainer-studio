@@ -1,11 +1,14 @@
 {
   "name": "esftn-explainer-studio",
-  "owner": { "name": "Esoft" },
+  "owner": {
+    "name": "Esoft"
+  },
   "plugins": [
     {
       "name": "explainer-studio",
       "source": "./",
-      "description": "Industry-grade explainer videos (Bangla first) with Claude: brief → research → script → VO → Vox-style animation → original music/SFX → QA-gated render."
+      "description": "Vox / Johnny-Harris-style explainer shorts (Bangla first) with Claude: same step card every chat, calm rotating palettes, rotating music + automatic SFX, readable on-screen text, hand-designed spoiler-free covers, QA-gated render, auto status.",
+      "version": "0.7.2"
     }
   ]
 }
