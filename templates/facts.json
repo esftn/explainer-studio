@@ -1,0 +1,68 @@
+{
+ "_how": "Every number the video says or shows. script_check.py reads this. role: now = anything presented as current (must be ≤12 months old) | before = an explicit earlier point | context = background. chain: true only if the fact is about the yardstick or a link of the chain below; anything else gets cut. key: a name to use in math (the same key must have the same value in every episode — ../_series/shared_facts.json). math: every comparison/derived number, written with keys. v0.6 FACTS GATE — each fact that is not an invented example needs: url (the exact page, not the site's front page), quote (the exact sentence from that page that contains the number), fetched (the date you read it), and ONE of: second_source {source,url,quote} | official: true (primary agency dataset) | single_source_note (the caveat that goes into the pinned comment). Invented examples (the ১০০-টাকার গ্রাম) are marked illustrative: true and need no source. If two sources differ, use one fact per source, say which in `source`, and never write 'unverified' — resolve it first.",
+ "yardstick": "one litre of bottled soybean oil",
+ "chain": "dollar → importer → wholesaler → shop → your bazaar bag",
+ "facts": [
+  {
+   "id": "F1",
+   "scenes": [
+    3
+   ],
+   "claim": "১ ডলার ≈ ১২৩ টাকা (এখন)",
+   "key": "dollar_now",
+   "value": 123.67,
+   "date": "2026-10-20",
+   "role": "now",
+   "chain": true,
+   "source": "Bangladesh Bank, exchange rate",
+   "url": "https://www.bb.org.bd/en/index.php/econdata/exchangerate",
+   "quote": "USD 1 = BDT 123.67",
+   "fetched": "2026-10-21",
+   "official": true
+  },
+  {
+   "id": "F2",
+   "scenes": [
+    3
+   ],
+   "claim": "১ ডলার ≈ ৮৬ টাকা (২০২১)",
+   "key": "dollar_before",
+   "value": 85.8,
+   "date": "2021",
+   "role": "before",
+   "chain": true,
+   "source": "Bangladesh Bank",
+   "url": "https://www.bb.org.bd/en/index.php/econdata/exchangerate",
+   "quote": "USD 1 = BDT 85.80 (2021 average)",
+   "fetched": "2026-10-21",
+   "official": true
+  },
+  {
+   "id": "F3",
+   "scenes": [
+    2
+   ],
+   "claim": "উদাহরণ: ১০ জনের পাড়া",
+   "key": "example_people",
+   "value": 10,
+   "date": "2026-10",
+   "role": "context",
+   "chain": true,
+   "source": "illustrative example",
+   "url": "",
+   "illustrative": true
+  }
+ ],
+ "math": [
+  {
+   "id": "M1",
+   "scenes": [
+    4
+   ],
+   "claim": "একই ১ ডলারের তেলে +৩৭ টাকা",
+   "expr": "int(dollar_now) - round(dollar_before)",
+   "expect": 37,
+   "tol": 0.01
+  }
+ ]
+}

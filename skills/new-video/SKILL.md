@@ -3,49 +3,45 @@ name: new-video
 description: Start a new explainer video project and collect everything needed from the creator up front. Use when the user says "new video", "make a video about…", "start an explainer", "নতুন ভিডিও", or gives a topic for a video without a brief yet.
 ---
 
-# New video — intake and brief
+# New video(s) — intake, Mac folder, brief  (Chat 1 · Plan)
 
-Goal: one short round of questions, then a filled `brief.md` the creator approves. Ask only what you
-cannot infer; never ask about things the engine decides (layout, animation, SFX timing).
+> **v0.7:** the order of work is the step card printed by `python3 engine/tools/studio.py next videoNN` (it wins over anything below that conflicts). This file is the technique reference for your current step; do not read it start to finish.
+
+Goal: one short round of questions for up to 3 episodes, the episode folders ready on the Mac, and a brief per
+episode the creator approves. Ask only what you cannot infer; never ask about what the engine decides.
 
 ## 1. Read
-`../../docs/PLAYBOOK.md` §1 (roles) and §11 (getting started), and `../../templates/brief.md`.
+The project's series brief (`claude/series-brief.md`: house defaults, shared figures, cover log, lessons),
+`../../docs/PLAYBOOK.md` §1 and `../../templates/brief.md`. Batch: if the creator gives several topics, handle
+them together — shared research, one question round, briefs side by side.
 
-## 2. Fill in what you already know
-From the request and the conversation: topic, angle, language, platform, tone. Run a quick web search to
-scope the topic (2–4 searches) so your questions are informed (e.g. "two sources disagree on the date").
-Open every link or file the creator gave. List any that wouldn't open and ask for the text.
+## 2. Scope (quick, standard search mode)
+2–4 searches per topic so the questions are informed (angles, the obvious yardstick, recent figures).
 
-## 3. Ask about the gaps in ONE AskUserQuestion call (max 4 questions; skip any already answered)
-Priority order:
-1. **Central question and takeaway:** the question the video answers and the one sentence viewers should
-   remember. Offer 2–3 angles you found.
-2. **Format and platform:** Short 9:16 (Facebook Reels ≤ 90 s, recommended for Bangladesh; Shorts ≤ 2:59) ·
-   Long 16:9 YouTube (chapters of 45–90 s) · both.
-3. **Voice:** own recording (best for monetisation) · ElevenLabs (paid plan? the free tier blocks generation
-   and has no commercial licence) · Gemini TTS (free; lists Bangla) · text only. Character: Dhaka-standard,
-   male or female.
-4. **Look and sound:** VOX (paper collage, vox-paper) · HARRIS (maps and archival photos, dark-doc) · MIX;
-   music bangla-folk or cinematic. Mention whether AI illustrations are allowed for symbolic beats.
+## 3. Ask the gaps in ONE AskUserQuestion call (max 4 questions across all episodes) — v0.7: when the title is clear, ask nothing and go on
+Takeaway & angle (offer 2–3), yardstick, anything the series brief doesn't settle. The series brief already
+fixes platform, length (≤60 s), voice, preset family and endings — don't re-ask them.
+In plain text, list the photos to drop in `videoNN/images/` (hero object, places, people) — creator photos
+beat scraping.
 
-Then, in plain text, ask two quick yes/no questions (the creator can answer in one line):
-- **Monetised?** If yes, every asset needs a commercial-use licence.
-- **First video?** If yes, suggest a 60-second pilot first.
-
-Also list what they should drop into `photos/`: 20–40 images for 2–3 minutes, including a hero photo, with
-the source and licence for each if known. Add brand items (handle, end card, CTA) and any sources, notes or
-transcripts to use. Photos from the creator save the most time and credits; scraping is the last resort
-(small batches through the browser pane, never hammering a site).
-
-## 4. Create the project
+## 4. Create the folders
+v0.7: in the cloud workspace use `python3 engine/tools/studio.py new videoNN --title "<title>" --ep NN` instead of `new_project.py` — it also assigns the episode's Vox-style palette and music preset. Do this AFTER the script is approved (state stage `folders-ready`).
+**On the Mac** (series home `~/Documents/VIDEO GEN/videoNN`): the creator makes `videoNN/` (+ `images/`)
+and connects it with "Add folder". Then create the standard skeleton there, so later they only drop files in:
 ```bash
-python3 engine/tools/new_project.py <slug> --title "<title>" --aspect 9:16 --preset vox-paper --palette bangla [--monetized]
+# cloud: copy pack.py over (device_commit_files → videoNN/.studio/pack.py), then on the Mac (device_bash):
+python3 "$HOME/mnt/videoNN/.studio/pack.py" skeleton "$HOME/mnt/videoNN"
 ```
-For 16:9 use `--aspect 16:9`. For both, create `<slug>-916` and `<slug>-169`; the second reuses the first
-one's `vo/raw/` and `photos/`. Write the answers into `<slug>/brief.md` and copy the creator's photos into
-`<slug>/photos/`.
+`new_project.py` puts `pack.py guard.py state_check.py publint.py series_tracker.py finish.py tidy.py` into `videoNN/.studio/`; push that folder
+with the project. A copy of the same seven files belongs in `VIDEO GEN/_series/tools/` (copy once when the plugin is updated).
+**In the cloud workspace** (where all the work happens):
+```bash
+python3 engine/tools/new_project.py videoNN --title "<title>" --ep NN --preset vox-money --palette cinematic
+```
+This makes the same layout (out/ docs/ drafts/ vo/raw vo/unused img/ images/), `facts.json`, `state.json`.
 
-## 5. Gate
-Send the brief as a short summary: central question, takeaway, angle, audience, format and aspect, voice,
-look, whether it's monetised, and what's missing. Say what is still cheap to change. Wait for approval,
-then hand off to `video-script`.
+## 5. Brief → gate
+v0.7: if the creator gave only a title there is NO brief gate: write `docs/brief.md` for yourself, run `state.py videoNN approve brief --note 'title given'` and go straight to `video-script`. Ask for approval only of the script.
+Write `docs/brief.md`. Send it as a short summary per episode (takeaway, angle, yardstick, chain, look idea,
+photos needed). Say what is cheap to change now. On approval: `state.py videoNN approve brief`, then
+`video-script` in the same chat.

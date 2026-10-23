@@ -4,25 +4,83 @@
   "sa_midi": 50,
   "bpm": 80,
   "moods": {
-    "intro":  {"raga": "bhupali",  "layers": ["drone", "bansuri"]},
-    "build":  {"raga": "yaman",    "layers": ["drone", "harmonium", "dotara"]},
-    "drive":  {"raga": "yaman",    "layers": ["drone", "harmonium", "dotara", "tabla"]},
-    "somber": {"raga": "bhairavi", "layers": ["drone", "harmonium"]},
-    "elegy":  {"raga": "bhairavi", "layers": ["drone", "bansuri"]},
-    "answer": {"raga": "bhupali",  "layers": ["drone", "harmonium", "dotara"]},
-    "end":    {"raga": "bhupali",  "layers": ["drone"]}
+    "intro": {
+      "raga": "bhupali",
+      "layers": [
+        "drone",
+        "bansuri"
+      ]
+    },
+    "build": {
+      "raga": "yaman",
+      "layers": [
+        "drone",
+        "harmonium",
+        "dotara"
+      ]
+    },
+    "drive": {
+      "raga": "yaman",
+      "layers": [
+        "drone",
+        "harmonium",
+        "dotara",
+        "tabla"
+      ]
+    },
+    "somber": {
+      "raga": "bhairavi",
+      "layers": [
+        "drone",
+        "harmonium"
+      ]
+    },
+    "elegy": {
+      "raga": "bhairavi",
+      "layers": [
+        "drone",
+        "bansuri"
+      ]
+    },
+    "answer": {
+      "raga": "bhupali",
+      "layers": [
+        "drone",
+        "harmonium",
+        "dotara"
+      ]
+    },
+    "end": {
+      "raga": "bhupali",
+      "layers": [
+        "drone"
+      ]
+    }
   },
   "levels": {
     "music_lufs": -23.0,
-    "sfx_lufs": -21.0,
+    "sfx_lufs": -27.0,
     "vo_clip_lufs": -17.5,
     "vo_bus_lufs": -16.0,
     "master_lufs": -14.5,
     "true_peak_db": -1.5,
     "vo_duck": 0.6,
-    "impact_duck": 0.35
+    "impact_duck": 0.2
   },
-  "sfx_gain": {"click": 0.32, "tick": 0.22, "whoosh": 0.30, "trans": 0.34, "impact": 0.55, "stamp": 0.5, "tone": 0.5, "bell": 0.4, "paper": 0.35, "pop": 0.3},
-  "end_fade_s": 4.6,
-  "seed": 7
+  "sfx_gain": {
+    "click": 0.22,
+    "tick": 0.12,
+    "whoosh": 0.2,
+    "trans": 0.22,
+    "impact": 0.3,
+    "stamp": 0.28,
+    "tone": 0.26,
+    "bell": 0.25,
+    "paper": 0.25,
+    "pop": 0.2
+  },
+  "end_fade_s": 1.0,
+  "seed": 7,
+  "end_chord_s": 4.4,
+  "_end_note": "end_chord_s: the closing chord lands this many seconds before the end and rings through the hold; end_fade_s only cleans the last second so the final VO line is never faded"
 }

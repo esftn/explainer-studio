@@ -5,6 +5,7 @@
   "description": "Fonts for the Explainer Studio HTML-to-video engine",
   "dependencies": {
     "@fontsource/noto-sans-bengali": "^5.0.0",
-    "@fontsource/noto-serif-bengali": "^5.0.0"
+    "@fontsource/noto-serif-bengali": "^5.0.0",
+    "@fontsource/tiro-bangla": "^5.0.0"
   }
 }

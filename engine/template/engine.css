@@ -1,20 +1,23 @@
 /* Explainer Studio base styles — preset files set the CSS variables and textures. */
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{width:var(--W,1080px);height:var(--H,1920px);overflow:hidden;background:#000} /* black behind scenes: the final fade goes to black */
+html,body{width:1080px;height:1920px;overflow:hidden;background:#000} /* black behind scenes: the final fade goes to black */
 body{font-family:var(--font-sans);color:var(--ink);position:relative}
 .scene{position:absolute;inset:0;display:none;overflow:hidden}
 .bgp{position:absolute;inset:-40px;background:var(--tex-light) center/cover,var(--bg)}
 .bgd{position:absolute;inset:-40px;background:var(--tex-dark) center/cover,var(--bg-dark)}
-.cam{position:absolute;left:0;top:0;width:var(--W,1080px);height:var(--H,1920px);transform-origin:50% 50%}
-.fix{position:absolute;left:0;top:0;width:var(--W,1080px);height:var(--H,1920px);z-index:10}
+.cam{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 960px}
+.fix{position:absolute;left:0;top:0;width:1080px;height:1920px;z-index:10}
 .a{position:absolute}
 .dark{color:var(--ink-on-dark)}
 
 /* chrome */
-.tag{position:absolute;left:56px;top:78px;z-index:20;background:var(--ink);color:var(--accent);font:900 28px var(--font-sans);padding:6px 18px 8px;border-radius:4px;letter-spacing:.5px}
+/* .tag = optional internal chapter chip; NOT used in videos by default (creators found it distracting) */
+.tag{position:absolute;left:56px;top:200px;z-index:20;background:var(--ink);color:var(--accent);font:900 28px var(--font-sans);padding:6px 18px 8px;border-radius:4px;letter-spacing:.5px}
 .dark .tag{background:var(--accent);color:var(--ink)}
-.src{position:absolute;left:0;right:0;bottom:0;z-index:30;font:500 22px/1.4 var(--font-sans);color:var(--src-ink);background:var(--src-bg);border-top:2px solid var(--rule);padding:12px 56px 58px}
-.dark .src{color:var(--src-ink-dark);border-color:var(--rule-dark);background:var(--src-bg-dark)}
+/* source line: plain text in the bottom band (outside the 4:5 feed crop), no rule line, even spacing */
+.src{position:absolute;left:56px;right:56px;top:1712px;z-index:30;font:500 24px/1.4 var(--font-sans);color:var(--ink);opacity:.72}
+.dark .src{color:var(--ink-on-dark)}
+.srcpill{display:inline-block;background:var(--bg);padding:6px 16px 9px;border-radius:6px}
 
 /* type scale */
 .h0{font:900 170px/1.05 var(--font-sans);letter-spacing:-2px}
@@ -58,12 +61,3 @@ body{font-family:var(--font-sans);color:var(--ink);position:relative}
 svg.ico{display:block}
 .grid{display:grid}
 .row{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
-
-/* 16:9 (landscape): no platform UI at the bottom → slimmer source band, tag nearer the corner */
-.land .src{padding:12px 64px 16px}
-.land .tag{left:64px;top:48px}
-/* recreated documents must say so */
-.recreation{position:absolute;right:18px;bottom:14px;font:700 22px var(--font-sans);color:var(--mut);letter-spacing:.5px}
-.doc{background:var(--card);color:var(--ink);padding:40px 46px 70px;box-shadow:0 22px 40px -18px rgba(0,0,0,.5)}
-.doc .mast{font:700 54px/1.1 var(--font-serif);border-bottom:4px double var(--ink);padding-bottom:12px;margin-bottom:18px}
-.doc .dl{font:500 40px/1.5 var(--font-serif)}

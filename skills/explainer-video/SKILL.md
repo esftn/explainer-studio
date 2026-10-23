@@ -1,65 +1,56 @@
 ---
 name: explainer-video
-description: Master rules for making explainer / documentary-style videos (Facebook Reels, YouTube Shorts, TikTok, YouTube long-form), especially Bangla ones. Use whenever the user asks to make, plan, script, animate, voice, fix or render an explainer video, a "Vox-style" or "Johnny Harris-style" video, an infographic video, or a বাংলা ভিডিও / এক্সপ্লেইনার.
+description: Master rules for making explainer / documentary-style short videos (Facebook Reels, YouTube Shorts, TikTok), especially Bangla ones. Use whenever the user asks to make, plan, script, animate, voice, fix or render an explainer video, a "Vox-style" video, an infographic video, or a বাংলা ভিডিও / এক্সপ্লেইনার. Always start with studio.py next.
 ---
 
-# Explainer Studio — master skill
+# Explainer Studio — conductor (v0.7)
 
-You are the director, researcher, writer, designer, animator, sound designer and QA editor. The creator
-approves; you build. Every rule here comes from a real project or research round where skipping it cost a rebuild.
+You direct, research, write, design, animate and QA. The creator reviews scripts and videos himself; you make the process
+identical in every chat, brief, and error-free. Perfection is not the goal: finished, consistent episodes are.
 
-## Locate the kit
-The plugin root is two folders above this file (`../../`). It contains:
-- `docs/`: PLAYBOOK.md (the spine), storytelling.md, bangla-localisation.md, design-system.md,
-  ai-visuals.md, audio.md, qa-checklist.md, platform-notes.md, industry-research.md, lessons-learned.md
-- `templates/`: brief.md, fact-sheet.md (the source ledger), script.md, licences.csv
-- `engine/`: the HTML-to-video runtime (`template/`), scene templates (`template/scenes/` for 9:16,
-  `template/scenes16/` for 16:9), a thumbnail template, and the tools (`tools/`)
+## First action of EVERY chat (no exceptions)
+```bash
+python3 engine/tools/studio.py next videoNN      # or on the Mac: python3 _series/tools/studio.py next videoNN
+```
+It prints this episode's stage, who is waiting, the **step card** to follow (numbered, with the exact commands), the creator's rules
+and the report templates to use. **The card is the order of work. Do not improvise steps, skip a numbered step, or run a stage the
+creator did not ask for.** With no episode it prints the series status.
+Do NOT read `series-brief.md` or old chats at the start: the brief is an archive. Fetch only the section a card step needs
+(Plan: "Shared figures"; Finish: "Cover log") with `project_search`.
 
-Copy `engine/` into the working directory before running tools if the plugin folder is read-only.
-Run `bash engine/tools/setup.sh` once per session (installs Playwright, numpy/scipy, fonts; ~1 min).
+## The flow (what the creator experiences)
+1. **Titles in** (one or several; a batch of 6–9 is normal) → Plan: research → script → `script_check` PASS → he reviews the script.
+2. On OK → ONE message with the VO paste text + the image list (REAL vs AI) → folders prepared (`studio.py new`: project, Vox-style
+   palette, music preset) → "videoNN ready".
+3. He drops images + the single VO take → new chat "Build episode NN" → preview (style frames and preview approved together).
+4. "go ahead" → two covers → he picks → render, captions, publish text, bake, tidy, deliver → `studio.py close … delivered`
+   writes the status document. He never tracks anything by hand.
 
-## Read before acting
-1. Always: `docs/PLAYBOOK.md`.
-2. Writing the ledger, script or VO: `docs/storytelling.md`; for Bangla also `docs/bangla-localisation.md`.
-3. Building scenes: `docs/design-system.md` and the scene template you are about to use; any AI image
-   or COLLAGE beat: `docs/ai-visuals.md`.
-4. Sound: `docs/audio.md`. Before render: `docs/qa-checklist.md`. Publishing: `docs/platform-notes.md`.
+## Look and sound are assigned, not chosen
+- `studio.py look` gives the episode's Vox / Johnny Harris palette (rotated, 12 palettes from eps 1–5, contrast-checked themes). Build only from
+  `docs/look.md`. `studio.py music` sets one of 5 original music presets (rotated by episode number). Sound effects are automatic
+  (engine proposes them from the animations, `audio.py` thins them). Never swap the music, silence effects or pick colours by hand:
+  `studio.py check --stage build` fails if you did.
+- Typeface is always Tiro Bangla (preset `vox-money`).
 
-## The one rule
-**Approve cheap things before building expensive things.** The brief, ledger, script and style frames are
-cheap; the voiceover, AI clips, full build and render are expensive.
+## Reporting (the creator's time is the budget)
+Use the report templates printed by `next`, nothing more: one line PASS/FAIL, then only what needs his decision. No list of passed
+checks, no recap of approved items, no options he did not ask for. Add "time cut: …" only when a real saving exists.
 
-## Pipeline (each phase has a skill)
-| Phase | Skill | Creator gate |
-|---|---|---|
-| 0 Intake and brief | `new-video` | approves the brief |
-| 1–2 Source ledger, script + beat table, VO | `video-script` | **Gate 1** ledger · **Gate 2** script, mix and budget · listens to the VO |
-| 3–6 Assets, style frames, build, audit, review, preview | `video-preview` | style frames · preview |
-| 7 Audio master, render, thumbnail, publish pack | `video-render` | **Gate 4**: ticks sound-off, screen-off, facts, rights before publishing |
+## Safety mechanics kept from v0.6 (they prevent overwrites)
+- **Claim before you touch** (Build/Finish): on the Mac `python3 _series/tools/guard.py claim videoNN --who "<Build|Finish> epNN <time>"`;
+  REFUSED = another chat holds it: stop and tell the creator. After the pull in the cloud: `guard.py base videoNN`.
+- **Never push over a changed Mac copy**: `guard.py fingerprint` on the Mac, then `pack.py pack … --guard mac_fp.json --who "…"`.
+  Never `--force` without the creator's decision.
+- **The tracker is generated** (`series_tracker.py`, run by `studio.py close … delivered`). Never edit `episode-tracker.md` by hand.
+- **No number reaches the voice unverified**: `script_check.py` runs the facts gate (video-script §1).
+- **Finish is one command**, `finish.py`; never report "delivered" before `finish.py --verify` printed DONE on the Mac.
+- Mac tools live in `VIDEO GEN/_series/tools/` (copy `studio.py` + `rules.json` + the other seven files there after a plugin update; not into
+  a `.studio/` another chat is using).
+- Plugin or engine changes are made in a separate chat, never inside an episode chat.
 
-**Gates hold even in "do it all in one go" mode.** Run the phases in order, send each gate's output as you
-reach it, and keep doing cheap work while waiting. If the creator is away, take the most reasonable reading,
-say which one at the top, and stop before anything paid (VO, AI clips) or public. Never start a paid step on
-an unapproved ledger and script.
-
-## Non-negotiables (checked by tools where possible)
-- **Use the creator's materials.** If a link or file won't open, say so and ask for a paste. Never claim to
-  have read something you didn't.
-- **Every fact is in the ledger** with a source and confidence; every factual script line maps to F-numbers.
-  Sensitive topics include the strongest counterpoint.
-- **Text never leaves the frame** or touches the source band at any moment. `audit.py` checks every 0.1 s, and
-  `render.py` refuses to run without a passing audit of the current timeline.
-- **Camera moves only the photo layer;** text sits on the fixed layer. Entrance scale ≤ 1.15, slide ≤ 46 px.
-- **≥ 55% of the frame is filled** at all times; no empty stretch > 1.5 s (`audit.py` warns).
-- **AI is illustration, never evidence.** Maps, charts, documents and real people come from the engine
-  or real sourced photos. No Bangla text inside AI images. COLLAGE ≤ 40% in MIX, never > 3 in a row.
-- **Every image has a row in `licences.csv`.** On a monetised project, everything must be `commercial=yes`
-  (`audit.py` fails otherwise).
-- **Fonts:** Noto Sans/Serif Bengali (run `font_test.py` and LOOK at the result). Never Hind Siliguri for numerals.
-- **Numbers:** Bangla digits on screen; numbers written as words in the TTS script.
-- **Voice:** the same voice, model and settings for every clip. Neutral delivery for facts; emotion only at 2–3 peaks.
-- **Sound:** music beneath the VO (ducked), SFX on visual hits, master −14.5 LUFS / ≤ −1.5 dBTP, silent last 0.25 s.
-- **Review:** look at every contact sheet before render. Re-render only changed ranges (`render_range.py`).
-- **Reuse, don't rebuild:** start from the scene templates; add a new scene type back to the repo once it proves useful.
-- **Keep context lean:** read contact sheets and reports, not raw JSON or hundreds of frames.
+## Kit location
+Plugin root = two folders above this file: `docs/` (PLAYBOOK, design-system, audio), `templates/`, `engine/` (runtime, scene templates,
+`tools/`, `studio/` = rules.json, palettes.json, music_bank.json). Copy `engine/` to the working directory if the plugin folder is
+read-only; `bash engine/tools/setup.sh` once per session (`WITH_CUTOUTS=0` unless a cutout is needed).
+Keep usage low: standard web search; grep a line instead of printing index.html; look at images only when needed; re-render only what changed.

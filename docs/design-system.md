@@ -1,21 +1,13 @@
 # Design System (style-independent rules + engine conventions)
 
 ## 1. Canvas & layers
-- **9:16** 1080×1920 (Reels, Shorts, TikTok) or **16:9** 1920×1080 (YouTube long-form), 30 fps. Set with
-  `new_project.py --aspect 16:9`; for both, make two projects that share `vo/` and `photos/`.
-  Each `<section class="scene">` has:
+- 1080×1920, 30 fps. Each `<section class="scene">` has:
   1. `.bgp`/`.bgd` texture background (paper / dark)
   2. `.cam` — **camera layer**: photos, cutouts, full-bleed images, decorative shapes (`data-layer="cam"`). Camera keyframes (`data-cam="t:scale:x:y|..."`) move only this layer.
   3. `.fix` — **text/graphics layer** (auto-created): every element without an `<img>` moves here unless `data-layer="cam"`. Never zoomed.
   4. `.tag` chapter chip (top-left) and `.src` source band (bottom, always on top, own background).
-- Safe area for text: **9:16** x 56–1024, y 150–1790 (platform UI covers the bottom ~20% on Reels/TikTok;
-  the source band lives there because it's low-priority text). **16:9** x 64–1856, y 60–1020 (source band
-  below 1020; keep key text out of the bottom-right corner, where YouTube shows end-screen elements in the
-  last 20 s).
-- Scene attributes: `data-vo` (VO clip) · `data-mood` (music section) · `data-type` (beat type: PHOTO, MAP,
-  CHART, DOCUMENT, TEXT, TIMELINE or COLLAGE; `audit.py` reports the mix) · `data-twos="12"` (stop-motion
-  cadence: animations step at 12 fps) · `data-shake="2"` (subtle hand-held jitter of the photo layer, in px)
-  · `data-density="off"` (skip the density check, e.g. a deliberate black pause).
+- **4:5 feed zone: key content inside y 285–1635** (Facebook timeline previews/autoplays Reels as 4:5). Bands above/below carry bleed so the full 9:16 never looks empty.
+- Safe area for text: x 56–1024, y 150–1790. Platform UI covers the bottom ~20% on Reels/TikTok; the source band lives there because it's low-priority text.
 
 ## 2. Motion vocabulary (`data-a`)
 | Anim | Use | Limits |
@@ -30,6 +22,10 @@
 | `rot` | clock hands, dials | `data-from`, `data-to` deg |
 | `strike` | red strike-through | |
 Timing attributes: `data-t` (start, s from scene start), `data-d` (duration), `data-out` (fade-out time), `data-sfx` (click|tick|whoosh|impact|stamp|tone|bell|paper).
+
+Easing (engine.js): expo-out for entrances (quick start, long soft settle, default 0.7 s), quart in-out for
+bars/stacks/counts, gentle back-out (overshoot ≈4%) for pops. Scene change = colour wipe from the right with
+slight parallax (0.5 s). Counts accept `data-fmt="in"` for Indian grouping (২,০০,০০,০০০).
 
 ## 3. Camera
 - Purposeful only: push-in to focus, pull-out to reveal scale (crowds), pan to follow a path.
@@ -54,36 +50,26 @@ Timing attributes: `data-t` (start, s from scene start), `data-d` (duration), `d
 | `split-portrait` | two portraits + linking phrase |
 | `ending-mural` | full-bleed photo, dark gradient, 3 closing lines |
 | `credits` | sources + photo credits |
-| `document-clip` | recreated headline/report with a highlighted phrase, labelled **পুনর্নির্মিত** (recreation) |
-| `collage-parallax` | AI or photo layers (plate, hero, supporting) entering back to front, then a living-poster hold |
-
-16:9 versions live in `engine/template/scenes16/` (`hook-quote`, `big-number`, `comparison-bar`,
-`map-pin`, `document-clip`, `collage-parallax`, `ending-mural`). Landscape layouts put the photo on one side
-and text on the other, rather than stacking them.
-
-**Beat types → templates.** PHOTO: `photo-collage`, `split-portrait`, `ending-mural` · MAP: `map-pin` ·
-CHART: `big-number`, `comparison-bar`, `icon-grid`, `tick-timeline` · DOCUMENT: `document-clip` · TEXT:
-`hook-quote` · TIMELINE: `timeline-vertical`, `calendar-clock` · COLLAGE: `collage-parallax` (rules in
-`ai-visuals.md`). Reuse templates instead of building one-off scenes; add a scene type that proves useful back
-to the repo.
 
 ## 6. Infographic rules
-- Facts are drawn by the engine from the source ledger: maps from open data (Natural Earth is public domain,
-  OpenStreetMap needs attribution), numbers from F-numbers. Never use an AI image for a map, chart or document.
-- Disputed borders and names: check them, and say whose map it is.
 - One number per screen as the hero; always give a comparison or unit (“২০ বার”, “৩২ বনাম ৭২.৩”).
 - Annotate: arrows, half-marks, brackets, labels — explain the chart in the chart.
 - Draw in the order the voice explains it.
 - Icons > pie charts for counts under ~40.
 
 ## 7. Typography (Bangla)
+- `vox-money` preset: **Tiro Bangla** everywhere (one weight; thicken headlines with `-webkit-text-stroke`, never faux bold; avoid ৳, it renders like ট).
 - Headlines: Noto Sans Bengali 900; body: Noto Sans Bengali 500–700; quotes: Noto Serif Bengali 700.
 - Run `tools/font_test.py` before design: digits ০–৯, conjuncts (ক্ষ ষ্ট্র জ্ঞ ন্দ্র ঙ্ক), ং ঃ ঁ, quotes “ ”, ‘ ’, ৳, %.
 - Min sizes at 1080 px width: body 40 px, labels 28 px, sources 22 px.
 
+## 8a. Palettes (v0.7) — Vox / Johnny Harris look
+Colours are NOT chosen per episode: `studio.py look` assigns one of 12 contrast-checked palettes (v0.7.1: rebuilt from the colours of episodes 1–5 — calm, printed-paper, no neon) from `engine/studio/palettes.json` (rotating by episode, skipping a family used by the last three episodes) and writes `docs/look.md` with ready-made scene themes (bg / text / highlight / pop) and a motif. Style = flat calm colour blocks, real paper/grain/halftone texture, cutout photos with a thin paper outline and soft shadow, no top/bottom bars, hand-made marks (arrows, circles, underlines, string, stamps, tape), 3–4 colours per scene, big bold type. Edit colours only in `engine/studio/build_palettes.py` (it re-validates contrast).
+
 ## 8. Style presets (`engine/template/presets/`)
 - `vox-paper.css` — cream paper, ink, yellow highlighter, red accent, halftone, torn strips, sticker cutouts.
 - `dark-doc.css` — charcoal documentary, red/yellow accents.
+- `vox-money.css` — Vox "Your money, explained": per-scene colour themes (money green, graph paper, blueprint, sky, Vox yellow, teal map, ink) with matching textures; Tiro Bangla.
 Add new presets as CSS variable sets; layouts stay identical.
 
 ## 9. Density rule

@@ -1,7 +1,7 @@
 {
   "name": "explainer-studio",
-  "version": "0.2.0",
-  "description": "Make industry-grade explainer videos (Bangla first) with Claude: brief → source ledger → script + beat table → voiceover → Vox/Harris-style HTML animation (9:16 or 16:9) → original music/SFX → QA-gated render → thumbnail + publish pack.",
+  "version": "0.7.2",
+  "description": "Make Vox / Johnny-Harris-style explainer videos (Bangla first) with Claude: one step card per stage, rotating palettes and music, automatic sound effects, QA-gated render and an auto-written status document.",
   "author": {
     "name": "Esoft"
   },

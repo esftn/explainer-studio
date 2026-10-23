@@ -1,0 +1,73 @@
+/* Preset: vox-money — Vox "Your money, explained" look (first used on ১ কোটি বনাম ১,০০০ কোটি, Oct 2026).
+   Use with --preset vox-money. Builds on vox-paper variables; adds:
+   · Tiro Bangla type (single weight; headlines thickened with -webkit-text-stroke, never faux bold; avoid the ৳ glyph)
+   · per-scene colour themes: put a theme class on the <section> and a texture class on its background div, e.g.
+       <section class="scene t-green" ...><div class="bgx dots"></div>
+     themes  : t-green (money) · t-graph (counting) · t-blue (measuring) · t-sky (height) · t-yellow (comparison) · t-teal (property/map) · t-ink (ending)
+     textures: dots · graph · bprint · skyg · map · bigdots   (plain .bgx = paper grain only)
+   · objects: .stack (side view of a note stack) · .ghost (dashed unknown) · .notecard · .notewall · .cloud · .mag · .dim · .lbl · .qm
+   Layout rule: key content inside the centre 4:5 zone (y 285–1635); bands above/below carry bleed. */
+@import url("vox-paper.css");
+/* ---------- type: Tiro Bangla (single weight; headlines thickened with a stroke, no faux bold) ---------- */
+:root{--font-sans:'Tiro Bangla',serif;--font-serif:'Tiro Bangla',serif;--shadow:#151515;--bgc:#efe7d6}
+.scene{color:var(--ink)}
+.scene *{font-synthesis:none}
+/* Tiro Bangla has one weight: never ask for another (the browser would fake it); ep. 03 lesson */
+.scene,.scene *{font-weight:400!important}
+.t-green .mk,.t-blue .mk,.t-teal .mk,.t-ink .mk{background-size:calc(var(--m,0)*100%) 16%;background-position:0 96%}
+.h0{font:400 176px/1.12 var(--font-sans);-webkit-text-stroke:4px currentColor;letter-spacing:0}
+.h1{font:400 118px/1.2 var(--font-sans);-webkit-text-stroke:3px currentColor;letter-spacing:0}
+.h2{font:400 80px/1.25 var(--font-sans);-webkit-text-stroke:2.2px currentColor}
+.h3{font:400 58px/1.35 var(--font-sans);-webkit-text-stroke:1.5px currentColor}
+.b{font:400 48px/1.45 var(--font-sans);-webkit-text-stroke:.6px currentColor}
+.s{font:400 36px/1.45 var(--font-sans)}
+.lab{font:400 34px var(--font-sans);-webkit-text-stroke:.9px currentColor;letter-spacing:.3px;color:var(--accent2)}
+.ann{font:400 36px var(--font-sans);-webkit-text-stroke:.6px currentColor}
+.chip{font:400 42px var(--font-sans);-webkit-text-stroke:1px currentColor;background:var(--ink);color:var(--bgc)}
+.chip b{color:var(--accent);font-weight:400}
+.blk{box-shadow:8px 8px 0 var(--shadow)}
+.blkr{box-shadow:8px 8px 0 var(--shadow)}
+/* chapter chip lives in the top band (outside the 4:5 crop) */
+.tag{top:200px;font:400 30px var(--font-sans);-webkit-text-stroke:.6px currentColor;background:var(--ink);color:var(--bgc);padding:4px 18px 8px}
+.dark .tag{background:var(--ink);color:var(--bgc)}
+/* source line: no rule, even spacing, sits in the bottom band */
+.src,.dark .src{border:0;background:none;top:1712px;bottom:auto;left:56px;right:56px;padding:0;
+  font:400 25px/1.4 var(--font-sans);color:var(--ink);opacity:.72}
+.srcpill{display:inline-block;background:var(--bgc);padding:6px 16px 9px;border-radius:6px}
+
+/* ---------- themed backgrounds (Vox "money explained" palette) ---------- */
+.bgx{position:absolute;inset:-40px;background:var(--bgc)}
+.bgx::after{content:'';position:absolute;inset:0;background:url(../../img/paper.jpg) center/cover;mix-blend-mode:multiply;opacity:.55;pointer-events:none}
+.t-green{--bgc:#1d5b45;--ink:#f6efdd;--mut:#cfe0d2;--accent:#ffd23f;--accent2:#ff7a63;--accent2-a:rgba(255,122,99,.85);--shadow:#0c2b20;--card:#f6efdd;--card2:#f6efdd;--note:#ffd23f}
+.t-graph{--bgc:#f3ead6;--ink:#151515;--accent:#ffd23f;--accent2:#e2333f;--shadow:#151515}
+.t-blue{--bgc:#173a6a;--ink:#eef4ff;--mut:#b9cbe6;--accent:#ffd23f;--accent2:#ff7a63;--shadow:#0b1f3d;--card2:#eef4ff}
+.t-sky{--bgc:#8fcbe8;--ink:#10223f;--accent:#ffd23f;--accent2:#e2333f;--shadow:#10223f}
+.t-yellow{--bgc:#ffd23f;--ink:#151515;--accent:#fffaf0;--accent2:#e2333f;--shadow:#151515;--note:#fffaf0}
+.t-teal{--bgc:#1f7f79;--ink:#fff6e6;--mut:#cfeae6;--accent:#ffd23f;--accent2:#ff7a63;--shadow:#0e403c}
+.t-ink{--bgc:#161514;--ink:#f6efdd;--mut:#b8b0a2;--accent:#ffd23f;--accent2:#ff7a63;--shadow:#000;--card2:#f6efdd}
+.dots::before{content:'';position:absolute;inset:0;z-index:1;background-image:radial-gradient(rgba(0,0,0,.16) 2px,transparent 2.6px);background-size:14px 14px}
+.graph::before{content:'';position:absolute;inset:0;z-index:1;background-image:linear-gradient(rgba(40,90,160,.16) 2px,transparent 2px),linear-gradient(90deg,rgba(40,90,160,.16) 2px,transparent 2px),linear-gradient(rgba(40,90,160,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(40,90,160,.08) 1px,transparent 1px);background-size:120px 120px,120px 120px,24px 24px,24px 24px}
+.bprint::before{content:'';position:absolute;inset:0;z-index:1;background-image:linear-gradient(rgba(255,255,255,.22) 2px,transparent 2px),linear-gradient(90deg,rgba(255,255,255,.22) 2px,transparent 2px),linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);background-size:150px 150px,150px 150px,30px 30px,30px 30px}
+.skyg{background:linear-gradient(#3f86c4 0%,#8fcbe8 55%,#ffd9b0 100%)}
+.map::before{content:'';position:absolute;inset:0;z-index:1;background:url(../../img/tex_map.png) center/cover}
+.bigdots::before{content:'';position:absolute;inset:0;z-index:1;background-image:radial-gradient(rgba(255,255,255,.35) 5px,transparent 6px);background-size:44px 44px;-webkit-mask-image:linear-gradient(transparent 35%,#000 100%)}
+
+/* ---------- objects ---------- */
+.ground{height:6px;background:var(--ink)}
+.stack{background:repeating-linear-gradient(0deg,#2f5d3a 0 2px,#cfe3bd 2px 7px);border:4px solid #151515;border-bottom:none;transform-origin:50% 100%;box-shadow:10px 0 0 rgba(0,0,0,.18)}
+.t-green .stack{background:repeating-linear-gradient(0deg,#0f3b2c 0 2px,#efe4bb 2px 7px)}
+.ghost{border:5px dashed var(--accent2);background:rgba(255,255,255,.05);transform-origin:50% 100%}
+.dim{font:400 32px var(--font-sans);-webkit-text-stroke:.6px currentColor;color:#151515;background:#fffaf0;padding:4px 14px 8px;border:3px solid #151515}
+.lbl{font:400 44px var(--font-sans);-webkit-text-stroke:1px currentColor;text-align:center}
+.qm{font:400 300px/1 var(--font-sans);-webkit-text-stroke:6px currentColor;color:var(--accent2);text-align:center}
+.notecard{background:linear-gradient(135deg,#d8e8c6,#b9d6a3);border:4px solid #151515;border-radius:10px;box-shadow:12px 12px 0 rgba(0,0,0,.25);overflow:hidden}
+.notecard .num{position:absolute;font:400 110px/1 var(--font-sans);-webkit-text-stroke:3px #1d4a2e;color:#1d4a2e}
+.notecard .seal{position:absolute;border:6px solid #1d4a2e;border-radius:50%}
+.notecard .guil{position:absolute;inset:18px;border:3px dashed rgba(29,74,46,.45);border-radius:6px}
+.notewall{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='84' height='44'><rect x='3' y='4' width='76' height='34' rx='3' fill='%23cfe3bd' stroke='%23151515' stroke-width='2'/><circle cx='41' cy='21' r='8' fill='none' stroke='%23151515' stroke-width='2'/></svg>");background-size:84px 44px;transform-origin:50% 0}
+.cloud{background:#fff;border-radius:200px;opacity:.85;filter:blur(1px)}
+.cloud::before,.cloud::after{content:'';position:absolute;background:#fff;border-radius:50%}
+.cloud::before{width:55%;height:150%;left:15%;top:-70%}
+.cloud::after{width:40%;height:120%;left:48%;top:-45%}
+.mag{border-radius:50%;border:10px solid #fffaf0;overflow:hidden;background:#173a6a;box-shadow:0 0 0 6px #0b1f3d}
+.house{width:100%}

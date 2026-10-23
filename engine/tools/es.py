@@ -18,16 +18,10 @@ def cfg(p):
     return json.loads(f.read_text()) if f.exists() else {}
 
 
-def size(p):
-    """(width, height) of the project's canvas: 1080x1920 (9:16, default) or 1920x1080 (16:9)."""
-    c = cfg(p)
-    return int(c.get('width', W)), int(c.get('height', H))
-
-
 def timeline_hash(p):
     """Hash of everything that changes what a frame looks like or when."""
     h = hashlib.sha256()
-    files = [p / 'index.html', p / 'vo.js', p / 'project.json', p / 'licences.csv']
+    files = [p / 'index.html', p / 'vo.js', p / 'project.json']
     files += sorted((p / 'engine').rglob('*.js')) + sorted((p / 'engine').rglob('*.css'))
     for f in files:
         if f.exists():
@@ -36,10 +30,9 @@ def timeline_hash(p):
 
 
 @contextlib.contextmanager
-def page(p, w=None, h=None):
+def page(p, w=W, h=H):
     from playwright.sync_api import sync_playwright
     with sync_playwright() as pw:
-        if w is None: w, h = size(p)
         br = pw.chromium.launch()
         pg = br.new_page(viewport={'width': w, 'height': h})
         errs = []
@@ -56,3 +49,53 @@ def page(p, w=None, h=None):
             yield pg
         finally:
             br.close()
+
+
+# ---------- text helpers (Bangla-aware) ----------
+import re as _re
+TAG_RE = _re.compile(r'\[[^\]]*\]')                 # ElevenLabs audio tags: [curious], [excited] …
+PUNCT = ',।?!—–-…;:"\'“”‘’()|.'
+BREAK_PUNCT = ',।?!—…;:'
+
+
+def strip_tags(t):
+    return _re.sub(r'\s+', ' ', TAG_RE.sub(' ', t)).strip()
+
+
+def speak_chars(t):
+    """Number of spoken characters (letters/digits/marks), ignoring tags, spaces, punctuation and joiners."""
+    t = strip_tags(t)
+    return sum(1 for ch in t if not ch.isspace() and ch not in PUNCT and ch not in '‌‍')
+
+
+def norm_word(w):
+    return ''.join(ch for ch in w if ch not in PUNCT and ch not in '‌‍').strip()
+
+
+def load_script(p):
+    f = p / 'script.json'
+    if not f.exists():
+        sys.exit(f'ERROR: {f} missing — write script.json ({{"1": "VO text of scene 1", ...}})')
+    d = json.loads(f.read_text())
+    return {int(k): v for k, v in d.items() if str(k).isdigit()}
+
+
+def file_hash(*files):
+    h = hashlib.sha256()
+    for f in files:
+        f = pathlib.Path(f)
+        if f.exists(): h.update(f.name.encode()); h.update(f.read_bytes())
+    return h.hexdigest()[:16]
+
+
+def load_vo(p):
+    vj = p / 'vo.js'
+    if not vj.exists(): return {'durs': [], 'anchors': [], 'words': []}
+    m = _re.search(r'window\.VO=(\{.*\});', vj.read_text(), _re.S)
+    txt = m.group(1)
+    txt = _re.sub(r'([{,])\s*(durs|anchors|words)\s*:', r'\1"\2":', txt)
+    d = json.loads(txt); d.setdefault('words', []); return d
+
+
+def bn_digits_to_int(s):
+    return s.translate(str.maketrans('০১২৩৪৫৬৭৮৯', '0123456789'))

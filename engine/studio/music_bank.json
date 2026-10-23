@@ -1,0 +1,279 @@
+{
+ "_about": "Five original background-music presets, rotated by episode number (music[(ep-1) % 5]). All are synthesised by tools/audio.py: no samples, no licences. 'defaults' is merged under every preset.",
+ "defaults": {
+  "levels": {
+   "music_lufs": -23.0,
+   "sfx_lufs": -24.5,
+   "vo_clip_lufs": -17.5,
+   "vo_bus_lufs": -16.0,
+   "master_lufs": -14.5,
+   "true_peak_db": -1.5,
+   "vo_duck": 0.6,
+   "impact_duck": 0.2
+  },
+  "sfx_gain": {
+   "click": 0.22,
+   "tick": 0.12,
+   "whoosh": 0.2,
+   "trans": 0.22,
+   "impact": 0.3,
+   "stamp": 0.28,
+   "tone": 0.26,
+   "bell": 0.25,
+   "paper": 0.25,
+   "pop": 0.22
+  },
+  "auto_sfx": {
+   "enabled": true,
+   "max_per_scene": 3,
+   "min_gap_s": 0.6,
+   "gain_mult": 0.8
+  },
+  "end_fade_s": 1.0,
+  "end_chord_s": 4.4
+ },
+ "presets": [
+  {
+   "id": "tanpura-bansuri",
+   "label": "Tanpura + bansuri \u2014 calm, reflective",
+   "palette": "bangla",
+   "sa_midi": 50,
+   "bpm": 78,
+   "seed": 7,
+   "moods": {
+    "intro": {
+     "raga": "bhupali",
+     "layers": [
+      "drone",
+      "bansuri"
+     ]
+    },
+    "build": {
+     "raga": "yaman",
+     "layers": [
+      "drone",
+      "harmonium",
+      "dotara"
+     ]
+    },
+    "drive": {
+     "raga": "yaman",
+     "layers": [
+      "drone",
+      "harmonium",
+      "dotara",
+      "tabla"
+     ]
+    },
+    "somber": {
+     "raga": "bhairavi",
+     "layers": [
+      "drone",
+      "harmonium"
+     ]
+    },
+    "elegy": {
+     "raga": "bhairavi",
+     "layers": [
+      "drone",
+      "bansuri"
+     ]
+    },
+    "answer": {
+     "raga": "bhupali",
+     "layers": [
+      "drone",
+      "harmonium",
+      "dotara"
+     ]
+    },
+    "end": {
+     "raga": "bhupali",
+     "layers": [
+      "drone"
+     ]
+    }
+   }
+  },
+  {
+   "id": "dotara-drive",
+   "label": "Dotara + tabla \u2014 rhythmic, forward",
+   "palette": "bangla",
+   "sa_midi": 52,
+   "bpm": 92,
+   "seed": 21,
+   "moods": {
+    "intro": {
+     "raga": "khamaj",
+     "layers": [
+      "drone",
+      "dotara"
+     ]
+    },
+    "build": {
+     "raga": "yaman",
+     "layers": [
+      "drone",
+      "dotara",
+      "tabla"
+     ]
+    },
+    "drive": {
+     "raga": "yaman",
+     "layers": [
+      "drone",
+      "harmonium",
+      "dotara",
+      "tabla"
+     ]
+    },
+    "somber": {
+     "raga": "bhairavi",
+     "layers": [
+      "drone",
+      "dotara"
+     ]
+    },
+    "elegy": {
+     "raga": "bhairavi",
+     "layers": [
+      "drone",
+      "bansuri"
+     ]
+    },
+    "answer": {
+     "raga": "khamaj",
+     "layers": [
+      "drone",
+      "harmonium",
+      "dotara"
+     ]
+    },
+    "end": {
+     "raga": "khamaj",
+     "layers": [
+      "drone"
+     ]
+    }
+   }
+  },
+  {
+   "id": "harmonium-warm",
+   "label": "Harmonium + flute \u2014 warm, human",
+   "palette": "bangla",
+   "sa_midi": 46,
+   "bpm": 84,
+   "seed": 33,
+   "moods": {
+    "intro": {
+     "raga": "bhupali",
+     "layers": [
+      "drone",
+      "harmonium"
+     ]
+    },
+    "build": {
+     "raga": "bhupali",
+     "layers": [
+      "drone",
+      "harmonium",
+      "bansuri"
+     ]
+    },
+    "drive": {
+     "raga": "yaman",
+     "layers": [
+      "drone",
+      "harmonium",
+      "bansuri",
+      "tabla"
+     ]
+    },
+    "somber": {
+     "raga": "bhairav",
+     "layers": [
+      "drone",
+      "harmonium"
+     ]
+    },
+    "elegy": {
+     "raga": "bhairavi",
+     "layers": [
+      "drone",
+      "bansuri"
+     ]
+    },
+    "answer": {
+     "raga": "bhupali",
+     "layers": [
+      "drone",
+      "harmonium",
+      "bansuri"
+     ]
+    },
+    "end": {
+     "raga": "bhupali",
+     "layers": [
+      "drone",
+      "harmonium"
+     ]
+    }
+   }
+  },
+  {
+   "id": "felt-piano-minor",
+   "label": "Felt piano + pads (D minor) \u2014 cinematic, serious",
+   "palette": "cinematic",
+   "prog": "dm",
+   "bpm": 84,
+   "seed": 11,
+   "kick_moods": [
+    "drive"
+   ],
+   "pattern": [
+    0,
+    2,
+    1,
+    2,
+    0,
+    2,
+    1,
+    2
+   ]
+  },
+  {
+   "id": "cinematic-pulse",
+   "label": "Pulse + pads (A minor) \u2014 energetic, news-like",
+   "palette": "cinematic",
+   "prog": "am",
+   "bpm": 100,
+   "seed": 5,
+   "kick_moods": [
+    "build",
+    "drive"
+   ],
+   "pattern": [
+    0,
+    1,
+    2,
+    1,
+    0,
+    2,
+    1,
+    2
+   ],
+   "end_notes": [
+    45,
+    52,
+    57,
+    60,
+    64,
+    72
+   ],
+   "end_pluck": [
+    76,
+    81
+   ]
+  }
+ ]
+}

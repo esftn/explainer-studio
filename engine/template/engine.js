@@ -1,26 +1,21 @@
 /* Explainer Studio runtime — deterministic, seekable timeline for HTML→video.
  * Scenes: <section class="scene" data-vo="3" data-dur="auto|9.5" data-cam="t:scale:x:y|...">
- * Elements: data-a (anim) data-t (start s) | data-at="a2" (VO pause anchor #2) data-d data-out data-sfx data-layer
+ * Elements: data-a (anim) data-t (start s) | data-at="a2" (VO pause anchor #2) | data-say="সাতশো[#2][+0.1]" (lands on that
+ *           spoken word; several words = a phrase) data-d data-out data-sfx data-layer
  * Generators: <div data-gen="icons|ticks" ...> (see below)
  * Exposes: seek(t), TOTAL, CUES, SCENES, AUDIT(step), DENSITY(step)
  */
 (function () {
-  const VO = window.VO || { durs: [], anchors: [] };          // written by tools/vo_prep.py into vo.js
-  const P0 = window.PROJECT || {};
-  const LAND = (P0.width || 1080) > (P0.height || 1920);
-  const CFG = Object.assign({ voOffset: 0.3, pad: 0.55, transition: 0.45, width: 1080, height: 1920,
-    safeTop: LAND ? 60 : 150, safeBottom: LAND ? 1020 : 1795, twos: 0 }, P0);
-  // canvas size → CSS variables (engine.css reads --W/--H); .land switches landscape chrome
-  document.documentElement.style.setProperty('--W', CFG.width + 'px');
-  document.documentElement.style.setProperty('--H', CFG.height + 'px');
-  if (LAND) document.documentElement.classList.add('land');
+  const VO = Object.assign({ durs: [], anchors: [], words: [] }, window.VO || {});          // written by tools/vo_prep.py into vo.js
+  const CFG = Object.assign({ voOffset: 0.3, pad: 0.55, transition: 0.45, safeBottom: 1795, width: 1080, height: 1920 }, window.PROJECT || {});
   const TR = CFG.transition;
   const BN = '০১২৩৪৫৬৭৮৯';
   const digits = (n) => (CFG.lang === 'en' ? String(n) : String(n).replace(/\d/g, (d) => BN[d]));
   const cl = (x) => (x < 0 ? 0 : x > 1 ? 1 : x);
-  const eo = (p) => 1 - Math.pow(1 - cl(p), 3);
+  const eo = (p) => { p = cl(p); return p === 1 ? 1 : 1 - Math.pow(2, -10 * p); };            // expo-out: quick start, long soft settle
+  const eq = (p) => { p = cl(p); return p < 0.5 ? 8 * p * p * p * p : 1 - Math.pow(-2 * p + 2, 4) / 2; }; // quart in-out for builds
   const eio = (p) => { p = cl(p); return p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2; };
-  const eb = (p) => { p = cl(p); const c = 1.70158, c3 = c + 1; return 1 + c3 * Math.pow(p - 1, 3) + c * Math.pow(p - 1, 2); };
+  const eb = (p) => { p = cl(p); const c = 0.9, c3 = c + 1; /* gentle overshoot */ return 1 + c3 * Math.pow(p - 1, 3) + c * Math.pow(p - 1, 2); };
   let seed = 7; const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
 
   const scenes = [...document.querySelectorAll('.scene')];
@@ -49,6 +44,8 @@
     phone: (c) => `<svg class="ico" viewBox="0 0 60 96" width="100%"><rect x="3" y="3" width="54" height="90" rx="10" fill="${c}"/><rect x="10" y="14" width="40" height="62" rx="3" fill="rgba(0,0,0,.75)"/><path d="M22 40l16 16M38 40L22 56" stroke="#ffc93c" stroke-width="5" stroke-linecap="round"/></svg>`,
     house: (c) => `<svg class="ico" viewBox="0 0 60 56" width="100%"><path d="M30 2L2 26h8v28h40V26h8z" fill="${c}"/></svg>`,
     dot: (c) => `<svg class="ico" viewBox="0 0 10 10" width="100%"><circle cx="5" cy="5" r="5" fill="${c}"/></svg>`,
+    note: (c) => `<svg class="ico" viewBox="0 0 64 30" width="100%"><rect x="1.5" y="1.5" width="61" height="27" rx="3" fill="${c}" stroke="#151515" stroke-width="2"/><circle cx="32" cy="15" r="7" fill="none" stroke="#151515" stroke-width="2"/></svg>`,
+    flat: (c) => `<svg class="ico" viewBox="0 0 40 52" width="100%"><path d="M4 50V8h32v42z" fill="${c}"/><path d="M10 14h6v6h-6zM24 14h6v6h-6zM10 26h6v6h-6zM24 26h6v6h-6zM16 40h8v10h-8z" fill="rgba(0,0,0,.35)"/></svg>`,
     doc: (c) => `<svg class="ico" viewBox="0 0 48 60" width="100%"><path d="M2 2h30l14 14v42H2z" fill="${c}"/><path d="M10 26h28M10 34h28M10 42h20" stroke="rgba(255,255,255,.7)" stroke-width="3"/></svg>`,
   };
   document.querySelectorAll('[data-gen]').forEach((g) => {
@@ -90,13 +87,24 @@
       if (base === null) { console.warn('missing anchor ' + e.dataset.at + ' in scene ' + (scenes.indexOf(s) + 1) + ' (vo_' + s._vo + ' has ' + anc.length + ' pauses) — use a smaller aN or data-t'); return; }
       e.dataset.t = (CFG.voOffset + base - 0.08 + (m[2] ? +m[2] : 0)).toFixed(3);
     });
+    // ---- data-say="word[ word…][#n][+/-s]": start the element on the n-th time that word is spoken ----
+    const W = s._vo !== null ? (VO.words[s._vo] || []) : [];
+    const nw = (w) => w.replace(/[,।?!—–\-…;:"'“”‘’()|.‌‍]/g, '').trim();
+    s.querySelectorAll('[data-say]').forEach((e) => {
+      const m = e.dataset.say.match(/^(.*?)(?:#(\d+))?([+-][\d.]+)?$/); if (!m) return;
+      const want = m[1].trim().split(/\s+/).map(nw).filter(Boolean), occ = +(m[2] || 1), off = m[3] ? +m[3] : 0;
+      let hit = null, seen = 0;
+      for (let i = 0; i + want.length <= W.length && hit === null; i++) {
+        if (want.every((w, k) => nw(W[i + k][0]).startsWith(w))) { seen++; if (seen === occ) hit = W[i][1]; }
+      }
+      if (hit === null) { console.warn('data-say "' + e.dataset.say + '" not found in the VO of scene ' + (scenes.indexOf(s) + 1) + ' (vo_' + s._vo + ')'); return; }
+      const lead = CFG.sayLead !== undefined ? CFG.sayLead : 0.05;   // v0.7: new projects use 0.25 s so text is on screen when the word is spoken
+      e.dataset.t = (CFG.voOffset + hit - lead + off).toFixed(3); e.dataset.sayT = e.dataset.t;
+    });
     s._els = [...s.querySelectorAll('[data-a]')]; s._cam = s.querySelector('.cam');
     s._keys = (s.dataset.cam || '0:1:0:0').split('|').map((k) => k.split(':').map(Number));
     s._kb = [...s.querySelectorAll('[data-kb] img')];
-    s._twos = +(s.dataset.twos || CFG.twos || 0);        // stop-motion cadence: step element time at N fps
-    s._shake = +(s.dataset.shake || 0);                   // hand-held jitter of the photo layer, px
   });
-  const jit = (k, t) => Math.sin(t * 12.9898 + k * 78.233) * 0.5 + Math.sin(t * 4.1 + k * 3.7) * 0.5;
 
   function cam(s, lt) {
     const K = s._keys; if (lt <= K[0][0]) return K[0]; if (lt >= K[K.length - 1][0]) return K[K.length - 1];
@@ -106,23 +114,23 @@
     return K[0];
   }
   function applyEl(e, lt) {
-    const a = e.dataset.a, t = +e.dataset.t || 0, d = +(e.dataset.d || 0.5);
-    const r = (lt - t) / d, p = eo(r); let op = null;
+    const a = e.dataset.a, t = +e.dataset.t || 0;
+    const d2 = +(e.dataset.d || 0.7); const r = (lt - t) / d2, p = eo(r); let op = null;
     switch (a) {
-      case 'up': op = p; e.style.transform = `translateY(${(1 - p) * 46}px)`; break;
-      case 'left': op = p; e.style.transform = `translateX(${-(1 - p) * 34}px)`; break;
-      case 'right': op = p; e.style.transform = `translateX(${(1 - p) * 34}px)`; break;
+      case 'up': op = cl(r * 2.2); e.style.transform = `translateY(${(1 - p) * 40}px)`; break;
+      case 'left': op = cl(r * 2.2); e.style.transform = `translateX(${-(1 - p) * 40}px)`; break;
+      case 'right': op = cl(r * 2.2); e.style.transform = `translateX(${(1 - p) * 40}px)`; break;
       case 'fade': op = p; break;
       case 'pop': { const q = eb(r); op = cl(r * 3); e.style.transform = `scale(${r <= 0 ? 0.001 : Math.max(0.001, q)})`; break; }
-      case 'slam': { const q = cl(r / 0.9); const sc = q < 1 ? 1.14 - 0.14 * eb(q) : 1; op = cl(q * 3); e.style.transform = `scale(${sc})`; break; }
+      case 'slam': { const sc = 1.1 - 0.1 * p; op = cl(r * 4); e.style.transform = `scale(${sc})`; break; }
       case 'stamp': { const q = cl(r); const sc = q < 1 ? 1.25 - 0.25 * eo(q) : 1; op = cl(q * 2.5); e.style.transform = `scale(${sc})`; break; }
       case 'mark': e.style.setProperty('--m', p); break;
-      case 'drawy': e.style.transform = `scaleY(${p})`; break;
-      case 'growx': e.style.transform = `scaleX(${p})`; break;
+      case 'drawy': e.style.transform = `scaleY(${eq(r)})`; break;
+      case 'growx': e.style.transform = `scaleX(${eq(r)})`; break;
       case 'strike': e.style.transform = `rotate(-4deg) scaleX(${p})`; break;
       case 'draw': e.style.strokeDasharray = '1'; e.style.strokeDashoffset = String(1 - p); break;
       case 'rot': { const f = +e.dataset.from, to = +e.dataset.to; e.style.transform = `rotate(${f + (to - f) * eio(r)}deg)`; break; }
-      case 'count': { const f = +(e.dataset.from || 0); const v = f + (+e.dataset.to - f) * eo(r); const dec = +(e.dataset.dec || 0); e.textContent = digits(dec ? v.toFixed(dec) : Math.round(v)); break; }
+      case 'count': { const f = +(e.dataset.from || 0); const v = f + (+e.dataset.to - f) * eq(r); const dec = +(e.dataset.dec || 0); const raw = dec ? v.toFixed(dec) : Math.round(v); e.textContent = digits(e.dataset.fmt === 'in' ? Number(raw).toLocaleString('en-IN') : raw); break; }
     }
     if (e.dataset.out) { const o = +e.dataset.out; const q = cl((lt - o) / 0.35); if (op === null) op = 1; op *= 1 - q; }
     if (op !== null) e.style.opacity = op;
@@ -134,28 +142,35 @@
       const vis = lt >= 0 && lt < s._dur + (last ? 10 : TR);
       if (!vis) { s.style.display = 'none'; return; }
       s.style.display = 'block';
-      let op = 1, tx = 0, rot = 0;
-      if (i > 0 && lt < TR) { const p = eio(lt / TR); tx = (1 - p) * CFG.width; rot = (1 - p) * 3; }
-      if (!last && lt >= s._dur) { const p = eio((lt - s._dur) / TR); tx = -p * 420; op = 1 - p * 0.6; }
-      if (last && lt > s._dur - 1.1) op = Math.max(0, 1 - (lt - (s._dur - 1.1)) / 1.1);
+      let op = 1, tx = 0, rot = 0, clip = 'none';
+      if (i > 0 && lt < TR) { const p = eq(lt / TR); clip = `inset(0 0 0 ${((1 - p) * 100).toFixed(2)}%)`; tx = (1 - p) * 140; }
+      if (!last && lt >= s._dur) { const p = eq((lt - s._dur) / TR); tx = -p * 160; }
+      s.style.clipPath = clip;
+      if (last && lt > s._dur - 0.8) op = Math.max(0, 1 - (lt - (s._dur - 0.8)) / 0.8);
       s.style.opacity = op; s.style.transform = `translateX(${tx}px) rotate(${rot}deg)`; s.style.zIndex = i;
-      const st = s._twos ? Math.floor(lt * s._twos + 1e-6) / s._twos : lt;
-      if (s._cam) {
-        const c = cam(s, lt); let jx = 0, jy = 0;
-        if (s._shake) { const q = Math.floor(lt * 12) / 12; jx = jit(1, q) * s._shake; jy = jit(2, q) * s._shake; }
-        s._cam.style.transform = `translate(${c[2] + jx}px,${c[3] + jy}px) scale(${c[1]})`;
-      }
-      s._els.forEach((e) => applyEl(e, st));
-      s._kb.forEach((im) => { im.style.transform = `scale(${1.02 + 0.08 * cl(st / s._dur)})`; });
+      if (s._cam) { const c = cam(s, lt); s._cam.style.transform = `translate(${c[2]}px,${c[3]}px) scale(${c[1]})`; }
+      s._els.forEach((e) => applyEl(e, lt));
+      s._kb.forEach((im) => { im.style.transform = `scale(${1.02 + 0.08 * cl(lt / s._dur)})`; });
     });
   };
   window.TOTAL = TOTAL;
-  window.SCENES = scenes.map((s) => ({ start: s._start, dur: s._dur, vo: s._vo, voMissing: !!s._voMiss, mood: s.dataset.mood || null, type: (s.dataset.type || '').toUpperCase() || null, tag: (s.querySelector('.tag') || {}).textContent || null }));
+  window.SCENES = scenes.map((s) => ({ start: s._start, dur: s._dur, vo: s._vo, voMissing: !!s._voMiss, mood: s.dataset.mood || null }));
   window.CUES = (function () {
+    // v0.7: every animated element without its own data-sfx also proposes an AUTO cue (auto:true) from its animation type;
+    // tools/audio.py thins them (per-scene / per-type caps, minimum gap) so sound effects exist on every episode without
+    // hand-tagging, and stay subtle. data-sfx="none" silences an element; project.json "autoSfx": false turns the proposals off.
+    const AUTO = { slam: 'impact', stamp: 'stamp', pop: 'pop', mark: 'tick', count: 'tick', growx: 'whoosh', drawy: 'whoosh', draw: 'whoosh', strike: 'click' };
     const c = [];
     scenes.forEach((s, i) => {
       if (i > 0) c.push({ t: s._start - 0.05, type: 'trans' });
       s.querySelectorAll('[data-sfx]').forEach((e) => { const ty = e.dataset.sfx; if (ty && ty !== 'none') c.push({ t: s._start + (+e.dataset.t || 0), type: ty }); });
+      if (CFG.autoSfx === false) return;
+      s._els.forEach((e) => {
+        if (e.dataset.sfx !== undefined) return;
+        let ty = AUTO[e.dataset.a];
+        if (!ty && ['up', 'left', 'right', 'fade'].includes(e.dataset.a) && (e.tagName === 'IMG' || e.querySelector('img'))) ty = 'paper';   // photo / cutout entrances
+        if (ty) c.push({ t: s._start + (+e.dataset.t || 0), type: ty, auto: true });
+      });
     });
     return c.sort((a, b) => a.t - b.t);
   })();
@@ -181,16 +196,15 @@
     }
     return bad;
   };
-  // Density: share of a grid over the content area (safeTop..safeBottom) hit by a visible photo/graphic/text element.
+  // Density: share of a 18x30 grid (content area y 150..1790) hit by a visible photo/graphic/text element.
   window.DENSITY = function (step) {
-    const out = []; const xs = LAND ? 32 : 18, ys = LAND ? 18 : 30;
-    const x0 = 40, xw = CFG.width - 80, y0 = CFG.safeTop, yh = CFG.safeBottom - CFG.safeTop;
+    const out = []; const xs = 18, ys = 30;
     for (let t = 0; t < TOTAL; t += step) {
       seek(t);
       const s = scenes.find((sc) => t >= sc._start + TR && t < sc._start + sc._dur - 0.05); if (!s) continue;
       let hit = 0, tot = 0;
       for (let yi = 0; yi < ys; yi++) for (let xi = 0; xi < xs; xi++) {
-        const x = x0 + (xi + 0.5) * (xw / xs), y = y0 + (yi + 0.5) * (yh / ys); tot++;
+        const x = 40 + (xi + 0.5) * (1000 / xs), y = 150 + (yi + 0.5) * (1640 / ys); tot++;
         const els = document.elementsFromPoint(x, y);
         const e = els.find((el) => el.closest('.scene') === s && !el.matches('.scene,.cam,.fix,.bgp,.bgd') && visibleOpacity(el, s) > 0.3);
         if (e) hit++;

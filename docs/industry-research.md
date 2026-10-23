@@ -27,49 +27,6 @@
 Script-first gates · style frames before full build · VO-anchored timing · layer-split camera · automated bounds/density QA · contact-sheet review · per-range re-render · original synthesised music/SFX · loudness mastering.
 Planned upgrades: word-level timestamps via Scribe STT (Bengali supported) · burned karaoke captions option · stillness detector · 4:5 feed export.
 
-## B. Vox / Johnny Harris-style pipelines with AI (second research round, Oct 2026)
-Nine tutorials and one shared "engine" prompt showed three approaches: (1) a prompt engine that turns
-script → 4-second beats → AI image prompts → image-to-video (Google Flow) → manual edit; (2) Claude Code +
-Remotion, where every graphic is code; (3) fully automated API pipelines that pay per clip.
-
-What we adopted:
-- **Beat types route the work.** About half of a Vox video is information graphics (maps, charts,
-  documents, timelines, quotes), and AI video is bad at those (garbled text, wrong geography). Build those in
-  the engine; use AI only for atmospheric COLLAGE beats → `ai-visuals.md`.
-- **Source ledger** with a central question, confidence levels, counterpoints, and fact numbers mapped to
-  every scripted line → `templates/fact-sheet.md`.
-- **Four creator gates** that hold even in "do it all" mode: facts, script/beats, preview, final QA.
-- **Long-form spine:** question → stakes → mechanism → evidence → counterpoint → payoff, in chapters → `storytelling.md`.
-- **Cold open, why/so-what lines, five ending patterns, and a creator note** for human perspective.
-- **Final QA:** sound off and screen off, plus facts, rights and AI honesty → `qa-checklist.md`.
-- **Licence ledger** for every asset; flags for non-commercial sources (Google Earth Studio, CapCut free,
-  ElevenLabs free) → `licences.csv`, checked by `audit.py`.
-- **Style lock for AI images:** a verbatim style block and closer, the recurring-subject law, a style
-  reference image, and representation rules for real people and children.
-- **Credit budget** before spending (Flow ≈ 20 credits per Fast clip, 1,000 a month on Google AI Pro).
-- **Stop-motion "on twos" cadence** and a subtle shake → `data-twos`, `data-shake`.
-- **Publish pack:** 3 titles ≤ 60 characters, a description with sources, chapters, and a thumbnail that reads at 200 px.
-- **Pilot first:** one 60-second video before scaling; log the time and credits.
-
-What we didn't adopt: switching to Remotion (this engine already does the same job, deterministically, with
-audio). Kept as an option if a team needs React components; free for individuals and companies of up to 3
-people.
-
-Sources (round B):
-- Mark Ai Guy, Vox style animation 100% free: https://www.youtube.com/watch?v=_TTaaIocYq4
-- Mark Ai Guy, Vox style with Opus 5.5 + Higgsfield: https://www.youtube.com/watch?v=WoNgl4qpogk
-- Mapal, How to make Vox style videos (After Effects): https://www.youtube.com/watch?v=F7A503llNBA
-- MoSidd, Vox-style motion graphics with Claude Code & Remotion: https://www.youtube.com/watch?v=7wuYBfE131U
-- Jacksons AI, Claude prompt for Vox style videos: https://www.youtube.com/watch?v=RaxX_Q7Apj0
-- Koen, 100% automated Vox-style motion graphics: https://www.youtube.com/watch?v=TiycelzfzC0
-- Rachit Singh, Vox style documentary with one prompt: https://www.youtube.com/watch?v=L7vi4PNTZ8E
-- RandomAI, Vox-style motion graphics with Opus 5.5 & Remotion: https://www.youtube.com/watch?v=uIHJvUVaB34
-- Remotion licence: https://www.remotion.dev/docs/pricing
-- Gemini TTS (Bangla listed for gemini-3.8-flash-tts): https://ai.google.dev/gemini-api/docs/speech-generation
-- Google Veo / Flow credits: https://diyai.io/ai-tools/video-generation/google-veo-pricing/
-- YouTube inauthentic content: https://www.creatorhandbook.net/youtube-updates-monetization-policy-for-inauthentic-content/
-- Google Earth Studio terms: https://geoawesomeness.com/google-earth-studio-create-geospatial-animations-zero-experience/
-
 ## Sources
 - OpenReplay — Making Videos with Claude Code and Remotion: https://blog.openreplay.com/making-videos-claude-code-remotion/
 - awesome-claude-video-skills: https://github.com/zhuyansen/awesome-claude-video-skills

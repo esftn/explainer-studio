@@ -12,7 +12,7 @@ Every rule here exists because skipping it cost a rebuild, a re-render or credit
 
 | Cheap to change (approve first) | Expensive to change (build once) |
 |---|---|
-| Brief · source ledger · script + beat table · emotion map · style frames | Voiceover · AI clips · full layout · animation · render |
+| Brief · fact sheet · script · emotion map · style frames | Voiceover · full layout · animation · render |
 
 A video is "first-try ready" when nothing in the right column is built on an unapproved left column.
 
@@ -29,9 +29,7 @@ A video is "first-try ready" when nothing in the right column is built on an una
 6. Voice: provider + paid account, or "I'll record it myself"; voice preference (gender, age, accent)
 7. Brand: colours, handle/logo, end card, CTA
 8. Rules: what must / must not appear; sensitivities (politics, religion, real people)
-9. Materials to use (links, documents, transcripts). If Claude can't open one, it says so and asks for a paste.
-10. Monetised or not (decides which licences are acceptable); AI illustrations allowed or not
-11. Approvals: **brief → ledger → script → VO → style frames → preview → final QA**
+9. Four approvals: **brief → script → style frames → preview**
 
 **Claude does**: research + fact sheet with sources, script + emotion map, asset prep (resize, cutouts,
 textures, font test), voiceover generation + timing, layout + animation, music + SFX, automated QA,
@@ -39,25 +37,44 @@ contact-sheet review, render, mastering, captions/SRT, cover, caption text, deli
 
 ---
 
-## 2. Pipeline and gates
+## 2. Pipeline and gates (v0.6: claim/guard, facts gate, one-command Finish; tools check before the creator does)
 
-| # | Phase | Output | Gate |
-|---|---|---|---|
+| # | Phase | Output | Tool gate | Creator |
+|---|---|---|---|---|
+| 0 | **Brief** (Chat 1, batch 1–3 episodes) | `docs/brief.md`, Mac skeleton | — | ✅ brief |
+| 1 | **Research** | `facts.json` (+ `docs/fact-sheet.md`) — each fact: URL, exact quote, fetched date, second source/official/single-source note | `script_check.py` + facts gate (`factcheck.py`) | — |
+| 2 | **Script** | `script.json` + `docs/script.md` (with the spoken word each graphic lands on) | `script_check.py` PASS | ✅ script → `state.py approve script` |
+| 2b | **Image list** (after script approval) | table: filename · scene · REAL or AI · Gemini prompt (AI rows) | — | creator makes/finds images |
+| 3 | **VO text** | `vo/vo_paste.txt` (one take, scene-break lines, 2–3 tags) | `vo_text.py` (needs approval) | records one take → `vo/raw/vo_full.mp3` |
+| 4 | **Split + timing** (Chat 2) | `vo/raw/vo_NN.wav`, `vo.js` (durations, anchors, word times) | `vo_split.py` + `vo_prep.py` | — |
+| 5 | **Style frames** | 3 stills in a new look for this episode | — | ✅ style |
+| 6 | **Build + QA** | full timeline with `data-say` cues; key-moment sheet; 540p preview | `audit.py` PASS, `review.py --keys` | ✅ preview + sheet |
+| 7 | **Final** (Chat 3) | reel + feed, `captions.bn_IN.srt` + `captions.en_US.srt`, `publish.txt` | `finish.py` (render, check_final + A/V fix, captions pair, `publint.py`) | — |
+| 8 | **Cover + delivery** | 2 concepts → pick → bake; verified offline copy; tidy; `docs/delivery.md`; generated tracker | `finish.py` then `finish.py --verify` on the Mac | ✅ cover |
+
+Rules:
+- A tool FAIL is fixed before anything is sent to the creator.
+- Never make VO text before the script is approved; never render full-res before the preview is approved.
+- Each chat starts from `state.py show` + the series brief + the generated tracker and ends with one verified `pack.py` transfer.
+- v0.6 hand-offs: a Build/Finish chat **claims** the episode (`guard.py claim`, refused = stop), pulls with `pack.py unpack` (saves the base), pushes only with
+  `--guard <Mac fingerprint>` (refused if the Mac copy changed since the pull), and releases at the end. The tracker is generated
+  (`series_tracker.py --write`), never hand-edited; notes go to `_series/issues.md` (append-only). Finish ends with `finish.py --verify` = DONE on the Mac.
+- If the creator is away, continue with the most reasonable reading, state it at the top, and stop before any paid/irreversible step.
+
+---|---|---|---|
 | 0 | **Brief** | `brief.md` filled (template) + photo inventory | ✅ creator |
-| 1 | **Research** | `fact-sheet.md` = source ledger: central question + thesis, F-numbered facts with source + confidence, counterpoints, hooks, visual opportunities | ✅ Gate 1 |
-| 2 | **Script + beats** | `script.md` table: scene · beat type · VO line · on-screen text · template · asset · emotion · F-numbers; mix, budget, missing assets, licence warnings | ✅ Gate 2 |
+| 1 | **Research** | `fact-sheet.md`: every fact → date → source URL; conflicts flagged | ✅ creator |
+| 2 | **Script** | `script.md` table: scene · VO line · on-screen text · visual/infographic · emotion tag · photo · source | ✅ creator |
 | 3 | **Assets** | photos resized, contact sheet, cutouts, font test sheet, textures | auto-check |
 | 4 | **Style frames** | 3 stills: hook · data/infographic scene · ending | ✅ creator |
 | 5 | **Voiceover** | 1–3 long takes → split → trimmed, level-matched clips + anchors | ✅ creator listens |
 | 6 | **Build + QA** | full timeline; `audit.py` (bounds, density, safe zone) passes; contact sheets reviewed by Claude; low-res preview MP4 | ✅ creator watches preview |
-| 7 | **Final** | full-res render, audio master, `check_final.py`, cover/thumbnail, SRT, `publish.md` | ✅ Gate 4: creator ticks sound-off / screen-off / facts / rights before publishing |
+| 7 | **Final** | full-res render (parallel, per-range), audio master, caption, SRT, delivery with md5 check | — |
+| 8 | **Cover** | 2–3 designed cover concepts per `cover-design.md` (topic palette, hero element, question title, trend check) | ✅ creator picks |
 
 Rules:
 - Never generate VO before the script gate. Never render full-res before the preview gate.
-- **Gates hold even in "do it all in one go" mode.** If the creator is away, continue with the most
-  reasonable reading of cheap steps, state it at the top, and stop at the next gate. Never start a paid step
-  (VO, AI clips) on an unapproved ledger and script, and never publish.
-- **Use the creator's materials.** If a link or file can't be opened, say so and ask for a paste; never claim to have read it.
+- If the creator is away, continue with the most reasonable reading, state it at the top, and stop before any paid/irreversible step (VO credits, publishing).
 - Each gate message is short: what to check, what changes are cheap now, what becomes expensive after.
 
 ---
@@ -80,7 +97,8 @@ Rules:
 
 ## 5. Design rules (details: `design-system.md`)
 - **Layers**: photo/camera layer (zooms/pans) · fixed text layer (never zoomed) · source band (always on top).
-- **Safe area** (9:16, 1080×1920): text x 56–1024, y 150–1790 · (16:9, 1920×1080): x 64–1856, y 60–1020; bottom band = sources; keep key text out of the bottom 20% of Reels UI when sources aren't used.
+- **4:5 feed zone**: key content inside y 285–1635; top/bottom bands = bleed, never empty. No chapter chips on screen.
+- **Safe area** (1080×1920): text x 56–1024, y 150–1790; bottom band = sources; keep key text out of the bottom 20% of Reels UI when sources aren't used.
 - Entrances: slide ≤40 px, scale ≤1.15, fade. Nothing starts off-screen.
 - **Density**: ≥55–60% of the frame occupied at all times; no stretch >1.5 s that is mostly empty.
 - Every scene: ≥1 photo/graphic + 1 key text + 1 highlight; numbers as heroes with a comparison.
@@ -106,24 +124,7 @@ Rules:
 `audit.py` must pass (text bounds every 0.1 s, source-band overlap, density) — `render.py` refuses to run otherwise.
 Then: contact sheet every 1.5 s reviewed, spelling/consistency pass, sync spot-check, length, loudness, md5 on delivery.
 
-## 9. AI visuals (details: `ai-visuals.md`)
-- AI is illustration, never evidence. Maps, charts, documents, quotes and real people come from the engine or
-  real sourced photos; AI only does atmospheric COLLAGE beats (≤ 40% in MIX; never > 3 in a row).
-- No Bangla text inside AI images; all words go on the engine's text layer.
-- Every asset (photo, AI image, clip) has a row in `licences.csv`; `audit.py` checks it.
-
-## 10. One folder per video
-If a file isn't in the project folder, it isn't in the video: `brief.md`, `fact-sheet.md`, `script.md`,
-`script.json`, `licences.csv`, `photos/`, `img/`, `vo/`, `index.html`, `out/` (video, cover, thumbnail,
-`captions.srt`, `publish.md`). That keeps facts, assets and licences traceable.
-
-## 11. Getting started (first month)
-1. **Week 1:** set up (`setup.sh`, `font_test.py`), pick a look, and make one 60-second **pilot** on a topic you know well.
-2. **Week 2:** note the slowest step of the pilot and fix it, then make a second 60–90 s video.
-3. **Week 3:** try one long-form chapter (16:9) to test depth.
-4. **Week 4:** lock what worked (presets, palettes, scene templates) and set a cadence from the real time and credits used.
-
-## 12. Efficiency rules
+## 9. Efficiency rules
 - Creator supplies photos → zero scraping. If scraping is unavoidable: small batches, browser-pane only.
 - Review at low cost (contact sheets, low-res preview); render full-res once; re-render only changed ranges.
 - Keep tool outputs compact (jq/grep), avoid reading big JSON or many single frames into context.

@@ -128,3 +128,37 @@ Rough estimate: the next video of similar length should take **~40–50% of the 
 - ElevenLabs links expire in 2 h; download immediately. Free tier gets flagged by bursts or VPN.
 - Freepik MCP: images, video, TTS (different voices from ElevenLabs), background removal; useful as a backup.
 - Container: 2 CPUs. Full-res render ≈ 8–10 min per 90 s of video per worker.
+
+
+---
+
+## Video 01 of the economics series — "১ কোটি বনাম ১,০০০ কোটি" (Oct 2026)
+
+| What happened | Rule now |
+|---|---|
+| Script mixed "650 floors" (3 m floors) with a 40-floor/152 m tower — numbers contradicted each other | One measuring stick per comparison; check every pair of numbers agrees |
+| 4 takes × 4 variations burned credits and hit ElevenLabs concurrency/rate limits | One take per voiceover, whole script in one request; split by transcript word timings |
+| Signed audio URLs blocked by the network allowlist | Ask the creator to allow `storage.googleapis.com` before the VO step |
+| Chapter chips ("০১ প্রশ্ন") distracted from the main visuals | No `.tag` in videos |
+| Uneven rule line above the source band | Source = plain text in the bottom band, no rule |
+| Facebook feed shows Reels cropped to 4:5 | Key content in y 285–1635; bands carry bleed |
+| Master fade (4.6 s) swallowed the last VO line; ending felt abrupt | Hold last scene ~3 s after VO; `end_chord_s` lands the closing chord on the CTA; `end_fade_s` 1 s |
+| Default cover at 1.5 s was an empty frame; a frame grab is weak anyway | Design a dedicated cover per video (`cover-design.md`): question title, one hero element, topic palette |
+| A real photo of the subject (Shanta Pinnacle) beat any drawn icon | Ask for a photo of the key object; cut it out and use it as the comparison unit |
+
+
+---
+
+## Process review after episodes 01–03 (Oct 2026) → plugin v0.4
+
+| Where time went | Rule / tool now |
+|---|---|
+| Script fixes caught by the creator after the script was "done" (650 floors; stale 2022–23 inflation; off-chain remittance and wage lines; ending question added late) | `facts.json` + `script_check.py`: recency, connection, arithmetic with fact keys, ending CTA, no digits in VO — before the creator sees it |
+| Script edited after the VO existed (ep. 02) → VO, split, timing, mix, render all again | `state.py approve script` stores the hash; `vo_text.py` and `vo_split.py` refuse any other version |
+| Manual take split by guessing from small pauses; a phrase landed in the wrong scene (ep. 02, visuals late in scenes 8–9). Tested on the real ep. 03 take: its scene breaks (0.4–0.5 s) equal sentence pauses and natural speed varies −16 %…+24 % per scene, so pause/speed guesses got 1–5 of 8 cuts wrong | `vo_text.py` puts a "[pause]" line between scenes; `vo_split.py` cuts only when the scene pauses are clearly the longest (8/8 right on ep. 03 with real pauses), otherwise stops (AMBIGUOUS) and asks for a re-generated take |
+| Visuals timed by hand to seconds | `data-say="word"`: the engine times the graphic to the spoken word (word times from `vo_prep.py`) |
+| Creator found illegible numbers, overlaps, text touching bars | `audit.py`: contrast vs real background, text-on-text, covered text, edge touches, 4:5 zone, size; `review.py --keys` sheet with the spoken line under each frame |
+| Captions drifted up to 0.8 s | `make_srt.py` starts each line on its first spoken word |
+| Many tar → _to_delete → extract round trips; ep. 03 folder structure missing on the Mac | Mac skeleton at setup; `pack.py` one verified transfer per stage (decode check survives C2PA); `pack.py check --final` |
+| One giant chat per episode (every turn re-reads everything) | Three chats (Plan batch / Build / Finish batch), `state.json` hand-off, plugin work in its own chat |
+| Deferred: a per-episode theme library | Revisit once there are enough episodes to learn from (creator decision, Oct 2026) |

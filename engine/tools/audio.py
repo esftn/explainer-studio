@@ -33,7 +33,7 @@ def mood_at(t):
         if t >= st - 1e-6: m = mo
     return m
 end_scene = next((s for s, (_, mo) in zip(scenes, moods) if mo == 'end'), scenes[-1])
-END_T = end_scene['start'] - 0.6
+END_T = (TOTAL - C['end_chord_s']) if C.get('end_chord_s') else end_scene['start'] - 0.6   # end_chord_s: closing chord this many s before the end (rings through the hold)
 
 # ---- DSP helpers ----
 def env_adsr(n, a, d, s, r):
@@ -134,9 +134,18 @@ def raga_notes(name, lo, hi):
 music = np.zeros((N, 2)); nbars = int(np.ceil(END_T / BAR))
 pal = C.get('palette', 'bangla')
 if pal == 'cinematic':
-    PROG = [(50, [62, 65, 69]), (46, [62, 65, 70]), (41, [60, 65, 69]), (48, [60, 64, 67]),
-            (50, [62, 65, 69]), (43, [62, 67, 70]), (46, [62, 65, 70]), (45, [61, 64, 69])]
-    pattern = [0, 2, 1, 2, 0, 2, 1, 2]
+    # v0.7: chord set, pattern, kick moods and closing chord are configurable so five music presets sound different (studio/music_bank.json)
+    PROGS = {
+        'dm':   [(50, [62, 65, 69]), (46, [62, 65, 70]), (41, [60, 65, 69]), (48, [60, 64, 67]),
+                 (50, [62, 65, 69]), (43, [62, 67, 70]), (46, [62, 65, 70]), (45, [61, 64, 69])],
+        'am':   [(45, [57, 60, 64]), (41, [57, 60, 65]), (48, [60, 64, 67]), (43, [59, 62, 67]),
+                 (45, [57, 60, 64]), (41, [57, 60, 65]), (48, [60, 64, 67]), (40, [56, 59, 64])],
+        'cmaj': [(48, [60, 64, 67]), (43, [59, 62, 67]), (45, [57, 60, 64]), (41, [57, 60, 65]),
+                 (48, [60, 64, 67]), (43, [59, 62, 67]), (41, [57, 60, 65]), (43, [59, 62, 67])]}
+    PROG = PROGS.get(C.get('prog', 'dm'), PROGS['dm'])
+    pattern = C.get('pattern', [0, 2, 1, 2, 0, 2, 1, 2])
+    KICK = set(C.get('kick_moods', ['drive']))
+    END_NOTES = C.get('end_notes', [50, 57, 62, 65, 69, 76]); END_PLUCK = C.get('end_pluck', [74, 81])
     for k in range(nbars):
         t0 = k * BAR; mo = mood_at(t0); root, tri = PROG[k % 8]
         amp = {'intro': .05, 'drive': .06, 'somber': .06, 'elegy': .062}.get(mo, .055)
@@ -151,14 +160,14 @@ if pal == 'cinematic':
         elif mo in ('build', 'drive'):
             for j, idx in enumerate(pattern):
                 place(music, pluck(mtof(notes[idx]), (.045 if mo == 'build' else .052) * (1 if j % 4 == 0 else .7)), t0 + j * BEAT / 2, pan=-.25 + .25 * idx)
-            if mo == 'drive':
+            if mo in KICK:
                 for j in (0, 2): place(music, kick(), t0 + j * BEAT, .10)
         elif mo in ('somber', 'elegy'):
             for j in (0, 3): place(music, pluck(mtof(notes[0] if j == 0 else notes[2]), .055, 2.6), t0 + j * BEAT, pan=-.1)
         elif mo == 'answer':
             for j, idx in enumerate([0, 1, 2, 1]): place(music, pluck(mtof(notes[idx] + (12 if j == 2 else 0)), .045, 2.2), t0 + j * BEAT, pan=.15)
-    for i, m in enumerate([50, 57, 62, 65, 69, 76]): place(music, pad_note(mtof(m), 7.5, .05 if m > 55 else .07), END_T, pan=-.4 + .16 * i)
-    for i, m in enumerate([74, 81]): place(music, pluck(mtof(m), .05, 3.5), END_T + .05 + i * .35, pan=.2 * (1 if i else -1))
+    for i, m in enumerate(END_NOTES): place(music, pad_note(mtof(m), 7.5, .05 if m > 55 else .07), END_T, pan=-.4 + .16 * i)
+    for i, m in enumerate(END_PLUCK): place(music, pluck(mtof(m), .05, 3.5), END_T + .05 + i * .35, pan=.2 * (1 if i else -1))
 else:
     sa = C.get('sa_midi', 50); MO = C['moods']
     # tanpura: Pa – Sa' – Sa' – Sa cycle, one string every BEAT, continuous to the end chord
@@ -239,6 +248,27 @@ def s_pop():
     return np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-tt * 60) * .5
 SFX = {'click': (s_click, 0), 'tick': (lambda: s_tick(rng.uniform(.9, 1.12)), 0), 'whoosh': (s_whoosh, -.18), 'trans': (s_trans, -.2),
        'impact': (s_impact, 0), 'stamp': (s_stamp, .12), 'tone': (s_tone, 0), 'bell': (s_bell, 0), 'paper': (s_paper, -.05), 'pop': (s_pop, 0)}
+# v0.7: the engine also emits AUTO cues (from data-a: slam→impact, stamp→stamp, pop→pop, …). They are thinned here so the track stays
+# subtle: a per-scene cap, a per-type cap, a minimum gap to every other cue, and a lower gain than hand-placed data-sfx cues.
+AS = {'enabled': True, 'max_per_scene': 3, 'min_gap_s': 0.6, 'gain_mult': 0.8,
+      'priority': ['impact', 'stamp', 'pop', 'whoosh', 'paper', 'click', 'tick'],
+      'type_cap': {'impact': 1, 'stamp': 2, 'pop': 2, 'whoosh': 1, 'paper': 1, 'click': 1, 'tick': 1}}
+AS.update(C.get('auto_sfx', {}))
+_hand = [c for c in cues if not c.get('auto')]; _auto = [c for c in cues if c.get('auto')]
+_keep, _taken, _ps, _pt = [], [c['t'] for c in _hand], {}, {}
+if AS['enabled']:
+    _pri = {k: i for i, k in enumerate(AS['priority'])}
+    def _scene_of(t):
+        for i, s in enumerate(scenes):
+            if s['start'] - 1e-6 <= t < s['start'] + s['dur']: return i
+        return len(scenes) - 1
+    for c in sorted(_auto, key=lambda c: (_pri.get(c['type'], 99), c['t'])):
+        k = _scene_of(c['t']); tk = (k, c['type'])
+        if _ps.get(k, 0) >= AS['max_per_scene'] or _pt.get(tk, 0) >= AS['type_cap'].get(c['type'], 1): continue
+        if any(abs(c['t'] - x) < AS['min_gap_s'] for x in _taken): continue
+        _keep.append(c); _taken.append(c['t']); _ps[k] = _ps.get(k, 0) + 1; _pt[tk] = _pt.get(tk, 0) + 1
+cues = sorted(_hand + _keep, key=lambda c: c['t'])
+report.append(f'sfx cues: {len(_hand)} placed by hand/transitions, {len(_keep)} automatic (of {len(_auto)} candidates)')
 last, duck, used, unknown = {}, np.ones(N), {}, set()
 for c in cues:
     t, ty = c['t'], c['type']
@@ -247,7 +277,7 @@ for c in cues:
     if ty in last and t - last[ty] < .07: continue
     last[ty] = t; used[ty] = used.get(ty, 0) + 1
     fn, off = SFX[ty]; pan = 0 if ty in ('whoosh', 'trans', 'impact', 'stamp') else rng.uniform(-.25, .25)
-    place(sfx, fn(), t + off, G.get(ty, .3), pan)
+    place(sfx, fn(), t + off, G.get(ty, .3) * (AS['gain_mult'] if c.get('auto') else 1.0), pan)
     if ty == 'impact':
         i = int(t * SR); n = int(SR); d = 1 - L.get('impact_duck', .35) * np.exp(-np.arange(n) / SR * 3)
         duck[i:i + n] = np.minimum(duck[i:i + n], d[: len(duck[i:i + n])])
@@ -294,7 +324,7 @@ report.append(f'limiter: {(g < 10 ** (-1 / 20)).mean() * 100:.2f}% of samples re
 mix *= g[:, None]; mix[fo1:] = 0
 tp = 20 * np.log10(np.abs(signal.resample_poly(mix, 4, 1, axis=0)).max() + 1e-12)
 lu = meter.integrated_loudness(mix)
-report.append(f'master: {lu:.2f} LUFS, true peak {tp:.2f} dBTP, length {len(mix) / SR:.2f}s, palette {pal}')
+report.append(f'master: {lu:.2f} LUFS, true peak {tp:.2f} dBTP, length {len(mix) / SR:.2f}s, palette {pal}, music {C.get("music_id", "default")}')
 if tp > L['true_peak_db'] + .3: report.append('FAIL true peak above target')
 (P / 'out').mkdir(exist_ok=True)
 sf.write(P / 'out' / 'mix.wav', mix.astype(np.float32), SR, subtype='PCM_24')

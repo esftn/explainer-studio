@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.7.2 — 2026-10-24
+Catches the repo up from 0.2.0 to the plugin in use (0.3–0.7.2 were installed as .plugin files only).
+- 0.5–0.6: Facebook 4:5 zone, captions bn/en, publish.txt, guard/pack/finish transfer tools, facts gate.
+- 0.7: studio.py (step cards, look/music rotation, objective checks, automatic status), 5 rotating music presets, automatic SFX, palette bank.
+- 0.7.1: reading-time check and bigger minimum text in audit.py; data-say lands 0.25 s early (sayLead); cover_check.py (size, zones, palette, spoilers).
+- 0.7.2: palettes rebuilt from episodes 1–5 (12 calm sets); cover template tool removed, covers hand-designed (docs/cover-design.md); no top/bottom bars.
+- Dropped since 0.2 (removed in later plugin versions): 16:9 scene set, thumbnail.py, publish.py, docs/ai-visuals.md.
+Details: docs/CHANGES-v0.7.md.
+
 ## 0.2.0 — 2026-10-21
 Learnings from the "Vox / Johnny Harris-style videos with AI" research merged in.
 - **Source ledger** replaces the fact sheet: central question + thesis, F-numbered facts with confidence,
