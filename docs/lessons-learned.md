@@ -162,3 +162,4 @@ Rough estimate: the next video of similar length should take **~40–50% of the 
 | Many tar → _to_delete → extract round trips; ep. 03 folder structure missing on the Mac | Mac skeleton at setup; `pack.py` one verified transfer per stage (decode check survives C2PA); `pack.py check --final` |
 | One giant chat per episode (every turn re-reads everything) | Three chats (Plan batch / Build / Finish batch), `state.json` hand-off, plugin work in its own chat |
 | Deferred: a per-episode theme library | Revisit once there are enough episodes to learn from (creator decision, Oct 2026) |
+| v0.8 (7 Nov 2026, channel data, 24 Shorts): swipe-away 36–49 %, view curves flat after day 1–2, retention falls to ~0 during the 3 s end hold, average view 0:27–0:42 whatever the length | Cover opening 1.6 s (bake_cover --hold), loud scene 1, end hold 1 s, scripts 85–100 words, one series-layout cover (cover_series.py), bright covers only, titles ≤ 45 chars |

@@ -70,7 +70,7 @@ Rules:
 | 5 | **Voiceover** | 1–3 long takes → split → trimmed, level-matched clips + anchors | ✅ creator listens |
 | 6 | **Build + QA** | full timeline; `audit.py` (bounds, density, safe zone) passes; contact sheets reviewed by Claude; low-res preview MP4 | ✅ creator watches preview |
 | 7 | **Final** | full-res render (parallel, per-range), audio master, caption, SRT, delivery with md5 check | — |
-| 8 | **Cover** | 2–3 designed cover concepts per `cover-design.md` (episode palette, real photo/cutout hero, question title without the answer; `cover_check.py` PASS) | ✅ creator picks |
+| 8 | **Cover** | ONE cover in the series layout (`cover_series.py`, `cover-design.md` §0: full-bleed real photo, chip, white line, one bright question block, no answer; `cover_check.py` PASS); baked as frame 1, thumbnail and 1.6 s opening | ✅ creator confirms |
 
 Rules:
 - Never generate VO before the script gate. Never render full-res before the preview gate.

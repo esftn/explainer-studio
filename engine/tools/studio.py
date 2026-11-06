@@ -184,8 +184,9 @@ def cmd_check(a):
             if per < K['min_sfx_cues_per_scene']: fails.append(f'sound effects missing or too few ({n} cues for {ns} scenes). Check project.json autoSfx is not false and no data-sfx="none" everywhere')
             elif per > 6: warns.append(f'{n} sound-effect cues ({per:.1f} per scene): may be distracting')
             if 'FAIL' in rep: fails.append('audio_report.txt contains a FAIL line')
-        if ac.get('end_fade_s', 1) > 1.2 or ac.get('end_chord_s', 4) < 3: fails.append('ending audio changed: the closing chord must ring and the last line must not fade')
-        if float(pj.get('end_hold', 3.0)) < K['min_end_hold_s'] - 1e-6: fails.append(f"end_hold {pj.get('end_hold')} s is below {K['min_end_hold_s']} s")
+        if ac.get('end_fade_s', .6) > 1.0 or ac.get('end_chord_s', 2.4) < 1.5: fails.append('ending audio changed: the closing chord must land on the last line and the last line must not fade')
+        eh = float(pj.get('end_hold', 1.0)); lo, hi = K['end_hold_s']
+        if not lo - 1e-6 <= eh <= hi + 1e-6: fails.append(f"end_hold {eh} s is outside {lo}-{hi} s (v0.8: ~1 s so the Short loops)")
     if a.stage == 'final':
         out = p / 'out'
         for pat in FINALS:

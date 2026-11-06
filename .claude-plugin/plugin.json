@@ -1,6 +1,6 @@
 {
   "name": "explainer-studio",
-  "version": "0.7.2",
+  "version": "0.8.0",
   "description": "Make Vox / Johnny-Harris-style explainer videos (Bangla first) with Claude: one step card per stage, rotating palettes and music, automatic sound effects, QA-gated render and an auto-written status document.",
   "author": {
     "name": "Esoft"

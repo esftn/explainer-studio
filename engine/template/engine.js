@@ -146,7 +146,7 @@
       if (i > 0 && lt < TR) { const p = eq(lt / TR); clip = `inset(0 0 0 ${((1 - p) * 100).toFixed(2)}%)`; tx = (1 - p) * 140; }
       if (!last && lt >= s._dur) { const p = eq((lt - s._dur) / TR); tx = -p * 160; }
       s.style.clipPath = clip;
-      if (last && lt > s._dur - 0.8) op = Math.max(0, 1 - (lt - (s._dur - 0.8)) / 0.8);
+      if (last && lt > s._dur - 0.25) op = Math.max(0, 1 - (lt - (s._dur - 0.25)) / 0.25);   // v0.8: 1 s hold, quick out so the loop restart is clean
       s.style.opacity = op; s.style.transform = `translateX(${tx}px) rotate(${rot}deg)`; s.style.zIndex = i;
       if (s._cam) { const c = cam(s, lt); s._cam.style.transform = `translate(${c[2]}px,${c[3]}px) scale(${c[1]})`; }
       s._els.forEach((e) => applyEl(e, lt));

@@ -50,6 +50,7 @@ def lint(path, facts=None, strict=False):
     t = sec.get('TITLE', '')
     title = next((l.strip() for l in t.splitlines() if l.strip() and not l.strip().lower().startswith('alt')), '')
     if title and len(title) > 70: fails.append(f'title is {len(title)} characters (max 70)')
+    elif title and len(title) > 45: warns.append(f'title is {len(title)} characters: aim for <= 45 so the whole title shows over the Short in the feed')
     for h, lab in (('HASHTAGS', None),):
         for line in sec.get(h, '').splitlines():
             m = re.match(r'^(YouTube|Facebook)\s*(?:\((\d+)\))?\s*:\s*(.*)$', line.strip())

@@ -30,7 +30,7 @@ for fam in ('noto-sans-bengali', 'noto-serif-bengali', 'tiro-bangla'):
     shutil.copytree(fs / fam, P / 'fonts' / fam, dirs_exist_ok=True)
 
 proj = {'title': a.title, 'lang': a.lang, 'preset': a.preset, 'voOffset': 0.3, 'pad': 0.55, 'transition': 0.45,
-        'max_len': a.max_len, 'end_hold': 3.0, 'sayLead': 0.25, 'feed_zone': [285, 1635],
+        'max_len': a.max_len, 'end_hold': 1.0, 'cover_hold': 1.6, 'sayLead': 0.25, 'feed_zone': [285, 1635],
         'rules': {'ending_cta': 'কমেন্টে', 'now_max_months': 12, 'facts_gate': True},
         'vo': {'tempo': 1.06, 'trim_db': -45, 'pause_min': 0.22, 'scene_break': '[pause]', 'scene_break_min': 0.45, 'chars_per_s': 12.5}}
 (P / 'project.json').write_text(json.dumps(proj, ensure_ascii=False, indent=2))
