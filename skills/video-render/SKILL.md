@@ -8,7 +8,7 @@ description: Final audio master, full-resolution render, verification, captions,
 > **v0.7:** the order of work is the step card printed by `python3 engine/tools/studio.py next videoNN` (it wins over anything below that conflicts). This file is the technique reference for your current step; do not read it start to finish.
 
 ## 0. Start lean
-Series brief (cover log!) + the generated tracker + `../../docs/audio.md`, `../../docs/cover-design.md`, `../../docs/platform-notes.md`.
+`claude/series-rules.md` + the generated tracker + `../../docs/audio.md`, `../../docs/cover-design.md`, `../../docs/platform-notes.md`.
 **Claim the episode first** (`python3 _series/tools/guard.py claim videoNN --who "Finish epNN …"` on the Mac — REFUSED = stop; then `guard.py fingerprint videoNN --out videoNN/_to_delete/mac_fp.json` right before pushing). Pull each episode in one verified step
 (see video-preview §0). `state.py videoNN show` must say `preview-approved`.
 

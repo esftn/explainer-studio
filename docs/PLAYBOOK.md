@@ -55,7 +55,7 @@ contact-sheet review, render, mastering, captions/SRT, cover, caption text, deli
 Rules:
 - A tool FAIL is fixed before anything is sent to the creator.
 - Never make VO text before the script is approved; never render full-res before the preview is approved.
-- Each chat starts from `state.py show` + the series brief + the generated tracker and ends with one verified `pack.py` transfer.
+- Each chat starts from `state.py show` + `claude/series-rules.md` (the brief is an archive for lookups) + the generated tracker and ends with one verified `pack.py` transfer.
 - v0.6 hand-offs: a Build/Finish chat **claims** the episode (`guard.py claim`, refused = stop), pulls with `pack.py unpack` (saves the base), pushes only with
   `--guard <Mac fingerprint>` (refused if the Mac copy changed since the pull), and releases at the end. The tracker is generated
   (`series_tracker.py --write`), never hand-edited; notes go to `_series/issues.md` (append-only). Finish ends with `finish.py --verify` = DONE on the Mac.

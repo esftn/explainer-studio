@@ -13,21 +13,22 @@ def sat(h):
     h = h.lstrip('#'); r, g, b = [int(h[i:i + 2], 16) / 255 for i in (0, 2, 4)]; return colorsys.rgb_to_hsv(r, g, b)[1]
 
 # id, label, family, motif, paper, ink, [c1..c4]      (order = rotation order; neighbours differ in colour family)
-P = [   # v0.7.1: rebuilt from the colours of episodes 1-5 (the covers/videos the creator liked) - calm, printed-paper, never neon
- ('mustard-paper', 'Mustard paper (ep 01)', 'yellow', 'note stacks, cream paper tags, tiny-vs-huge scale, dot texture', '#F6EFDD', '#151515', ['#F3C63C', '#E2333F', '#1F7F79', '#A1BE98']),
- ('teal-map', 'Teal map', 'teal', 'atlas page, coral pins, brass labels, dashed routes', '#FFF6E6', '#0E403C', ['#1F7F79', '#FFD23F', '#FF7A63', '#8B6A3F']),
- ('vermilion-kraft', 'Vermilion and kraft (ep 03)', 'red', 'newsprint strip, kraft tags, price tags, real product cutouts', '#F4EDDB', '#15100C', ['#E2452B', '#E0A43A', '#2F6B4F', '#BAA582']),
- ('money-green', 'Money green', 'green', 'banknote guilloche, ledger lines, coral stamps, coin discs', '#F6EFDD', '#0C2B20', ['#1D5B45', '#FFD23F', '#FF7A63', '#CFE0D2']),
- ('riso-indigo', 'Risograph indigo (ep 04)', 'blue', 'two-ink halftone photo, grain, hatched shapes, mustard blocks', '#F4EDDF', '#161842', ['#262A6E', '#F0B429', '#FF5F4E', '#A47056']),
- ('berry-mint', 'Berry and mint (ep 02)', 'pink', 'taped receipts, torn paper, photo strips, mint tags', '#FFF8F0', '#2A0A17', ['#7D243E', '#B4E1C3', '#FFE066', '#F2B8C6']),
- ('concrete-orange', 'Concrete and safety orange (ep 05)', 'charcoal', 'raw concrete texture, corner marks, calendar pages, navy title blocks', '#F3F1EA', '#15181D', ['#9E9B96', '#FF6B1A', '#13203D', '#B68A6D']),
- ('blueprint-sky', 'Blueprint and sky', 'sky', 'blueprint grid, chalk lines, white paper tags, yellow marker', '#EEF4FF', '#10223F', ['#8FCBE8', '#173A6A', '#FFD23F', '#E2333F']),
- ('kraft-stamp', 'Kraft and stamp', 'cream', 'kraft paper, rubber stamps, twine, red wax', '#F6EEDC', '#211C17', ['#C49A62', '#B53B26', '#2F5D50', '#E0A43A']),
- ('coral-sand', 'Coral and sand', 'coral', 'warm paper cut-outs, sun circles, teal contrast tags', '#FFF3E8', '#2A1612', ['#F2735C', '#F0B429', '#1F6B6A', '#264653']),
- ('plum-paper', 'Plum paper', 'violet', 'poster print, mustard tags, terracotta underline, sage cards', '#F5EEF2', '#1F1230', ['#573C64', '#F0B429', '#E07A5F', '#A7C4BC']),
- ('forest-gold', 'Forest and gold', 'darkgreen', 'letterpress cards, gold rules, rust stamps, leaf fills', '#F3EDD8', '#0F1F17', ['#2E5E3E', '#E9B949', '#C4552E', '#8DB580']),
+P = [   # v0.8.1 (7 Nov 2026): energetic Vox register (creator preference + channel data: bright covers/openers outperformed calm/dark ones).
+        # One bold background colour, one hot accent, paper for contrast; families unchanged so rotation history still works.
+ ('vox-yellow', 'Vox yellow', 'yellow', 'note stacks, tiny-vs-huge scale, marker circles, dot texture', '#FFF6E0', '#111111', ['#FFC400', '#FF3B30', '#1F3FD8', '#2EE6A8']),
+ ('electric-teal', 'Electric teal', 'teal', 'map pins, dashed routes, lime tags, coral arrows', '#F2FBF9', '#062B2A', ['#00A39A', '#FFD23F', '#FF5A4E', '#B8F400']),
+ ('tomato-red', 'Tomato red', 'red', 'price tags, newsprint strip, real product cutouts, gold stamps', '#FFF1E6', '#160B07', ['#F2382B', '#FFC93C', '#0B7A5A', '#FFB4A2']),
+ ('money-lime', 'Money lime', 'green', 'banknote guilloche, ledger lines, coin discs, lime highlighter', '#F6FFE9', '#0B2410', ['#1FA34A', '#FFD23F', '#FF5A4E', '#C6F432']),
+ ('cobalt-pop', 'Cobalt pop', 'blue', 'bold bars, pink markers, mint chips, halftone photo', '#F0F3FF', '#0B1346', ['#1F3FD8', '#FFC93C', '#FF3F86', '#2EE6A8']),
+ ('hot-pink', 'Hot pink', 'pink', 'taped receipts, torn paper, lemon tags, cobalt arrows', '#FFF0F6', '#2A0A17', ['#FF3F86', '#FFE066', '#1F3FD8', '#2EE6A8']),
+ ('charcoal-orange', 'Charcoal and safety orange', 'charcoal', 'hazard tape, corner marks, calendar pages, sky-blue tags', '#F4F2EE', '#121417', ['#FF6B1A', '#23262B', '#FFD23F', '#17A9F5']),
+ ('sky-lemon', 'Sky and lemon', 'sky', 'chat bubbles, blueprint grid, lemon marker, coral pops', '#EEF8FF', '#06182C', ['#17A9F5', '#FFE22E', '#FF4D5A', '#35E8A4']),
+ ('saffron-grape', 'Saffron and grape', 'cream', 'rice-grain texture, ticket stubs, grape blocks, rose tags', '#FFF6E2', '#1E0F2E', ['#FFA31A', '#5B2A86', '#FF5A7A', '#FFE066']),
+ ('coral-lime', 'Coral and lime', 'coral', 'scratch cards, signal bars, lime blocks, blue pops', '#FFF3EE', '#2A1612', ['#FF5A4E', '#C6F432', '#1F6FEB', '#FFD23F']),
+ ('violet-lemon', 'Violet and lemon', 'violet', 'poster print, lemon tags, orange underline, mint cards', '#F6F0FF', '#1A0E33', ['#7A3CFF', '#FFE22E', '#FF7A1A', '#2EE6A8']),
+ ('jungle-gold', 'Jungle and gold', 'darkgreen', 'leaf fills, gold rules, coral stamps, sky tags', '#F3FFF5', '#062114', ['#0B8F55', '#FFC400', '#FF5A4E', '#8BE3FF']),
 ]
-out = {'_about': 'Vox / Johnny-Harris-style palettes in the calm printed-paper register of episodes 1-5 (creator preference): no neon, no harsh pairs. Themes are pre-validated (text >= 4.5:1, graphics >= 3:1). Rotated by episode number (studio.py look). Colours outside the palette (except black/white/greys) are flagged by studio.py check. Generated by build_palettes.py.',
+out = {'_about': 'Vox / Johnny-Harris-style palettes, energetic register (v0.8.1): one bold background, one hot accent, paper for contrast; never dull or dark-dominant openers. Themes are pre-validated (text >= 4.5:1, graphics >= 3:1). Rotated by episode number (studio.py look). Colours outside the palette (except black/white/greys) are flagged by studio.py check. Generated by build_palettes.py.',
        'rules': ['3-4 colours per scene: one background, one text colour, one highlight, one small pop colour',
                  'flat colour blocks + real texture (paper, grain, halftone); no decorative gradients',
                  'photos as cutouts with a thin paper outline and a soft shadow, or full-bleed with a colour wash',

@@ -1,0 +1,22 @@
+<!-- share-bar (v0.8.1): one price / one 100 টাকা split into who gets what (T-shirt, cash-out fee, supershop, gold, rice).
+     One horizontal bar; segments grow left→right in the order the voice names them; each label pops on its own spoken word.
+     Widths are the real shares (set style width: NN%). The smallest share gets the marker circle — that's usually the point.
+     Keep labels ≥ 40 px; the caption lane (y ~1430-1550) stays free. -->
+<section class="scene" data-vo="3">
+  <div class="bgp"></div>
+  <div class="cam">
+    <div class="a h2" style="left:56px;top:300px;width:968px" data-a="up" data-t="0.2">১০০ টাকা গেল <span class="mk" data-a="mark" data-at="a0">কোথায়</span>?</div>
+    <div class="a" style="left:56px;top:560px;width:968px;height:150px;display:flex;border:6px solid var(--ink);box-shadow:10px 10px 0 var(--ink);background:var(--bgc)">
+      <div style="width:60%;background:var(--accent);transform-origin:left" data-a="growx" data-at="a1" data-d="0.7" data-sfx="whoosh"></div>
+      <div style="width:24%;background:var(--accent2);transform-origin:left" data-a="growx" data-at="a2" data-d="0.6" data-sfx="whoosh"></div>
+      <div style="width:12%;background:var(--ink);transform-origin:left" data-a="growx" data-at="a3" data-d="0.5" data-sfx="whoosh"></div>
+      <div style="width:4%;background:var(--accent2);transform-origin:left" data-a="growx" data-at="a4" data-d="0.4" data-sfx="tick"></div>
+    </div>
+    <div class="a b" style="left:56px;top:740px;width:560px" data-a="up" data-at="a1">দোকান <b><span data-a="count" data-from="0" data-to="60" data-at="a1" data-d="0.7">০</span> টাকা</b></div>
+    <div class="a b" style="left:56px;top:820px;width:560px" data-a="up" data-at="a2">ব্র্যান্ড <b>২৪ টাকা</b></div>
+    <div class="a b" style="left:56px;top:900px;width:560px" data-a="up" data-at="a3">কারখানা <b>১২ টাকা</b></div>
+    <div class="a h2" style="left:56px;top:1010px;width:968px" data-a="slam" data-at="a4" data-sfx="impact"><span class="blk">শ্রমিক: ৪ টাকা</span></div>
+    <svg class="a" style="left:928px;top:520px;width:150px;height:230px" viewBox="0 0 150 230"><ellipse data-a="draw" data-at="a4" data-d="0.6" cx="75" cy="115" rx="62" ry="100" fill="none" stroke="var(--accent2)" stroke-width="9" pathLength="1"/></svg>
+  </div>
+  <div class="src">সূত্র: …</div>
+</section>

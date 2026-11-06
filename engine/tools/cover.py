@@ -5,13 +5,14 @@ Output: out/_cover_<name>_9x16.png, out/_cover_<name>_4x5.png, out/_cover_<name>
 import argparse, pathlib
 from PIL import Image, ImageDraw
 from playwright.sync_api import sync_playwright
+import sys as _s; _s.path.insert(0, str(__import__('pathlib').Path(__file__).parent))
 
 ap = argparse.ArgumentParser(); ap.add_argument('project'); ap.add_argument('page')
 a = ap.parse_args(); P = pathlib.Path(a.project).resolve(); src = P / a.page
 name = src.stem.replace('cover_', '') or 'cover'; (P / 'out').mkdir(exist_ok=True)
 full = P / 'out' / f'_cover_{name}_9x16.png'
 with sync_playwright() as pw:
-    b = pw.chromium.launch(); pg = b.new_page(viewport={'width': 1080, 'height': 1920})
+    b = pw.chromium.launch(**__import__('es').launch_kw()); pg = b.new_page(viewport={'width': 1080, 'height': 1920})
     errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
     pg.on('requestfailed', lambda r: errs.append('missing ' + r.url))
     pg.goto('file://' + str(src)); pg.evaluate('document.fonts.ready'); pg.wait_for_timeout(600)

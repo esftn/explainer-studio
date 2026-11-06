@@ -12,6 +12,7 @@ The checker cannot judge taste: still LOOK at out/_cover_<name>_sheet.jpg (thumb
 """
 import json, pathlib, re, sys
 from playwright.sync_api import sync_playwright
+import sys as _s; _s.path.insert(0, str(__import__('pathlib').Path(__file__).parent))
 
 ZONE = (285, 1635); SQ = (420, 1500); TITLE_Y = (440, 1500)
 P = pathlib.Path(sys.argv[1]).resolve(); page = P / sys.argv[2]
@@ -52,7 +53,7 @@ BN = str.maketrans('০১২৩৪৫৬৭৮৯', '0123456789')
 nums = lambda s: {re.sub(r'[,.]$', '', x) for x in re.findall(r'[0-9][0-9,.]*', s.translate(BN))}
 
 with sync_playwright() as pw:
-    b = pw.chromium.launch(); pg = b.new_page(viewport={'width': 1080, 'height': 1920})
+    b = pw.chromium.launch(**__import__('es').launch_kw()); pg = b.new_page(viewport={'width': 1080, 'height': 1920})
     pg.goto('file://' + str(page)); pg.evaluate('document.fonts.ready'); pg.wait_for_timeout(500)
     try: pg.wait_for_function('window.COVER_READY || !document.querySelector(".title")', timeout=4000)
     except Exception: pass

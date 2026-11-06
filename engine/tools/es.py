@@ -29,11 +29,18 @@ def timeline_hash(p):
     return h.hexdigest()[:16]
 
 
+def launch_kw():
+    """ES_CHROME=/path/to/chrome uses that browser instead of Playwright's bundled Chromium (e.g. an ARM64 build)."""
+    import os
+    exe = os.environ.get('ES_CHROME')
+    return {'executable_path': exe, 'args': ['--no-sandbox', '--disable-gpu']} if exe else {}
+
+
 @contextlib.contextmanager
 def page(p, w=W, h=H):
     from playwright.sync_api import sync_playwright
     with sync_playwright() as pw:
-        br = pw.chromium.launch()
+        br = pw.chromium.launch(**launch_kw())
         pg = br.new_page(viewport={'width': w, 'height': h})
         errs = []
         pg.on('console', lambda m: errs.append(m.text) if m.type in ('warning', 'error') and 'Failed to load resource' not in m.text else None)

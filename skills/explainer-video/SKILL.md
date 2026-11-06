@@ -15,7 +15,7 @@ python3 engine/tools/studio.py next videoNN      # or on the Mac: python3 _serie
 It prints this episode's stage, who is waiting, the **step card** to follow (numbered, with the exact commands), the creator's rules
 and the report templates to use. **The card is the order of work. Do not improvise steps, skip a numbered step, or run a stage the
 creator did not ask for.** With no episode it prints the series status.
-Do NOT read `series-brief.md` or old chats at the start: the brief is an archive. Fetch only the section a card step needs
+Read `claude/series-rules.md` (short, current rules) at the start. Do NOT read `series-brief.md` or old chats: the brief is an archive. Fetch only the section a card step needs
 (Plan: "Shared figures"; Finish: "Cover log") with `project_search`.
 
 ## The flow (what the creator experiences)

@@ -11,7 +11,7 @@ Goal: one short round of questions for up to 3 episodes, the episode folders rea
 episode the creator approves. Ask only what you cannot infer; never ask about what the engine decides.
 
 ## 1. Read
-The project's series brief (`claude/series-brief.md`: house defaults, shared figures, cover log, lessons),
+The project's `claude/series-rules.md` (current rules; read it first) and, only for lookups, the series brief (`claude/series-brief.md`: shared figures, cover log, lessons — search it, don't read it whole),
 `../../docs/PLAYBOOK.md` §1 and `../../templates/brief.md`. Batch: if the creator gives several topics, handle
 them together — shared research, one question round, briefs side by side.
 

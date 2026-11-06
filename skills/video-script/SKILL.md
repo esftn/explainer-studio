@@ -9,7 +9,7 @@ description: Research, fact-check and write the script and voiceover for an expl
 
 ## Read
 `../../docs/storytelling.md`, `../../docs/bangla-localisation.md`, `../../templates/facts.json`,
-`../../templates/script.md`, and the series brief (rules: one measuring stick, Recency, Connection, Tone of
+`../../templates/script.md`, and `claude/series-rules.md` (rules: one measuring stick, Recency, Connection, Tone of
 comparisons, Endings; shared figures — reuse them so episodes agree).
 
 ## 1. Research → `facts.json` (+ `docs/fact-sheet.md` for the creator)

@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.8.1 — 2026-11-07
+- **Palettes:** the 12-set bank rebuilt in an energetic Vox register (vox-yellow, electric-teal, tomato-red, money-lime, cobalt-pop,
+  hot-pink, charcoal-orange, sky-lemon, saffron-grape, coral-lime, violet-lemon, jungle-gold); families unchanged so rotation works;
+  all themes ≥ 4.6:1 text contrast. Episodes that already have docs/look.json keep it until `studio.py look --set/--family` is re-run.
+- **burn_captions.py (new):** big Bangla captions burned into a copy of the video (`*_captioned.mp4`) on a dark box at y 1490
+  (4:5 scaled), skipped during the cover opening; word-by-word highlight when exact word timings exist (`--words`, ElevenLabs
+  Scribe format), SRT chunks otherwise. libass + HarfBuzz shape Bangla; the font is converted once from woff2 (fonttools).
+- **Scene templates:** `opener-loud` (scene 1), `share-bar` (who-gets-what split), `chain-cards` (answer chain); caption-lane rule.
+- **ES_CHROME** env var: use a given Chrome/Chromium binary (render/cover tools) where Playwright's own browser is unavailable.
+- Skills/PLAYBOOK read `claude/series-rules.md` (short current rules) instead of the 85 KB brief; rules.json 0.8.1 (topic test,
+  caption lane, templates).
+
 ## 0.8.0 — 2026-11-07
 From the TakaTheoryBD channel review (24 Shorts, YouTube Studio data): viewers decide in the first 1–2 s, leave at 30–40 s whatever the
 length, and swiped away during the 3 s silent end hold; dark covers and small framed photos underperformed.
