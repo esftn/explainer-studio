@@ -24,7 +24,7 @@
 **Claude's eyes** (`tools/review.py --keys`): every flagged frame (red box) fixed or judged intended; the
 highlighted spoken word under each cue frame matches the graphic; spelling of Bangla conjuncts and digits.
 
-**Audio** (`tools/audio.py`): −14.5 ±0.5 LUFS, ≤ −1.5 dBTP; VO above music; ending holds ~3 s; silent last 0.25 s.
+**Audio** (`tools/audio.py`): −14.5 ±0.5 LUFS, ≤ −1.5 dBTP; VO above music; ending holds ~1 s (v0.8, so the Short loops); silent last 0.25 s.
 
 **Delivery** (`tools/check_final.py`, `tools/pack.py`):
 - [ ] Reel 1080×1920 and feed 1080×1350 PASS · captions start on spoken words (`make_srt.py`)

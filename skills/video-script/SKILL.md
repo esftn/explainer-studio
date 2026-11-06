@@ -32,7 +32,8 @@ comparisons, Endings; shared figures — reuse them so episodes agree).
   (`"13 * pinnacle_m"`, `"int(dollar_now) - round(dollar_before)"`), with how it rounds made explicit.
 
 ## 2. Script → `script.json` + `docs/script.md`
-- Arc: hook (0–3 s) → stakes → turn → answer → closing question with "কমেন্টে লিখুন".
+- Arc: hook (0–1.5 s: the viewer's own stake or ONE short question, e.g. "পাঁচ লাখ টাকা ঋণ নিলেন…" — never a dry statistic or an institution first) → stakes → turn → answer → closing question with "কমেন্টে লিখুন".
+- Length (v0.8): aim for 85–100 Bangla words (~40–45 s). Channel data: viewers leave at 30–40 s whatever the length, so shorter videos finish with more of their audience; `script_check.py` warns above 110 words.
 - One idea per scene; a visual beat every 2–3 s. Bangla চলিত, BD vocabulary, numbers as words in the VO,
   Bangla digits on screen. Frame yardsticks so the main number feels big.
 - `script.json` = `{"1": "VO text", ...}`; `docs/script.md` = table: scene · VO · on-screen text · visual ·

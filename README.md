@@ -4,7 +4,7 @@ Make Vox / Johnny Harris-style explainer shorts with Claude, Bangla first (Faceb
 title → research → script → voiceover → HTML animation → original music and sound effects → QA-gated render → cover → delivery.
 Built for the series **বাংলা অর্থনীতি রিলস** (24+ episodes) and for making 6–9 videos in one sitting with the same steps every time.
 
-**Current version: 0.7.2** — see [CHANGELOG.md](CHANGELOG.md) and [docs/CHANGES-v0.7.md](docs/CHANGES-v0.7.md).
+**Current version: 0.8.0** — see [CHANGELOG.md](CHANGELOG.md) and [docs/CHANGES-v0.7.md](docs/CHANGES-v0.7.md).
 
 It is **two things in one repo**:
 1. **A Claude plugin** — five skills plus a "front door" tool (`studio.py`) that tells Claude the exact steps for the episode's stage.

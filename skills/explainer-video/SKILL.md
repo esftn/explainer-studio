@@ -23,7 +23,7 @@ Do NOT read `series-brief.md` or old chats at the start: the brief is an archive
 2. On OK → ONE message with the VO paste text + the image list (REAL vs AI) → folders prepared (`studio.py new`: project, Vox-style
    palette, music preset) → "videoNN ready".
 3. He drops images + the single VO take → new chat "Build episode NN" → preview (style frames and preview approved together).
-4. "go ahead" → two covers → he picks → render, captions, publish text, bake, tidy, deliver → `studio.py close … delivered`
+4. "go ahead" → one series-layout cover (cover_series.py) → he confirms → render, captions, publish text, bake, tidy, deliver → `studio.py close … delivered`
    writes the status document. He never tracks anything by hand.
 
 ## Look and sound are assigned, not chosen

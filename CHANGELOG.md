@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.8.0 — 2026-11-07
+From the TakaTheoryBD channel review (24 Shorts, YouTube Studio data): viewers decide in the first 1–2 s, leave at 30–40 s whatever the
+length, and swiped away during the 3 s silent end hold; dark covers and small framed photos underperformed.
+- **Cover opening:** `bake_cover.py --hold` (default project.json `cover_hold` 1.6): the cover fills the first 1.6 s with a slow push-in and
+  fades into scene 1 while the first VO line plays (still frame 1 + embedded thumbnail as before).
+- **Ending 1 s:** `end_hold` 1.0 in new projects, `studio.py check` accepts 0.8–1.4 s; closing chord 2.4 s before the end, end fade 0.6 s;
+  the last scene's visual fade-out is 0.25 s.
+- **Series cover:** new `cover_series.py` (full-bleed photo, chip, white line, one bright question block, faces below the title, palette's
+  two brightest colours, auto-shrinks the block to one line); ONE cover per episode (report and cards updated). `docs/cover-design.md` §0.
+- **Hook + length:** script target 85–100 words (~40–45 s); `script_check.py` warns above 110 words and when scene 1 is longer than 16 words;
+  scene 1 must be loud (big question + large photo).
+- **Titles:** `publint.py` warns above 45 characters (the title shows over the Short in the feed).
+- rules.json 0.8.0 (always-rules, plan/build/finish cards, cover report; duplicate build step 6 removed).
+
 ## 0.7.2 — 2026-10-24
 Catches the repo up from 0.2.0 to the plugin in use (0.3–0.7.2 were installed as .plugin files only).
 - 0.5–0.6: Facebook 4:5 zone, captions bn/en, publish.txt, guard/pack/finish transfer tools, facts gate.

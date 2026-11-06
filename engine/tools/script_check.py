@@ -41,11 +41,15 @@ for k, t in SC.items():
 
 # ---------- length ----------
 cps = C.get('vo', {}).get('chars_per_s', 12.5); tempo = C.get('vo', {}).get('tempo', 1.06)
-pad = C.get('pad', 0.55); hold = C.get('end_hold', 3.0); max_len = C.get('max_len', 60)
+pad = C.get('pad', 0.55); hold = C.get('end_hold', 1.0); max_len = C.get('max_len', 60)
 vo_s = sum(speak_chars(t) for t in SC.values()) / cps / tempo
 est = vo_s + pad * N + hold + C.get('voOffset', 0.3)
 if max_len and est > max_len: fails.append(f'estimated length {est:.1f}s > {max_len}s — cut words before the creator sees it')
 elif max_len and est > max_len - 3: warns.append(f'estimated length {est:.1f}s is close to the {max_len}s limit')
+nw = sum(len(str(t).split()) for t in SC.values())
+if nw > 110: warns.append(f'{nw} words (~{est:.0f} s): channel data shows viewers leave at 30-40 s; aim for 85-100 words (~40-45 s)')
+first = str(SC[sorted(SC, key=lambda k: int(''.join(c for c in k if c.isdigit()) or 0))[0]]).split() if SC else []
+if len(first) > 16: warns.append(f'scene 1 is {len(first)} words: the hook must land in ~1.5 s (one short question or the viewer\'s own stake first)')
 
 # ---------- ending ----------
 cta = R.get('ending_cta', 'কমেন্টে')

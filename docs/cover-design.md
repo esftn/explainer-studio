@@ -1,4 +1,24 @@
-# Cover design (v0.7.1): hand-made per topic, like episodes 1–5
+# Cover design
+
+## 0. Series layout (v0.8, 7 Nov 2026) — use this for every new episode
+Decided from the channel data (`claude/channel-performance-7nov.md` in the Claude project): covers with dark backgrounds (navy, indigo, violet,
+dark brown) and covers built around small framed photos/drawn icons all sat below the median; the full-photo ep. 08 cover was the best performer.
+The uploaded weak covers (ep. 01–24) and all of ep. 25–33 were redone in this layout.
+
+- **Tool:** `engine/tools/cover_series.py videoNN --photo … --chip … --line … --block … [--dy] [--px] --render` (writes `cover_A.html`,
+  renders with `cover.py`, checks with `cover_check.py`). The 4:5 version is the y 285–1635 crop of the same page.
+- **Layout (1080×1920):** full-bleed real photo (or a realistic Gemini photo) + top vignette; chip at y 330 (72 px, the known number/setup);
+  one paper-white line at y 455 (116 px, the note); a rotated colour block at y 600 (164 px, the question, ONE line). Faces/subject below y ≈ 830: shift the
+  photo down with `--dy` (a blurred copy fills the top).
+- **Colours:** the two brightest colours of the episode palette (or `--block-bg/--chip-bg`); text black or white by contrast. Never a dark base.
+- **Words:** ≤ 7 words in title + line; the question, never the answer (cover_check catches numbers said only in the second half of the script).
+- **Use:** baked as frame 1, as the embedded thumbnail and as the 1.6 s cover opening; upload the same image as the YouTube thumbnail.
+- **Images:** if no photo in `images/` is strong enough, ask the creator for one Gemini image (vertical 9:16, subject in the lower two-thirds,
+  documentary phone-camera look, no text/logos/banknotes).
+
+---
+
+(v0.7.1, hand-made covers — kept for reference)
 
 A cover is the video's poster: it decides whether the Reel gets tapped. Design every cover by hand for its topic; never a frame from the video,
 never a template. The model is **episodes 1–5**, which the creator liked. Later covers (clock face, speech bubbles, form card) and the v0.7 template

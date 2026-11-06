@@ -79,8 +79,8 @@
     "paper": 0.25,
     "pop": 0.2
   },
-  "end_fade_s": 1.0,
+  "end_fade_s": 0.6,
   "seed": 7,
-  "end_chord_s": 4.4,
+  "end_chord_s": 2.4,
   "_end_note": "end_chord_s: the closing chord lands this many seconds before the end and rings through the hold; end_fade_s only cleans the last second so the final VO line is never faded"
 }
