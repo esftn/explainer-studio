@@ -8,7 +8,7 @@ description: Build the animated explainer from an approved script and VO — spl
 > **v0.7:** the order of work is the step card printed by `python3 engine/tools/studio.py next videoNN` (it wins over anything below that conflicts). This file is the technique reference for your current step; do not read it start to finish.
 
 ## 0. Start the chat lean
-1. Series brief + `../../docs/design-system.md`, `../../docs/qa-checklist.md` (not old chats).
+1. `claude/series-rules.md` (+ the brief's cover log only, via search) + `../../docs/design-system.md`, `../../docs/qa-checklist.md` (not old chats).
 2. Pull the episode in ONE step: on the Mac `python3 .studio/pack.py pack . --set project --out _to_delete
    --name pullNN` (device_bash in videoNN), stage the parts + manifest, then in the cloud
    `pack.py unpack <dir> --name pullNN --into videoNN` → VERIFIED (it also saves the push-guard base). `state.py videoNN show`.

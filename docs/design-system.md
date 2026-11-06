@@ -50,6 +50,11 @@ slight parallax (0.5 s). Counts accept `data-fmt="in"` for Indian grouping (২,
 | `split-portrait` | two portraits + linking phrase |
 | `ending-mural` | full-bleed photo, dark gradient, 3 closing lines |
 | `credits` | sources + photo credits |
+| `opener-loud` (v0.8.1) | **scene 1**: full-bleed photo, chip, white line, bright question block — loud from t = 0 (the cover opening fades into it) |
+| `share-bar` (v0.8.1) | one price / 100 টাকা split into who gets what, segments grow in spoken order, smallest share circled |
+| `chain-cards` (v0.8.1) | the answer as a 3-step chain of cards with arrows, ending on a bright answer block |
+
+**Caption lane (v0.8.1):** keep y ≈ 1430–1550 free of key text and numbers in every scene, so burned-in captions (`burn_captions.py`) never cover them.
 
 ## 6. Infographic rules
 - One number per screen as the hero; always give a comparison or unit (“২০ বার”, “৩২ বনাম ৭২.৩”).
@@ -65,7 +70,7 @@ slight parallax (0.5 s). Counts accept `data-fmt="in"` for Indian grouping (২,
 - **Reading time (v0.7.1):** every text stays on screen ≥ 0.6 s + 0.33 s per word (numbers / 1–2 word labels ≥ 1.2 s), counted from 0.25 s after it starts to its `data-out` or scene end. `audit.py` FAILs shorter. Appearing early is fine; appearing late is not. `data-say` lands 0.25 s before the word (`sayLead` in project.json).
 
 ## 8a. Palettes (v0.7) — Vox / Johnny Harris look
-Colours are NOT chosen per episode: `studio.py look` assigns one of 12 contrast-checked palettes (v0.7.1: rebuilt from the colours of episodes 1–5 — calm, printed-paper, no neon) from `engine/studio/palettes.json` (rotating by episode, skipping a family used by the last three episodes) and writes `docs/look.md` with ready-made scene themes (bg / text / highlight / pop) and a motif. Style = flat calm colour blocks, real paper/grain/halftone texture, cutout photos with a thin paper outline and soft shadow, no top/bottom bars, hand-made marks (arrows, circles, underlines, string, stamps, tape), 3–4 colours per scene, big bold type. Edit colours only in `engine/studio/build_palettes.py` (it re-validates contrast).
+Colours are NOT chosen per episode: `studio.py look` assigns one of 12 contrast-checked palettes (v0.8.1: energetic Vox sets — one bold background, one hot accent, paper for contrast) from `engine/studio/palettes.json` (rotating by episode, skipping a family used by the last three episodes) and writes `docs/look.md` with ready-made scene themes (bg / text / highlight / pop) and a motif. Style = flat bold colour blocks, real paper/grain/halftone texture, cutout photos with a thin paper outline and soft shadow, no top/bottom bars, hand-made marks (arrows, circles, underlines, string, stamps, tape), 3–4 colours per scene, big bold type. Edit colours only in `engine/studio/build_palettes.py` (it re-validates contrast).
 
 ## 8. Style presets (`engine/template/presets/`)
 - `vox-paper.css` — cream paper, ink, yellow highlighter, red accent, halftone, torn strips, sticker cutouts.
