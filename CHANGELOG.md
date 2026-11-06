@@ -1,6 +1,7 @@
 # Changelog
 
 ## 0.8.1 — 2026-11-07
+- **render_resume.py:** full render in 10 s chunks, resumable across runs (for shells that stop a command after ~3 min, e.g. the Mac shell). Tested on the Mac shell (ARM64, Sparticuz Chromium via ES_CHROME): video33 59.5 s in 2 runs / ~157 s, check_final all PASS.
 - **Palettes:** the 12-set bank rebuilt in an energetic Vox register (vox-yellow, electric-teal, tomato-red, money-lime, cobalt-pop,
   hot-pink, charcoal-orange, sky-lemon, saffron-grape, coral-lime, violet-lemon, jungle-gold); families unchanged so rotation works;
   all themes ≥ 4.6:1 text contrast. Episodes that already have docs/look.json keep it until `studio.py look --set/--family` is re-run.
