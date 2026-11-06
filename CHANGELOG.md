@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.2 — 2026-11-07
+- **words_import.py (new):** exact word timings from an ElevenLabs Speech to Text export (`docs/words.json`). Aligns the script to the
+  transcript and writes `words_norm.json`, `words_script.json` (the script's own spelling with real times, for `burn_captions.py --words`)
+  and `words_cuts.json`; prints the scene cuts for `vo_split.py --cuts` (`--apply` runs it). Scribe picks which pause is the boundary,
+  ffmpeg silencedetect picks where: Scribe word ends run into pauses or stop early (video37: up to 1.3 s), so raw Scribe midpoints
+  would cut speech. Tested on video37: 102 words, all 9 scenes placed, every cut inside a real pause of 0.45–0.92 s.
+
 ## 0.8.1 — 2026-11-07
 - **render_resume.py:** full render in 10 s chunks, resumable across runs (for shells that stop a command after ~3 min, e.g. the Mac shell). Tested on the Mac shell (ARM64, Sparticuz Chromium via ES_CHROME): video33 59.5 s in 2 runs / ~157 s, check_final all PASS.
 - **Palettes:** the 12-set bank rebuilt in an energetic Vox register (vox-yellow, electric-teal, tomato-red, money-lime, cobalt-pop,
