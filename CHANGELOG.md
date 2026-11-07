@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.9.2 — 2026-11-07
+- **Finish runs in the Build chat:** after "go ahead" on the preview, Claude approves the preview, keeps the claim (re-claim with the
+  same label, `--stage finish`) and goes straight on to cover → finish → deliver in the same chat. No more "open a new chat: Finish
+  episode NN". Changed: build card step 8, finish card header, `preview` report, rules, video-preview §5, video-render §0,
+  explainer-video flow, state.py next-step text, tracker rules line, PLAYBOOK. Plan still runs in its own chat.
+
 ## 0.9.1 — 2026-11-07
 - **sync_engine.py (new):** brings every episode's own engine copy (`videoNN/engine/`: engine.js, engine.css, presets, scene templates)
   up to the plugin's template in one command (`sync_engine.py <series root> --apply`); replaced files go to `_to_delete/engine_before_<v>/`;

@@ -59,5 +59,8 @@ python3 engine/tools/render.py videoNN --preview --name <Slug>   # then mv out/<
 Send the preview (and the keys sheet only if the creator asked for it; Claude still reads it itself). Style frames and preview may be approved together. Push to the Mac in one step (`pack.py pack videoNN --set
 preview` → `_to_delete/` → unpack VERIFIED), also push `--set project --no-images` so the Mac has the build.
 `state.py videoNN stage built`. Ask for timestamped notes. Fixes → re-audit → re-preview only changed scenes
-(`render_range.py` when durations are unchanged). On approval: `state.py videoNN approve preview` and tell the
-creator to start Chat 3 ("Finish episode NN").
+(`render_range.py` when durations are unchanged). On approval ("go ahead"): `state.py videoNN approve preview`,
+`studio.py close videoNN preview-approved`, and **continue in this same chat** with the FINISH card (`studio.py next videoNN`,
+technique in video-render). Keep the claim: re-run `guard.py claim videoNN --who "<same label>" --stage finish` (same label =
+no refusal) and take a fresh `guard.py fingerprint` before the Finish push. Do not release the claim and do not ask the creator
+to open a new chat.

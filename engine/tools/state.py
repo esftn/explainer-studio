@@ -19,7 +19,7 @@ NEXT = {'plan': 'Plan chat: approve the brief (new-video)',
         'vo-received': 'Build chat: vo_split → vo_prep → style frames (video-preview)',
         'style-approved': 'Build chat: build all scenes → audit PASS → key-moment sheet → preview (video-preview)',
         'built': 'Creator: watch the preview + key-moment sheet, send timestamped notes or approve',
-        'preview-approved': 'Finish chat: render, captions, covers, bake, deliver (video-render)',
+        'preview-approved': 'Finish (same chat as Build): cover, render, bake, deliver (video-render)',
         'delivered': 'Done. Post it; log the cover in the series brief.'}
 ap = argparse.ArgumentParser(); ap.add_argument('project'); ap.add_argument('cmd')
 ap.add_argument('arg', nargs='?'); ap.add_argument('--note'); ap.add_argument('--ep'); ap.add_argument('--title'); ap.add_argument('--slug')

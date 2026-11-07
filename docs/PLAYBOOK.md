@@ -49,7 +49,7 @@ contact-sheet review, render, mastering, cover, caption text, delivery.
 | 4 | **Split + timing** (Chat 2) | `vo/raw/vo_NN.wav`, `vo.js` (durations, anchors, word times) | `vo_split.py` + `vo_prep.py` | — |
 | 5 | **Look** | assigned palette + motif (`studio.py look`); Claude checks its own stills, no separate gate | `studio.py check --stage build` | — |
 | 6 | **Build + QA** | full timeline with `data-say` cues (land 0.25 s early), auto SFX, rotating music; key-moment sheet; 540p preview | `audit.py` PASS (incl. text size + reading time), `review.py --keys`, `studio.py check` | ✅ preview |
-| 7 | **Final** (Chat 3) | 9:16 reel + 9:16 cover, `publish.txt` (v0.9: no 4:5, no SRT) | `finish.py` (render, check_final + A/V fix, cover bake, `publint.py`) | — |
+| 7 | **Final** (same chat as Build, after "go ahead") | 9:16 reel + 9:16 cover, `publish.txt` (v0.9: no 4:5, no SRT) | `finish.py` (render, check_final + A/V fix, cover bake, `publint.py`) | — |
 | 8 | **Cover + delivery** | 2 hand-designed concepts (`cover-design.md`, `cover_check.py` PASS) → pick → bake; verified offline copy; tidy; `docs/delivery.md`; generated tracker | `finish.py` then `finish.py --verify` on the Mac | ✅ cover |
 
 Rules:

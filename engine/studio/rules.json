@@ -19,7 +19,7 @@
   "In-video text must be readable: >=40 px running text, on screen early enough (audit FAILs text that has too little reading time). Earlier is fine, late is not.",
   "out/ holds finals only: <Slug>_reel_9x16.mp4, cover_reel_9x16.png, publish.txt (v0.9: no 4:5 cut, no 4:5 cover, no SRT).",
   "Every number comes from facts.json (url + quote). Single-source numbers are said in the pinned comment.",
-  "One chat per episode per stage. Claim the episode before touching it; close with studio.py close.",
+  "Plan runs in its own chat. Build and Finish of an episode run in ONE chat: after 'go ahead' on the preview, continue straight into the FINISH card in the same chat (no new chat, keep the claim). Claim the episode before touching it; close with studio.py close.",
   "Publish title: <= 45 characters, a question with \"আপনি/আপনার\" or a known object + number, never the answer (shown over the Short in the feed)."
  ],
  "reports": {
@@ -27,7 +27,7 @@
   "vo_and_images": "One message: (1) the VO paste text in a code block, (2) the image table: # - filename - what it shows - REAL or AI (+ Gemini prompt for AI rows). No other text.",
   "ready": "videoNN ready. Drop images in images/ and the single VO take in vo/raw/vo_full.mp3, then open a new chat: Build episode NN.",
   "missing": "Cannot build yet: missing <what>. (one line, then stop)",
-  "preview": "Preview ready: <file> - <s> s - look <palette> - music <music>. Reply 'go ahead' or timestamped notes. (+1 line only if a cut/tempo/fix was a judgement call; +1 line 'time cut: ...' only if there is one)",
+  "preview": "Preview ready: <file> - <s> s - look <palette> - music <music>. Reply 'go ahead' (I continue to cover + finish in this chat) or timestamped notes. (+1 line only if a cut/tempo/fix was a judgement call; +1 line 'time cut: ...' only if there is one)",
   "cover": "Cover: <one line>. OK? (one series-layout cover; a second only if the creator asks)",
   "delivered": "Delivered ep NN - <s> s - cover <X> - videoNN/out/. Caveat: <single-source items, 1 line>. Next: <one step>."
  },
@@ -52,10 +52,10 @@
    "5. audit.py --fast while iterating; full audit.py must PASS. Then audio.py, then: python3 engine/tools/studio.py check videoNN --stage build  must print STUDIO PASS (palette, music, sound effects, moods, ending).",
    "6. audio.py -> render.py --preview -> drafts/. Style frames and preview are approved together: send the preview only.",
    "7. Push (video-preview 5). state.py videoNN stage built. Send report 'preview'. Close: studio.py close videoNN built.",
-   "8. On 'go ahead': state.py videoNN approve preview; studio.py close videoNN preview-approved; release the claim."
+   "8. On 'go ahead': state.py videoNN approve preview; studio.py close videoNN preview-approved. KEEP the claim (re-claim with the same --who and --stage finish) and continue at once with the FINISH card (studio.py next videoNN) in THIS chat. Never ask the creator to open a new chat for Finish."
   ],
   "finish": [
-   "FINISH videoNN  (own chat or the same chat after approval; claim first)",
+   "FINISH videoNN  (same chat as Build, straight after 'go ahead'; a separate chat only if the Build chat was closed or ran out of room. Claim first; a Build-chat claim is re-used with the same --who)",
    "1. ONE cover in the series layout: python3 engine/tools/cover_series.py videoNN --photo images/<x> --chip '...' --line '...' --block '...' [--dy N] --render  (must print COVER PASS; block on one line; no answer). Look at the sheet. Send report 'cover'.",
    "2. publish.txt - no placeholder left (video-render 2).",
    "3. python3 engine/tools/finish.py ... (video-render top). It renders, bakes the cover, packs, tidies. Verify on the Mac: finish.py --verify must print DONE.",
@@ -83,7 +83,7 @@
   "vo-received": "Claude: build",
   "style-approved": "Claude: build",
   "built": "YOU: watch preview, 'go ahead' or notes",
-  "preview-approved": "YOU: pick cover; Claude: finish",
+  "preview-approved": "Claude: cover + finish (same chat as Build); YOU: OK the cover",
   "delivered": "done"
  },
  "checks": {
