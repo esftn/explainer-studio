@@ -13,7 +13,8 @@ from es import project, page, cfg, load_vo, strip_tags, BREAK_PUNCT, TOOLS
 
 ap = argparse.ArgumentParser(); ap.add_argument('project', nargs='?'); ap.add_argument('--step', type=float, default=1.0)
 ap.add_argument('--times'); ap.add_argument('--scene', type=int); ap.add_argument('--keys', action='store_true')
-a = ap.parse_args(); P = project(a.project); (P / 'out').mkdir(exist_ok=True)
+ap.add_argument('--one', action='store_true', help='ONE sheet (v0.10): per scene its last key moment + every flagged moment -> out/keys_one.jpg')
+a = ap.parse_args(); a.keys = a.keys or a.one; P = project(a.project); (P / 'out').mkdir(exist_ok=True)
 
 
 def said(vo, n, t):
@@ -56,7 +57,7 @@ if not a.keys:
 # ---------- key-moment sheet ----------
 qa = json.loads((P / 'qa.json').read_text()) if (P / 'qa.json').exists() else {'flags': []}
 vo = load_vo(P); off = cfg(P).get('voOffset', 0.3)
-items = []
+items = []; TW = 216 if a.one else 270; TH = TW * 16 // 9; NC = 5 if a.one else 4
 with page(P) as pg:
     S = pg.evaluate('SCENES')
     says = pg.evaluate("""[...document.querySelectorAll('.scene')].flatMap((s,i)=>[...s.querySelectorAll('[data-say-t]')]
@@ -66,35 +67,41 @@ with page(P) as pg:
     for i, s in enumerate(S):
         if not any(it['scene'] == i + 1 for it in items): items.append({'scene': i + 1, 't': s['start'] + s['dur'] * 0.6, 'label': 'scene', 'flag': None})
     items.sort(key=lambda x: x['t'])
+    if a.one:                                    # one frame per scene (its last key moment) + every flagged moment
+        last = {}
+        for it in items:
+            if not it['flag']: last[it['scene']] = it
+        items = sorted([it for it in items if it['flag']] + list(last.values()), key=lambda x: x['t'])
     for it in items:
         pg.evaluate(f"seek({it['t']})")
-        im = Image.open(io.BytesIO(pg.screenshot(type='jpeg', quality=85))).convert('RGB').resize((270, 480))
+        im = Image.open(io.BytesIO(pg.screenshot(type='jpeg', quality=85))).convert('RGB').resize((TW, TH))
         buf = io.BytesIO(); im.save(buf, 'JPEG', quality=82); it['img'] = base64.b64encode(buf.getvalue()).decode()
         s = S[it['scene'] - 1]; it['said'] = said(vo, s['vo'], it.get('ct', it['t']) - s['start'] - off)
     fonts = ''.join(f'<link rel="stylesheet" href="{(P / "fonts" / f).as_uri()}">' for f in ('tiro-bangla/400.css', 'noto-sans-bengali/600.css') if (P / 'fonts' / f).exists())
-    PER = 12; nsh = 0
+    PER = len(items) if a.one else 12; nsh = 0
     for k in range(0, len(items), PER):
         cells = []
         for it in items[k:k + PER]:
             box = ''
             if it['flag']:
-                l, t, r, b = it['flag']; sx = 270 / 1080
+                l, t, r, b = it['flag']; sx = TW / 1080
                 box = f'<div class="bx" style="left:{l * sx - 3:.0f}px;top:{t * sx - 3:.0f}px;width:{(r - l) * sx + 6:.0f}px;height:{(b - t) * sx + 6:.0f}px"></div>'
             cls = 'c fl' if it['flag'] else 'c'
             cells.append(f'<div class="{cls}"><div class="im"><img src="data:image/jpeg;base64,{it["img"]}">{box}'
                          f'<span class="ts">{it["t"]:.1f}s · S{it["scene"]}</span></div>'
                          f'<div class="lb">{html.escape(it["label"])}</div><div class="sd">{it["said"] or "—"}</div></div>')
-        doc = (f'<html><head><meta charset="utf-8">{fonts}<style>body{{margin:0;background:#fff;font:15px "Noto Sans Bengali","Tiro Bangla",sans-serif;width:1160px}}'
-               '.g{display:grid;grid-template-columns:repeat(4,282px);gap:8px;padding:8px}.c{border:1px solid #ccc;padding:5px}.fl{border:3px solid #e01e1e;padding:3px}'
-               '.im{position:relative;width:270px;height:480px}.im img{width:270px;height:480px;display:block}'
+        doc = (f'<html><head><meta charset="utf-8">{fonts}<style>body{{margin:0;background:#fff;font:15px "Noto Sans Bengali","Tiro Bangla",sans-serif;width:{NC * (TW + 20) + 8}px}}'
+               f'.g{{display:grid;grid-template-columns:repeat({NC},{TW + 12}px);gap:8px;padding:8px}}'
+               '.c{border:1px solid #ccc;padding:5px}.fl{border:3px solid #e01e1e;padding:3px}'
+               f'.im{{position:relative;width:{TW}px;height:{TH}px}}.im img{{width:{TW}px;height:{TH}px;display:block}}'
                '.bx{position:absolute;border:3px solid #e01e1e;box-shadow:0 0 0 2px #fff}'
                '.ts{position:absolute;left:0;top:0;background:#000;color:#ffd23f;font:12px monospace;padding:2px 5px}'
-               '.lb{font:600 12px sans-serif;color:#b00;margin:4px 0 2px}.c:not(.fl) .lb{color:#555}.sd{line-height:1.45;min-height:44px}.sd b{background:#ffe066}'
+               '.lb{font:600 12px "Noto Sans Bengali","Tiro Bangla",sans-serif;color:#b00;margin:4px 0 2px}.c:not(.fl) .lb{color:#555}.sd{line-height:1.45;min-height:44px}.sd b{background:#ffe066}'
                f'</style></head><body><div class="g">{"".join(cells)}</div></body></html>')
         f = P / 'out' / f'_keys_{nsh}.html'; f.write_text(doc, encoding='utf-8')
-        sp = pg.context.browser.new_page(viewport={'width': 1160, 'height': 800}); sp.goto(f.as_uri())
+        sp = pg.context.browser.new_page(viewport={'width': NC * (TW + 20) + 8, 'height': 800}); sp.goto(f.as_uri())
         sp.evaluate('document.fonts.ready'); sp.wait_for_timeout(300)
-        sp.screenshot(path=str(P / 'out' / f'keys_{nsh}.jpg'), full_page=True, type='jpeg', quality=82); sp.close(); f.unlink()
+        sp.screenshot(path=str(P / 'out' / ('keys_one.jpg' if a.one else f'keys_{nsh}.jpg')), full_page=True, type='jpeg', quality=82); sp.close(); f.unlink()
         nsh += 1
 nflag = sum(1 for it in items if it['flag'])
-print(f'{len(items)} key moments ({nflag} flagged) → out/keys_0..{nsh - 1}.jpg')
+print(f'{len(items)} key moments ({nflag} flagged) → ' + ('out/keys_one.jpg' if a.one else f'out/keys_0..{nsh - 1}.jpg'))

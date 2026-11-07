@@ -12,8 +12,8 @@ How it cuts (tested on the real ep. 03 take, Oct 2026):
              (ep. 03 take with 0.75 s added at the true cuts: 8/8 right.)
   AMBIGUOUS  no clear scene pauses (ep. 03 as recorded: breaks 0.4–0.5 s, same as sentence pauses; natural speed
              varies −16 %…+24 % between scenes, so neither pauses nor speed find the cuts: 1–5 of 8 wrong) →
-             exit 3, no clips. Fix: re-generate the take from vo_paste.txt; or listen to the candidate excerpts
-             in vo/check/ and pass the times with --cuts.
+             v0.10: the clips are written at the best pause-based estimate (BEST-ESTIMATE, exit 0); --strict
+             restores the old stop + listening excerpts. A docs/words.json (ElevenLabs STT) gives exact cuts.
   FAIL       a scene's speed is off by more than ±45 % (a phrase is in the wrong scene), or the take reads an
              older script than vo_paste.txt.
 On FAIL no clips are written."""
@@ -24,6 +24,7 @@ from es import project, cfg, load_script, speak_chars, strip_tags, file_hash
 AUDIO = ('.mp3', '.wav', '.m4a', '.flac', '.ogg', '.aac')
 ap = argparse.ArgumentParser(); ap.add_argument('project', nargs='?'); ap.add_argument('--file')
 ap.add_argument('--force', action='store_true', help='write clips even with FAILs (only after a human checked)')
+ap.add_argument('--strict', action='store_true', help='old behaviour: stop (exit 3) and write listening excerpts when the cuts are uncertain')
 ap.add_argument('--cuts', help='comma-separated cut times (s) chosen after listening to vo/check/ excerpts')
 a = ap.parse_args(); P = project(a.project); C = cfg(P).get('vo', {})
 SC = load_script(P); N = len(SC); keys = sorted(SC)
@@ -158,7 +159,7 @@ else:
                 if g1 - g0 >= 0.3 and abs(mid(j) - exp_t) <= 0.6 * sw: cand.add(round(mid(j), 2))
             uncertain.append((k, sorted(cand)))
         status = 'NO CLEAR SCENE PAUSES — cuts cannot be found reliably from this take'
-        warns.append('the take has no clear scene-break pauses: re-generate it from vo/vo_paste.txt (with the "[pause]" lines)')
+        warns.append('the take has no clear scene-break pauses (best-estimate cuts used; a docs/words.json from ElevenLabs Speech to Text makes them exact)')
 
 cuts, rows, mr = evaluate_cuts(inner)
 for r in rows:
@@ -176,7 +177,7 @@ for r in rows:
 if choose:
     rep.append('\n breaks (pause length s): ' + ', '.join(f'{k + 1}|{k + 2} {glen[j]:.2f}' for k, j in enumerate(choose)))
 chk = P / 'vo' / 'check'
-if uncertain:
+if uncertain and a.strict:
     chk.mkdir(parents=True, exist_ok=True)
     rep.append('\n Best fix: re-generate the take from vo/vo_paste.txt (one paste, ~2 min). Only if that is impossible,\n listen to the excerpts in vo/check/ and pick one time per cut:')
     for k, ts in uncertain:
@@ -194,8 +195,11 @@ rep += [''] + [f'WARN {m}' for m in warns] + [f'FAIL {m}' for m in fails]
 print('\n'.join(rep))
 if fails and not a.force:
     print(f'\n{len(fails)} failure(s): no clips written. Fix the take, or give the right times with --cuts.'); sys.exit(1)
-if uncertain and not a.force:
-    print('\nAMBIGUOUS: no clips written (exit 3). Do not guess: re-generate the take from vo_paste.txt, or pick times by ear.'); sys.exit(3)
+if uncertain and a.strict and not a.force:
+    print('\nAMBIGUOUS: no clips written (exit 3). Re-generate the take from vo_paste.txt, or pick times by ear.'); sys.exit(3)
+if uncertain:
+    print('\nBEST-ESTIMATE: no clear scene pauses, so the clips were cut at the best pause-based estimate '
+          f'({", ".join(f"{t:.2f}" for t in inner)}). Say so in one line with the preview; never ask for a new take.')
 
 # ---------- write clips ----------
 un = P / 'vo' / 'unused'

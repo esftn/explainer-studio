@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.10.0 — 2026-11-07  (efficiency release: ep 34–36 used ~90–100 tool calls each)
+- **Mac shell only for Build + Finish:** `engine/tools/mac/es.sh` (→ `VIDEO GEN/_series/es.sh`) runs any tool on the episode folder
+  itself with the local Chromium kit; `make_kit.sh` builds `engine_kit_v<ver>-<hash>.tar` for `_series/mac_render/`. No pull/push,
+  pack parts, fingerprints or push guard. `sitecustomize.py` turns refused deletes in the Mac folder into moves to
+  `_to_delete/_trash/`; render chunks/segments go to the VM's own scratch (`ES_SCRATCH`), not the Mac folder.
+- **`finish.py --local`:** render (resumable: same command again on RESUME), check, cover (newest `_cover_*` in out/ or drafts/),
+  bake, publish lint, state, tidy, tracker, titles_descriptions.md, lock release — one command, DONE or a clear STOP. A
+  script/facts change after approval re-runs script_check instead of stopping.
+- **`build_scenes.py` + `build.json`:** scenes come from a ~3 KB plan (blocks: text, blk, num, chip, note, card, tags, bars,
+  share, chain, vs, strike, photo, grid, row, html) instead of 20–30 KB of hand-written HTML. Colours from docs/look.json with
+  contrast-picked text, 10 band styles (warns if the previous episode used the same), say-word timing from vo.js, and early
+  warnings for unknown say words, text landing too late to read, over-full scenes and unknown moods.
+- **Cheat sheet** (`engine/studio/cheatsheet.md`) printed with the Build card; **`studio words videoNN`** lists the spoken words
+  per clip, photos, theme rows and the previous bands. Skills cut to the card + rules (video-preview/video-render ~2 KB each;
+  the old cloud technique moved to docs/legacy-cloud-*.md).
+- **`vo_split`:** no clear scene pauses → writes the best-estimate cuts itself (BEST-ESTIMATE, exit 0); `--strict` = old stop.
+- **One look per check:** `review.py --one` → `out/keys_one.jpg` (one frame per scene + every flagged moment).
+- **Cover baked right away** (creator decision 7 Nov 2026): no cover-OK wait; the 'delivered' report names the baked cover.
+  `cover_series` moves a too-wide question block's first words into the white line instead of failing.
+- Fixes: `studio close` clears stage-waiting open notes; key-sheet labels render Bangla; Python 3.10 compatible (Mac shell).
+
 ## 0.9.2 — 2026-11-07
 - **Finish runs in the Build chat:** after "go ahead" on the preview, Claude approves the preview, keeps the claim (re-claim with the
   same label, `--stage finish`) and goes straight on to cover → finish → deliver in the same chat. No more "open a new chat: Finish

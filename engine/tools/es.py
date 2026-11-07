@@ -1,5 +1,5 @@
 """Shared helpers for Explainer Studio tools."""
-import hashlib, json, pathlib, sys, contextlib
+import hashlib, json, os, pathlib, sys, contextlib
 
 W, H, FPS = 1080, 1920, 30
 TOOLS = pathlib.Path(__file__).resolve().parent
@@ -11,6 +11,14 @@ def project(arg=None):
     if not (p / 'index.html').exists():
         sys.exit(f'ERROR: {p} has no index.html — pass the project folder (made by new_project.py).')
     return p
+
+
+def scratch(p):
+    """v0.10: where render temp files go. ES_SCRATCH (set by the Mac es.sh) keeps 100 MB of chunks out of the Mac folder,
+    which can't delete; elsewhere it is the project's out/ as before."""
+    d = os.environ.get('ES_SCRATCH')
+    w = (pathlib.Path(d) / pathlib.Path(p).name) if d else pathlib.Path(p) / 'out'
+    w.mkdir(parents=True, exist_ok=True); return w
 
 
 def cfg(p):

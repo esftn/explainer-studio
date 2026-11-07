@@ -3,6 +3,11 @@
 
   CLOUD (after the preview is approved and the cover is chosen):
     python3 engine/tools/finish.py videoNN --slug Bridge_Metro --cover A --guard mac_fp.json --who "Finish ep20 …" [--render] [--out xfer]
+  MAC, ONE COPY (v0.10 default — the whole Build+Finish runs in the Mac shell, nothing is transferred):
+    bash _series/es.sh finish videoNN --local --slug Bridge_Metro [--who "Build ep20 …"]
+        renders with render_resume.py when the reel is missing (prints RESUME: run the same command again until it goes on),
+        then check, cover (the newest out/ or drafts/ _cover_*_9x16.png unless --cover), bake, publish lint, state, tidy,
+        tracker, titles_descriptions.md, lock release. No pack, no guard, no commit plan.
   MAC (after unpack says VERIFIED):
     python3 _series/tools/finish.py videoNN --verify [--who "Finish ep20 …"]      (from the VIDEO GEN folder)
 
@@ -19,7 +24,8 @@ CLOUD steps, in order — it stops at the first thing a human must fix and says 
 MAC --verify: layout, sizes, first frame = cover, publish lint, state_check --fix, tidy, tracker regenerated,
               titles_descriptions.md updated from publish.txt (titles_doc.py), lock released.
 Exit 0 = done; 2 = a person must fix something (printed); 1 = a tool failed."""
-import argparse, datetime as dt, json, pathlib, re, shutil, subprocess, sys
+import argparse, datetime as dt, json, pathlib, re, shutil, subprocess, sys, time
+T0 = time.time()
 sys.dont_write_bytecode = True      # the Mac folder can't delete: no __pycache__ litter
 
 HERE = pathlib.Path(__file__).resolve().parent
@@ -106,17 +112,33 @@ def cloud(a):
     sp = jread(P / '.script_pass', {});
     try:
         from es import file_hash
-        if sp.get('hash') != file_hash(P / 'script.json', P / 'facts.json'): problems.append('script.json / facts.json changed since script_check PASS — run script_check.py and get the script re-approved')
+        if sp.get('hash') != file_hash(P / 'script.json', P / 'facts.json'):
+            # v0.10: facts.json gains derived numbers during Build — re-run script_check instead of stopping; only a FAIL stops
+            r = run([sys.executable, tool('script_check.py'), P], check=False)
+            if r.returncode or file_hash(P / 'script.json', P / 'facts.json') != jread(P / '.script_pass', {}).get('hash'):
+                problems.append('script_check.py no longer passes after the script/facts change — fix the FAIL lines it prints')
+            else: say('OK', 'script/facts changed since approval → script_check re-run: PASS')
     except Exception as e: problems.append(f'cannot verify script hash: {e}')
     if not (out / 'publish.txt').exists(): problems.append('out/publish.txt missing — write it from templates/publish.md')
-    if not cr.exists() and not a.cover: problems.append('no cover: pass --cover <NAME> (the chosen out/_cover_<NAME>_9x16.png)')
+    cands = sorted([*out.glob('_cover_*_9x16.png'), *(P / 'drafts').glob('_cover_*_9x16.png')], key=lambda f: f.stat().st_mtime)
+    if not a.cover and not cr.exists() and cands: a.cover = cands[-1].name[len('_cover_'):-len('_9x16.png')]   # v0.10: newest cover
+    if not cr.exists() and not a.cover: problems.append('no cover: make one with cover_series.py (series layout) first')
     base = P / '.studio_base.json'
-    if base.exists() and not a.guard and not a.no_guard: problems.append('this folder was pulled with the push guard: run `guard.py fingerprint` on the Mac, stage the file and pass --guard <file> (or --no-guard if the creator said so)')
+    if base.exists() and not a.guard and not a.no_guard and not a.local: problems.append('this folder was pulled with the push guard: run `guard.py fingerprint` on the Mac, stage the file and pass --guard <file> (or --no-guard if the creator said so)')
     if problems: stop('preflight failed', problems)
 
     say('2/7', 'render')
     if a.render or not (reel.exists() or (out / f'{slug}_final.mp4').exists()):
-        run([sys.executable, tool('audio.py'), P]); r = run([sys.executable, tool('render.py'), P, '--workers', '2', '--name', slug]); print(r.stdout.strip().splitlines()[-1])
+        if a.local:      # the Mac shell stops a command after 3 min: resumable chunks, same command again until it goes on
+            mix, qa = out / 'mix.wav', P / '.qa_pass'
+            if not mix.exists() or (qa.exists() and mix.stat().st_mtime < qa.stat().st_mtime - 1): run([sys.executable, tool('audio.py'), P])
+            r = run([sys.executable, tool('render_resume.py'), P, '--name', slug, '--budget', str(a.budget)], check=False)
+            print(r.stdout.strip()[-600:], r.stderr.strip()[-600:])
+            if r.returncode: sys.exit('FAILED: render_resume.py')
+            if 'DONE' not in r.stdout: say('RESUME', 'render not finished — run the SAME finish command again'); sys.exit(0)
+            if time.time() - T0 > 100: say('RESUME', 'render done — run the SAME finish command again for check, bake and delivery (3-min shell cap)'); sys.exit(0)
+        else:
+            run([sys.executable, tool('audio.py'), P]); r = run([sys.executable, tool('render.py'), P, '--workers', '2', '--name', slug]); print(r.stdout.strip().splitlines()[-1])
     if not reel.exists() and (out / f'{slug}_final.mp4').exists(): shutil.move(str(out / f'{slug}_final.mp4'), reel)
     if not reel.exists(): stop(f'{reel.name} missing after render')
     nocover = P / 'drafts' / (reel.stem + '_nocover.mp4')
@@ -131,7 +153,8 @@ def cloud(a):
 
     say('4/7', 'cover')
     if a.cover:
-        c9 = next(iter(sorted(out.glob(f'_cover_{a.cover}_9x16.png')) or sorted(out.glob(f'_cover_*{a.cover}*_9x16.png'))), None)
+        c9 = next(iter(sorted(out.glob(f'_cover_{a.cover}_9x16.png')) or sorted((P / 'drafts').glob(f'_cover_{a.cover}_9x16.png'))
+                       or sorted(out.glob(f'_cover_*{a.cover}*_9x16.png'))), None)
         if not c9: stop(f'no cover candidate named {a.cover}', [f'looked for out/_cover_{a.cover}_9x16.png (make it with cover.py)'])
         shutil.copy2(c9, cr); say('OK', f'cover {c9.name} → cover_reel_9x16.png')
 
@@ -158,6 +181,7 @@ def cloud(a):
     run([sys.executable, tool('state_check.py'), P, '--fix'], check=False)
     run([sys.executable, tool('tidy.py'), P, '--apply'])
     rpt = write_delivery(P, slug, reel, a)
+    if a.local: return local_tail(P, a, rpt)
     r = run([sys.executable, tool('pack.py'), 'check', P, '--final', '--working'], check=False); print(r.stdout.strip())
     if r.returncode: stop('pack check failed', r.stdout.splitlines())
     xfer = pathlib.Path(a.out or '/tmp/xfer').resolve(); name = f'final{ep_no(P)}'
@@ -201,6 +225,23 @@ def write_delivery(P, slug, reel, a):
     f = P / 'docs' / 'delivery.md'; f.write_text('\n'.join(L) + '\n', encoding='utf-8'); return f
 
 
+# ------------------------------------------------------------------ MAC, one copy
+def local_tail(P, a, rpt):
+    bad = ['state.json: ' + x for x in state_check.check(P, fix=False)]
+    E = st.episode(P, True); bad += [x for x in E['problems'] if not x.startswith('state.json')]
+    root = next((c for c in [P.parent, *P.parents] if (c / '_series').is_dir()), None)
+    if root:
+        tr = HERE / 'series_tracker.py'
+        if tr: run([sys.executable, tr, '--root', root, '--write'], check=False)
+        r = run([sys.executable, HERE / 'titles_doc.py', P], check=False); print((r.stdout or r.stderr).strip())
+    if bad:
+        for b in dict.fromkeys(bad): say('FAIL', b)
+        stop('delivery check failed — do not tell the creator it is done', [])
+    if a.who:
+        import guard; guard.cmd_release(argparse.Namespace(project=str(P), who=a.who, force=True))
+    say('DONE', f"{P.name}: reel {E['dur']:.2f} s, {E['finals']}/{len(st.REQUIRED)} finals, cover baked, publish.txt clean — {rpt.relative_to(P)}")
+
+
 # ------------------------------------------------------------------ MAC
 def verify(a):
     P = pathlib.Path(a.project).resolve(); bad = []
@@ -229,6 +270,8 @@ ap.add_argument('project'); ap.add_argument('--slug'); ap.add_argument('--cover'
 ap.add_argument('--render', action='store_true'); ap.add_argument('--out', help='transfer folder (default /tmp/xfer)')
 ap.add_argument('--guard', help='Mac fingerprint json from guard.py'); ap.add_argument('--who'); ap.add_argument('--no-guard', action='store_true')
 ap.add_argument('--force', action='store_true'); ap.add_argument('--allow-long', action='store_true', help='the creator waived the length limit')
+ap.add_argument('--local', action='store_true', help='v0.10: everything in the Mac folder itself (no pack/guard/transfer)')
+ap.add_argument('--budget', type=float, default=140, help='seconds of rendering per run in --local mode (the shell stops at 180)')
 ap.add_argument('--verify', action='store_true', help='MAC mode: verify an unpacked delivery, tidy, regenerate the tracker, release the lock')
 a = ap.parse_args()
 (verify if a.verify else cloud)(a)

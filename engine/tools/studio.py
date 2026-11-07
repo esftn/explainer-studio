@@ -8,6 +8,7 @@
   studio.py music videoNN [--set ID]         assign / show the music preset              -> audio_config.json
   studio.py check videoNN --stage build|final   objective rule checks; prints STUDIO PASS or the FAIL lines
   studio.py status [--root DIR] [--write]    every episode: stage, who is waiting, length, look, music -> _series/STATUS.md
+  studio.py words videoNN [--times]          v0.10: spoken words per VO clip, photos, theme rows, previous bands (for build.json)
   studio.py close videoNN STAGE [--note T]   LAST command of every chat: state + status document (+ tracker when delivered)
 
 Rotation is by episode number, so no history file is needed: music = preset[(ep-1) % 5]; palette = bank[(ep-1) % 14], skipping
@@ -272,9 +273,26 @@ def cmd_next(a):
         if old: print(f"\n   ENGINE OUT OF DATE: {len(old)} file(s) differ from plugin {sync_engine.version()} — first run: python3 engine/tools/sync_engine.py {name} --apply")
     except Exception: pass
     print(); [print(l.replace('videoNN', name).replace('NN', nn)) for l in R['cards'][card]]
+    if card == 'build':
+        cs = next((d / 'cheatsheet.md' for d in (HERE.parent / 'studio', HERE / 'studio', HERE) if (d / 'cheatsheet.md').exists()), None)
+        if cs: print('\n' + cs.read_text(encoding='utf-8').strip())
     print('\nRULES (always)'); [print(f'- {l}') for l in R['always']]
-    keys = {'plan': ['script', 'vo_and_images', 'ready'], 'build': ['missing', 'preview'], 'finish': ['cover', 'delivered']}[card]
+    keys = {'plan': ['script', 'vo_and_images', 'ready'], 'build': ['missing', 'preview'], 'finish': ['delivered']}[card]
     print('\nREPORT TEMPLATES (use exactly; no extra text)'); [print(f'- {k}: {R["reports"][k]}') for k in keys]
+
+
+def cmd_words(a):
+    """v0.10: the spoken words of every VO clip with their times — what build.json's "say" keys must match."""
+    p = proj(a.folder); t = (p / 'vo.js').read_text(encoding='utf-8') if (p / 'vo.js').exists() else ''
+    if '{' not in t: sys.exit('no vo.js yet — run vo_split + vo_prep first')
+    v = json.loads(t[t.index('{'):t.rindex('}') + 1]); lk = jload(p / 'docs' / 'look.json', {}) or {}
+    for k, w in enumerate(v.get('words') or []):
+        if w: print(f"{k:>2} ({v['durs'][k]:.1f}s): " + ' '.join(f'{x}@{tt:.1f}' if a.times else x for x, tt in w))
+    imgs = sorted(f.name for f in (p / 'img').glob('*') if f.suffix.lower() in ('.jpg', '.jpeg', '.png') and not f.name.startswith(('_', 'paper', 'tex_')))
+    print('photos (img/): ' + ', '.join(imgs))
+    if lk: print('themes bg 0-5: ' + ' | '.join(f"{i}:{t['bg']}/{t['text']}" for i, t in enumerate(lk.get('themes', []))) + f"  · motif: {lk.get('motif', '')}")
+    prev = p.parent / f'video{ep_of(p) - 1:02d}' / 'build.json'
+    if prev.exists(): print(f"previous episode bands: {(jload(prev, {}) or {}).get('bands')} (pick another)")
 
 
 def cmd_close(a):
@@ -288,6 +306,8 @@ def cmd_close(a):
     if not st_py:
         st.update({'stage': a.stage}); st.setdefault('log', []).append(f'{now} stage {a.stage}')
         if a.note and a.stage != 'delivered': st.setdefault('open', []).append(a.note)
+    if a.stage in ('preview-approved', 'delivered'):     # v0.10: stage-waiting notes expire once the stage moves on
+        st['open'] = [o for o in st.get('open', []) if not re.search(r'waiting|preview sent|go ahead', o, re.I)]
     if a.stage == 'delivered':
         st['open'] = []; ln = reel_len(p)
         if ln: st['reel_s'] = round(ln, 2)
@@ -314,6 +334,7 @@ def main():
     s = sp.add_parser('music'); s.add_argument('folder'); s.add_argument('--set'); s.add_argument('--again', action='store_true'); s.set_defaults(f=cmd_music)
     s = sp.add_parser('check'); s.add_argument('folder'); s.add_argument('--stage', choices=['build', 'final'], required=True); s.set_defaults(f=cmd_check)
     s = sp.add_parser('status'); s.add_argument('--root'); s.add_argument('--write', action='store_true'); s.set_defaults(f=cmd_status)
+    s = sp.add_parser('words'); s.add_argument('folder'); s.add_argument('--times', action='store_true'); s.set_defaults(f=cmd_words)
     s = sp.add_parser('close'); s.add_argument('folder'); s.add_argument('stage'); s.add_argument('--note'); s.set_defaults(f=cmd_close)
     a = ap.parse_args(); a.f(a)
 
