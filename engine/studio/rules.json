@@ -1,5 +1,5 @@
 {
- "version": "0.8.1",
+ "version": "0.9.0",
  "_about": "The single source of truth for how an episode is made. studio.py next prints the card for the episode's stage; skills hold the technique, this file holds the order and the creator's rules. Change a rule HERE (one line), not in five skills.",
  "always": [
   "Write instructions, questions and reports in English. Only the script, VO text and on-screen Bangla are Bangla.",
@@ -8,7 +8,7 @@
   "Do not start a stage the creator did not ask for, and do not redo a step that state.py shows done.",
   "ONE voiceover per request (one take of vo_paste.txt). Never offer A/B takes.",
   "No scene numbers, chapter labels or chips on screen. Scene names are internal.",
-  "Key graphics inside the centre 4:5 zone (y 285-1635) but never leave the top and bottom bands empty: bleed fills them.",
+  "Key graphics inside the centre safe zone (y 285-1635, clear of the Shorts/Reels UI) but never leave the top and bottom bands empty: bleed fills them.",
   "Caption lane: keep y ~1430-1550 free of key text and numbers in every scene (burned-in captions go there). Scene 1 can start from scenes/opener-loud.html; share splits from scenes/share-bar.html; the answer chain from scenes/chain-cards.html.",
   "Series typeface Tiro Bangla (preset vox-money) on every video. Never switch fonts per episode.",
   "Look: Vox / Johnny Harris style. Use ONLY the colours of the palette assigned by studio.py look (docs/look.md). No palette picked by hand, no dull, dated or dark-dominant colours (v0.8.1 palettes are energetic). Top/bottom bands and style elements differ from earlier episodes.",
@@ -17,7 +17,7 @@
   "ONE cover per episode in the series layout (cover_series.py, docs/cover-design.md v0.8): full-bleed real photo, chip, one white line, one bright colour block with the question (one line, >=140 px), faces/subject below y ~830, bright episode colours (never a navy/violet/dark-brown base), no answer on the cover; COVER PASS from cover_check.py. It is baked in as frame 1, as the embedded thumbnail AND as the 1.6 s cover opening (bake_cover.py, cover_hold in project.json).",
   "Hook: the first 1.5 s decide whether YouTube keeps showing the Short (stayed-to-watch target >= 70 %). Scene 1 VO opens with the viewer's own stake or one short question; scene 1 visuals are loud: big question text + a large full-bleed photo, never a small framed photo with small text and empty space. Script target 85-100 Bangla words (~40-45 s).",
   "In-video text must be readable: >=40 px running text, on screen early enough (audit FAILs text that has too little reading time). Earlier is fine, late is not.",
-  "out/ holds finals only: reel_9x16, feed_4x5, 2 cover PNGs, captions.bn_IN.srt, captions.en_US.srt, publish.txt.",
+  "out/ holds finals only: <Slug>_reel_9x16.mp4, cover_reel_9x16.png, publish.txt (v0.9: no 4:5 cut, no 4:5 cover, no SRT).",
   "Every number comes from facts.json (url + quote). Single-source numbers are said in the pinned comment.",
   "One chat per episode per stage. Claim the episode before touching it; close with studio.py close.",
   "Publish title: <= 45 characters, a question with \"আপনি/আপনার\" or a known object + number, never the answer (shown over the Short in the feed)."
@@ -57,7 +57,7 @@
   "finish": [
    "FINISH videoNN  (own chat or the same chat after approval; claim first)",
    "1. ONE cover in the series layout: python3 engine/tools/cover_series.py videoNN --photo images/<x> --chip '...' --line '...' --block '...' [--dy N] --render  (must print COVER PASS; block on one line; no answer). Look at the sheet. Send report 'cover'.",
-   "2. make_srt.py, English captions, publish.txt - no placeholder left (video-render 2).",
+   "2. publish.txt - no placeholder left (video-render 2).",
    "3. python3 engine/tools/finish.py ... (video-render top). It renders, bakes the cover, packs, tidies. Verify on the Mac: finish.py --verify must print DONE.",
    "4. python3 engine/tools/studio.py check videoNN --stage final  must print STUDIO PASS.",
    "5. python3 _series/tools/studio.py close videoNN delivered --note '<single-source caveat>'  (writes state + STATUS.md).",

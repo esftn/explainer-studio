@@ -33,7 +33,7 @@ reuse an earlier episode's objects (series-brief cover log, grep only that secti
 - **`data-mood` on every scene** (first `intro`, last `end`, in between `build|drive|somber|elegy|answer`): it moves the music. **Sound effects are automatic** from the animations (slam→impact, stamp→stamp, pop→pop, count→tick, bars→whoosh, photos→paper, scene changes→trans); add `data-sfx="bell|tone|…"` only for a special hit, `data-sfx="none"` only to silence one element. Never edit `audio_config.json`; the music preset was assigned by `studio.py music`.
 - **Tie every key graphic to the spoken word:** `data-say="সাতশো"` (several words = phrase; `#2` = second
   time it is said; `+0.1` = nudge). Use `data-at`/`data-t` only for things not tied to a word.
-- 4:5 feed zone: all text inside y 285–1635 (audit FAILs outside; `data-zone="band"` only for deliberate
+- Safe zone: all text inside y 285–1635 (audit FAILs outside; `data-zone="band"` only for deliberate
   band text); bleed fills the top/bottom bands. Source line plain text in the bottom band.
 - Last scene `data-dur="<vo + 1>"` (ending hold 1 s, v0.8: the Short loops instead of sitting on a silent question).
 - Scene 1 is loud from t = 0: big question text + a large full-bleed photo. The cover opening (bake_cover.py, 1.6 s) fades into it, so scene 1 must already look full, never a small framed photo with small text and empty space. Grid children must not carry class "a" (only data-a).

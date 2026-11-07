@@ -45,7 +45,7 @@ and the short report templates. All rules live in one file, `engine/studio/rules
 ## Safety mechanics (from v0.6)
 - `guard.py`: a chat claims an episode (a second chat is refused); every push is checked against what was pulled.
 - Facts gate (`script_check.py` / `factcheck.py`): every number needs a URL, exact quote, fetch date and a second source or a single-source note.
-- `finish.py`: the whole Finish step in one command (render, A/V check, feed cut, cover bake, captions pair, placeholder-proof `publish.txt`, pack); `finish.py --verify` on the Mac.
+- `finish.py`: the whole Finish step in one command (render, A/V check, cover bake, placeholder-proof `publish.txt`, pack; v0.9 delivers 9:16 only); `finish.py --verify` on the Mac.
 - The episode tracker and `_series/STATUS.md` are generated, never typed by hand. Mac-side tool copies: `videoNN/.studio/` and `VIDEO GEN/_series/tools/`.
 
 ## Install
