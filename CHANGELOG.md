@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.9.0 — 2026-11-07
+- **Deliverables cut to 9:16 only:** `finish.py` now makes the 9:16 reel, its 9:16 cover and `publish.txt` — no 4:5 feed cut, no 4:5 cover,
+  no `captions.bn_IN.srt` / `captions.en_US.srt` and no English caption translation (7 steps instead of 9). `cover.py` writes only the 9:16
+  PNG (the review sheet still previews the feed crop). Finals checks (studio, state_check, pack, tidy, series_tracker) require 3 files;
+  the old 4:5/SRT files in earlier episodes stay allowed in out/, never required. The y 285–1635 text zone stays as the safe zone.
+- **titles_doc.py (new):** copies an episode's publish.txt (title, alt, full description, YouTube + Facebook hashtags, pinned comment)
+  into `titles_descriptions.md` in the series root, replacing that episode's section or inserting it in order; `finish.py --verify` runs it.
+
 ## 0.8.2 — 2026-11-07
 - **words_import.py (new):** exact word timings from an ElevenLabs Speech to Text export (`docs/words.json`). Aligns the script to the
   transcript and writes `words_norm.json`, `words_script.json` (the script's own spelling with real times, for `burn_captions.py --words`)

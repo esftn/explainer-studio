@@ -29,8 +29,7 @@ def find_root():
 
 
 ROOT = find_root()
-FINALS = ["*_reel_9x16.mp4", "*_feed_4x5.mp4", "cover_reel_9x16.png", "cover_feed_4x5.png",
-          "captions.bn_IN.srt", "captions.en_US.srt", "publish.txt"]
+FINALS = ["*_reel_9x16.mp4", "cover_reel_9x16.png", "publish.txt"]   # v0.9: 9:16 only, no SRT
 
 def finals_complete(d):
     out = d / "out"
@@ -49,7 +48,7 @@ def check(d, fix=False):
         if fix:
             s["stage"] = "delivered"; s.setdefault("log", []).append(time.strftime("%Y-%m-%d %H:%M") + " stage delivered (state_check)"); changed = True
     if not done and s.get("stage") == "delivered":
-        msgs.append("S2 stage is 'delivered' but out/ is missing finals (reel, feed, 2 covers, 2 SRT, publish.txt)")
+        msgs.append("S2 stage is 'delivered' but out/ is missing finals (reel 9:16, cover_reel_9x16.png, publish.txt)")
     if s.get("stage") == "delivered" and s.get("open"):
         msgs.append(f"S3 stage delivered but {len(s['open'])} stale 'open' line(s): " + " | ".join(s["open"])[:120])
         if fix:

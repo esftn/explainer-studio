@@ -24,6 +24,7 @@ except Exception:
 
 FIN = {'reel': '*_reel_9x16.mp4', 'feed': '*_feed_4x5.mp4', 'cover_reel': 'cover_reel_9x16.png', 'cover_feed': 'cover_feed_4x5.png',
        'srt_bn': 'captions.bn_IN.srt', 'srt_en': 'captions.en_US.srt', 'publish': 'publish.txt'}
+REQUIRED = ('reel', 'cover_reel', 'publish')      # v0.9: feed, cover_feed and the SRT pair are legacy — checked if present, never required
 
 
 def project_dir(d):
@@ -80,8 +81,8 @@ def episode(d, ssim=True):
     e['stage'] = st.get('stage') or ('delivered?' if out.is_dir() else ('planned' if any(P.glob('vo/raw/*')) else 'empty'))
     e['title'] = (st.get('title') or '')
     present = {k: (list(out.glob(p)) if out.is_dir() else []) for k, p in FIN.items()}
-    e['finals'] = sum(1 for v in present.values() if v)
-    e['finals_missing'] = [k for k, v in present.items() if not v]
+    e['finals'] = sum(1 for k in REQUIRED if present[k])
+    e['finals_missing'] = [k for k in REQUIRED if not present[k]]
     if not e['title'] and present['publish']:
         s, _ = publint.sections(present['publish'][0].read_text(encoding='utf-8'))
         e['title'] = next((l.strip() for l in s.get('TITLE', '').splitlines() if l.strip() and not l.lower().startswith('alt')), '')
@@ -105,7 +106,7 @@ def episode(d, ssim=True):
         end = e['dur'] or 1e9
         if a and a[-1][1] > end + 0.2: e['problems'].append('captions: last cue ends after the video')
         if any(a[i][1] > a[i + 1][0] + 0.001 for i in range(len(a) - 1)): e['notes'].append('bn cues overlap')
-    elif out.is_dir() and (present['reel'] or present['feed']): e['problems'].append('captions pair incomplete')
+    elif present['srt_bn'] or present['srt_en']: e['problems'].append('captions pair incomplete')
     e['pub'] = None
     if present['publish']:
         f, w = publint.lint(present['publish'][0], P / 'facts.json' if (P / 'facts.json').exists() else None)
@@ -134,7 +135,7 @@ def render(eps, issues_text):
          '**Rules (short):** one chat per stage per episode (Plan → Build NN → Finish NN) · claim the episode first '
          '(`guard.py claim`) and release it at the end · never push over a changed Mac copy (`pack --guard`) · '
          'close-out = `finish.py` / `state_check --fix` · no stage the creator did not ask for · reports brief.', '']
-    deliv = [e for e in eps if e['stage'] == 'delivered' or (e['stage'] == 'delivered?' and e['finals'] == 7)]
+    deliv = [e for e in eps if e['stage'] == 'delivered' or (e['stage'] == 'delivered?' and e['finals'] == len(REQUIRED))]
     L.append(f"**{len(deliv)} delivered · {sum(1 for e in eps if e['stage'] not in ('delivered', 'delivered?', 'empty', 'planned'))} in progress · "
              f"{sum(1 for e in eps if e['stage'] in ('empty', 'planned'))} empty/planned · {sum(1 for e in eps if e['problems'])} with file problems**")
     L += ['', '| Ep | Title | Stage | Lock | Reel | Finals | Captions | Cover | publish | Problems |', '|---|---|---|---|---|---|---|---|---|---|']
@@ -144,7 +145,7 @@ def render(eps, issues_text):
         cov = ('baked' if e['cover'] and e['cover'] >= 0.95 else f"NOT baked ({e['cover']:.2f})" if e['cover'] else '–')
         pub = 'ok' if e['pub'] == (0, 0) else ('–' if e['pub'] is None else f"{e['pub'][0]} fail / {e['pub'][1]} warn")
         pr = '; '.join(e['problems'] + e['notes']) or ''
-        L.append(f"| {e['ep']} | {e['title'][:40]} | {e['stage']} | {e['lock'] or ''} | {dur} | {e['finals']}/7 | {cues} | {cov} | {pub} | {pr} |")
+        L.append(f"| {e['ep']} | {e['title'][:40]} | {e['stage']} | {e['lock'] or ''} | {dur} | {e['finals']}/{len(REQUIRED)} | {cues} | {cov} | {pub} | {pr} |")
     td = [(e['dir'], e['td']) for e in eps if e['td'] > 1]
     if td: L += ['', '**_to_delete/ not empty (creator can delete):** ' + ', '.join(f'{n} {m:.0f} MB' for n, m in td)]
     L += ['', '## Issues and notes (from `_series/issues.md`)', '', issues_text.strip() or '(none yet)', '']

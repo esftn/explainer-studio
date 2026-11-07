@@ -33,7 +33,7 @@ A video is "first-try ready" when nothing in the right column is built on an una
 
 **Claude does**: research + fact sheet with sources, script + emotion map, asset prep (resize, cutouts,
 textures, font test), voiceover generation + timing, layout + animation, music + SFX, automated QA,
-contact-sheet review, render, mastering, captions/SRT, cover, caption text, delivery.
+contact-sheet review, render, mastering, cover, caption text, delivery.
 
 ---
 
@@ -49,7 +49,7 @@ contact-sheet review, render, mastering, captions/SRT, cover, caption text, deli
 | 4 | **Split + timing** (Chat 2) | `vo/raw/vo_NN.wav`, `vo.js` (durations, anchors, word times) | `vo_split.py` + `vo_prep.py` | — |
 | 5 | **Look** | assigned palette + motif (`studio.py look`); Claude checks its own stills, no separate gate | `studio.py check --stage build` | — |
 | 6 | **Build + QA** | full timeline with `data-say` cues (land 0.25 s early), auto SFX, rotating music; key-moment sheet; 540p preview | `audit.py` PASS (incl. text size + reading time), `review.py --keys`, `studio.py check` | ✅ preview |
-| 7 | **Final** (Chat 3) | reel + feed, `captions.bn_IN.srt` + `captions.en_US.srt`, `publish.txt` | `finish.py` (render, check_final + A/V fix, captions pair, `publint.py`) | — |
+| 7 | **Final** (Chat 3) | 9:16 reel + 9:16 cover, `publish.txt` (v0.9: no 4:5, no SRT) | `finish.py` (render, check_final + A/V fix, cover bake, `publint.py`) | — |
 | 8 | **Cover + delivery** | 2 hand-designed concepts (`cover-design.md`, `cover_check.py` PASS) → pick → bake; verified offline copy; tidy; `docs/delivery.md`; generated tracker | `finish.py` then `finish.py --verify` on the Mac | ✅ cover |
 
 Rules:
@@ -69,7 +69,7 @@ Rules:
 | 4 | **Look** | palette assigned by `studio.py look`; approved with the preview | — |
 | 5 | **Voiceover** | 1–3 long takes → split → trimmed, level-matched clips + anchors | ✅ creator listens |
 | 6 | **Build + QA** | full timeline; `audit.py` (bounds, density, safe zone) passes; contact sheets reviewed by Claude; low-res preview MP4 | ✅ creator watches preview |
-| 7 | **Final** | full-res render (parallel, per-range), audio master, caption, SRT, delivery with md5 check | — |
+| 7 | **Final** | full-res render (parallel, per-range), audio master, caption, delivery with md5 check | — |
 | 8 | **Cover** | ONE cover in the series layout (`cover_series.py`, `cover-design.md` §0: full-bleed real photo, chip, white line, one bright question block, no answer; `cover_check.py` PASS); baked as frame 1, thumbnail and 1.6 s opening | ✅ creator confirms |
 
 Rules:
@@ -97,7 +97,7 @@ Rules:
 
 ## 5. Design rules (details: `design-system.md`)
 - **Layers**: photo/camera layer (zooms/pans) · fixed text layer (never zoomed) · source band (always on top).
-- **4:5 feed zone**: key content inside y 285–1635; top/bottom bands = bleed, never empty. No chapter chips on screen.
+- **Safe zone**: key content inside y 285–1635 (clear of the Shorts/Reels UI and feed crops); top/bottom bands = bleed, never empty. No chapter chips on screen.
 - **Safe area** (1080×1920): text x 56–1024, y 150–1790; bottom band = sources; keep key text out of the bottom 20% of Reels UI when sources aren't used.
 - Entrances: slide ≤40 px, scale ≤1.15, fade. Nothing starts off-screen.
 - **Density**: ≥55–60% of the frame occupied at all times; no stretch >1.5 s that is mostly empty.
@@ -109,7 +109,7 @@ Rules:
 ## 6. Platform targets
 | Platform | Ratio | Length | Notes |
 |---|---|---|---|
-| Facebook Reels / feed (≈79% of BD social share) | 9:16 (feed also 4:5) | ≤ 90 s ideal; ≤ 3 min | burned-in Bangla captions or SRT; many watch muted |
+| Facebook Reels / feed (≈79% of BD social share) | 9:16 | ≤ 90 s ideal; ≤ 3 min | burned-in Bangla captions (optional); many watch muted |
 | YouTube Shorts | 9:16 | ≤ 2:59 | hook in 1–2 s; loopable ending helps |
 | TikTok | 9:16 | 30–90 s sweet spot | captions above bottom UI |
 | YouTube long-form | 16:9 | 6–12 min | chapters, slower pacing, more context |

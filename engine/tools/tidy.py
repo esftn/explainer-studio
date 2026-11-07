@@ -6,12 +6,15 @@ Without --apply it only lists what it would do. out/ keeps finals only: everythi
 import argparse, fnmatch, pathlib, shutil, sys
 # keep in sync with pack.py (pack.py has no import guard, so the lists are repeated here)
 LAYOUT = ['out', 'docs', 'drafts', 'vo/raw', 'vo/unused', 'img', 'images', '_to_delete', '.studio']
-FINALS = ['*_reel_9x16.mp4', '*_feed_4x5.mp4', 'cover_reel_9x16.png', 'cover_feed_4x5.png', 'captions.bn_IN.srt', 'captions.en_US.srt', 'publish.txt']
+# v0.9: deliver the 9:16 reel, its cover and publish.txt only. The 4:5 cut, 4:5 cover and SRTs are no longer made;
+# episodes delivered before v0.9 may still hold them in out/, so they stay allowed there (never required).
+FINALS = ['*_reel_9x16.mp4', 'cover_reel_9x16.png', 'publish.txt']
+LEGACY = ['*_feed_4x5.mp4', 'cover_feed_4x5.png', 'captions.bn_IN.srt', 'captions.en_US.srt']
 ap = argparse.ArgumentParser(); ap.add_argument('project'); ap.add_argument('--apply', action='store_true'); a = ap.parse_args()
 P = pathlib.Path(a.project); out = P / 'out'; moves = []
 if out.exists():
     for f in sorted(out.iterdir()):
-        if f.is_file() and not any(fnmatch.fnmatch(f.name, g) for g in FINALS):
+        if f.is_file() and not any(fnmatch.fnmatch(f.name, g) for g in FINALS + LEGACY):
             moves.append((f, P / 'drafts' / ('keys' if f.name.startswith('keys_') else '') / f.name))
 for f, t in moves:
     print(('MOVE ' if a.apply else 'would move ') + f'{f.relative_to(P)} -> {t.relative_to(P)}')

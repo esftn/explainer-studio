@@ -18,11 +18,11 @@
 - **Address:** আপনি · তুমি
 
 ## Format
-- **Platform(s):** Facebook Reels · Facebook feed (4:5) · YouTube Shorts · TikTok · YouTube long
+- **Platform(s):** Facebook Reels · YouTube Shorts · TikTok (9:16 only)
 - **Length target:** (≤ 2:59 for Shorts/Reels)
 - **Style preset:** vox-paper · dark-doc · new (attach references)
 - **Reference videos / screenshots:**
-- **Captions:** burned-in · SRT file only · none
+- **Captions:** burned-in · none
 
 ## Voice
 - **Narration:** AI voice (provider + paid account?) · own recording · none (text-only)

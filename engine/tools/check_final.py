@@ -1,5 +1,5 @@
 """Final file check: resolution, fps, A/V length match, loudness, true peak, clean silent ending, frames at cut points.
-usage: python check_final.py <project> [--file out/X_reel_9x16.mp4 | out/X_feed_4x5.mp4]"""
+usage: python check_final.py <project> [--file out/X_reel_9x16.mp4]   (a legacy *_feed_4x5.mp4 is still checked at 1080x1350)"""
 import argparse, json, subprocess, sys, re
 from es import project, cfg
 

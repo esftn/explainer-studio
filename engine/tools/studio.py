@@ -17,7 +17,10 @@ import argparse, colorsys, copy, datetime as dt, json, pathlib, re, shutil, subp
 sys.dont_write_bytecode = True
 HERE = pathlib.Path(__file__).resolve().parent
 STAGES = ['plan', 'brief-approved', 'script-approved', 'folders-ready', 'vo-received', 'style-approved', 'built', 'preview-approved', 'delivered']
-FINALS = ['*_reel_9x16.mp4', '*_feed_4x5.mp4', 'cover_reel_9x16.png', 'cover_feed_4x5.png', 'captions.bn_IN.srt', 'captions.en_US.srt', 'publish.txt']
+# v0.9: deliver the 9:16 reel, its cover and publish.txt only. The 4:5 cut, 4:5 cover and SRTs are no longer made;
+# episodes delivered before v0.9 may still hold them in out/, so they stay allowed there (never required).
+FINALS = ['*_reel_9x16.mp4', 'cover_reel_9x16.png', 'publish.txt']
+LEGACY = ['*_feed_4x5.mp4', 'cover_feed_4x5.png', 'captions.bn_IN.srt', 'captions.en_US.srt']
 
 
 # ---------------------------------------------------------------- helpers
@@ -191,7 +194,7 @@ def cmd_check(a):
         out = p / 'out'
         for pat in FINALS:
             if not any(out.glob(pat)): fails.append(f'out/ is missing {pat}')
-        extra = [f.name for f in out.iterdir() if f.is_file() and not any(f.match(pt) for pt in FINALS)] if out.is_dir() else []
+        extra = [f.name for f in out.iterdir() if f.is_file() and not any(f.match(pt) for pt in FINALS + LEGACY)] if out.is_dir() else []
         if extra: fails.append(f'out/ must hold finals only; move to drafts/: {", ".join(sorted(extra)[:6])}')
         pt = out / 'publish.txt'
         if pt.exists() and re.search(r'\[[^\]]{2,60}\]|যোগ করুন|TODO|TBD', pt.read_text(encoding='utf-8', errors='replace')): fails.append('publish.txt still has a placeholder')

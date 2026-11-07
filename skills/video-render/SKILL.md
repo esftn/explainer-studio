@@ -1,9 +1,12 @@
 ---
 name: video-render
-description: Final audio master, full-resolution render, verification, captions, cover and delivery package for an explainer video. Use when the preview is approved, or the user asks to render, export, finalize, make captions/SRT, or deliver/send the video.
+description: Final audio master, full-resolution render, verification, cover and delivery package for an explainer video. Use when the preview is approved, or the user asks to render, export, finalize, or deliver/send the video.
 ---
 
-# Render → captions → cover → bake → deliver  (Chat 3 · Finish; 1–3 episodes per chat)
+# Render → cover → bake → deliver  (Chat 3 · Finish; 1–3 episodes per chat)
+
+> **v0.9 deliverables: the 9:16 reel, its 9:16 cover and `publish.txt` — nothing else.** No 4:5 feed cut, no 4:5 cover, no SRT files,
+> no English caption translation. (Older episodes may still have them in out/; leave them.) Burned-in captions (`burn_captions.py`) stay optional.
 
 > **v0.7:** the order of work is the step card printed by `python3 engine/tools/studio.py next videoNN` (it wins over anything below that conflicts). This file is the technique reference for your current step; do not read it start to finish.
 
@@ -13,13 +16,13 @@ description: Final audio master, full-resolution render, verification, captions,
 (see video-preview §0). `state.py videoNN show` must say `preview-approved`.
 
 **v0.6: render/check (§1), bake (§3) and delivery (§4) are ONE command, `finish.py`.** Your own work in this chat is only the creative part:
-the English caption lines (§2), `publish.txt` (§2) and the cover concepts (§3). Then:
+`publish.txt` (§2) and the cover (§3). Then:
 ```bash
 python3 engine/tools/finish.py videoNN --slug <Slug> --cover <A|B|…> --guard mac_fp.json --who "Finish epNN <date time>" --out xfer
 ```
-It runs, in order, and stops at the first thing a person must fix: preflight (stage, approved script hash, captions_en, publish.txt) →
-render (if missing) → check_final + automatic A/V-length fix → 4:5 feed cut → covers → bake (skipped if frame 1 already is the cover) →
-captions pair validation (equal cue counts, none past the end, overlaps clamped) → **publish.txt lint (no placeholder may remain)** →
+It runs, in order, and stops at the first thing a person must fix: preflight (stage, approved script hash, publish.txt) →
+render (if missing) → check_final + automatic A/V-length fix → cover → bake (skipped if frame 1 already is the cover) →
+**publish.txt lint (no placeholder may remain)** →
 state + tidy + `docs/delivery.md` (written from measurements) → guarded pack + the exact commit plan. Print the last lines to the creator only if it STOPs.
 
 ## 1. Gate check + render  (finish.py does this; the commands are for a manual re-run only)
@@ -29,17 +32,9 @@ python3 engine/tools/audio.py videoNN            # read out/audio_report.txt: �
 python3 engine/tools/render.py videoNN --workers 2 --name <Slug>
 python3 engine/tools/check_final.py videoNN      # must PASS
 ```
-Rename/cut to the delivery names: `out/<Slug>_reel_9x16.mp4` and the 4:5 feed cut `out/<Slug>_feed_4x5.mp4`
-(crop the 4:5 zone y 285–1635 → 1080×1350). Run `check_final.py videoNN --file out/<Slug>_feed_4x5.mp4` too.
+Rename to the delivery name: `out/<Slug>_reel_9x16.mp4`.
 
-## 2. Captions + publish text
-Captions (Facebook only accepts `<name>.<lang>_<COUNTRY>.srt`; Bangla has no Bangladesh variant, so `bn_IN`):
-```bash
-python3 engine/tools/make_srt.py videoNN   # writes out/captions.bn_IN.srt + docs/captions_bn_cues.json
-# translate docs/captions_bn_cues.json line by line → docs/captions_en.json (same length/order; natural short
-# English, ≤2 lines per cue; every number/term checked against facts.json), then run make_srt.py again:
-python3 engine/tools/make_srt.py videoNN   # also writes out/captions.en_US.srt with the same timings
-```
+## 2. Publish text  (v0.9: no SRT step)
 `out/publish.txt` (replaces post_caption.txt; template `../../templates/publish.md`) for Facebook + YouTube:
 - Title: Bangla, ≤70 chars, curiosity hook/question, plus one alternative.
 - Description: a story, not a recap — hook, why it matters to an ordinary Bangladeshi viewer, a nudge to watch,
@@ -64,18 +59,19 @@ Upload the same 9:16 PNG (or a JPG under 2 MB) as the YouTube Shorts thumbnail.
 **v0.7.1 (older episodes, hand-made covers):** design each cover by hand as `cover_<name>.html` (cover-design.md), render with `cover.py`, then `python3 engine/tools/cover_check.py videoNN cover_<name>.html` must print `COVER PASS`; LOOK at the sheet before sending.
 
 Follow `cover-design.md`: the episode's own palette (`docs/look.md`) — and different from the last three covers (cover log, grep that section only), one real photo/cutout hero, question title without the answer,
-no top/bottom bars, `cover.py` review sheet → creator confirms. Save `out/cover_reel_9x16.png` +
-`out/cover_feed_4x5.png`; other concepts to `drafts/`. After confirmation `finish.py … --cover <NAME>` copies the chosen
-`out/_cover_<NAME>_9x16.png/_4x5.png` into place, bakes both videos (once — it checks frame 1 first) and records `approve cover`.
+no top/bottom bars, `cover.py` review sheet → creator confirms. Save `out/cover_reel_9x16.png`; other concepts to `drafts/`.
+After confirmation `finish.py … --cover <NAME>` copies the chosen `out/_cover_<NAME>_9x16.png` into place, bakes the reel (once — it
+checks frame 1 first) and records `approve cover`.
 
 ## 4. Deliver (what finish.py prints at the end)
 1. Commit the listed parts + manifest to `videoNN/_to_delete/` exactly as the COMMIT PLAN says (one call per batch). **After each commit
    call, check the file really arrived on the Mac** (the unpack in the next step does it: any missing part = FAIL).
 2. On the Mac, from the VIDEO GEN folder: `python3 _series/tools/pack.py unpack videoNN/_to_delete --name finalNN --into videoNN` → must print VERIFIED.
-3. On the Mac: `python3 _series/tools/finish.py videoNN --verify --who "Finish epNN …"` → must print `DONE` (layout, 7 finals, first frame = cover,
-   captions pair, publish.txt clean, state.json consistent, folders tidied, `_series/episode-tracker.md` regenerated, lock released).
+3. On the Mac: `python3 _series/tools/finish.py videoNN --verify --who "Finish epNN …"` → must print `DONE` (layout, 3 finals, first frame = cover,
+   publish.txt clean, state.json consistent, folders tidied, `_series/episode-tracker.md` regenerated, title/description/hashtags/pinned comment copied into
+   `titles_descriptions.md` in the VIDEO GEN folder, lock released).
    Anything else: fix and repeat; do NOT tell the creator it is delivered.
-3b. `python3 engine/tools/studio.py check videoNN --stage final` must print STUDIO PASS (finals only in out/, all 7 present, no placeholder).
+3b. `python3 engine/tools/studio.py check videoNN --stage final` must print STUDIO PASS (finals only in out/, all 3 present, no placeholder).
 3c. On the Mac, last command: `python3 _series/tools/studio.py close videoNN delivered --note "<single-source caveat>"` — writes state, `_series/STATUS.md` and regenerates the tracker. No hand-typed tracker or status.
 4. Send the reel with SendUserFile. Remind the creator to set the cover in Facebook's upload screen and to empty `_to_delete/`.
 5. Brief: append to `series-brief.md` (episode line, cover-log row, new shared figures, lessons) — or, if another chat owns the brief,
