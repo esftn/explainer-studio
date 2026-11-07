@@ -14,22 +14,22 @@
   "Look: Vox / Johnny Harris style. Use ONLY the colours of the palette assigned by studio.py look (docs/look.md). No palette picked by hand, no dull, dated or dark-dominant colours (v0.8.1 palettes are energetic). Top/bottom bands and style elements differ from earlier episodes.",
   "Sound: music preset and automatic sound effects are assigned by studio.py and played by audio.py. Never replace the music by hand, never silence the effects, never add loud ones. data-mood on every scene (first = intro, last = end).",
   "Ending holds ~1 s after the last VO line (end_hold 1.0) so the Short loops; the closing chord lands on the last line, the last line is never faded under. (v0.8, channel data 7 Nov 2026: viewers swiped away during the old 3 s hold.)",
-  "ONE cover per episode in the series layout (cover_series.py, docs/cover-design.md v0.8): full-bleed real photo, chip, one white line, one bright colour block with the question (one line, >=140 px), faces/subject below y ~830, bright episode colours (never a navy/violet/dark-brown base), no answer on the cover; COVER PASS from cover_check.py. It is baked in as frame 1, as the embedded thumbnail AND as the 1.6 s cover opening (bake_cover.py, cover_hold in project.json).",
   "Hook: the first 1.5 s decide whether YouTube keeps showing the Short (stayed-to-watch target >= 70 %). Scene 1 VO opens with the viewer's own stake or one short question; scene 1 visuals are loud: big question text + a large full-bleed photo, never a small framed photo with small text and empty space. Script target 85-100 Bangla words (~40-45 s).",
   "In-video text must be readable: >=40 px running text, on screen early enough (audit FAILs text that has too little reading time). Earlier is fine, late is not.",
   "out/ holds finals only: <Slug>_reel_9x16.mp4, cover_reel_9x16.png, publish.txt (v0.9: no 4:5 cut, no 4:5 cover, no SRT).",
   "Every number comes from facts.json (url + quote). Single-source numbers are said in the pinned comment.",
   "Plan runs in its own chat. Build and Finish of an episode run in ONE chat: after 'go ahead' on the preview, continue straight into the FINISH card in the same chat (no new chat, keep the claim). Claim the episode before touching it; close with studio.py close.",
-  "Publish title: <= 45 characters, a question with \"আপনি/আপনার\" or a known object + number, never the answer (shown over the Short in the feed)."
+  "Publish title: <= 45 characters, a question with \"আপনি/আপনার\" or a known object + number, never the answer (shown over the Short in the feed).",
+  "ONE cover per episode in the series layout (cover_series.py): full-bleed real photo, chip, one white line, one bright colour block with the question (one line, >=140 px), no answer on the cover; COVER PASS. Baked right away as frame 1, embedded thumbnail and the 1.6 s cover opening; re-bake only if the creator asks for another.",
+  "Efficiency (v0.10): Build + Finish run in the Mac shell with bash _series/es.sh <tool>; no cloud copy, no pack/guard pushes. Scenes come from build.json via build_scenes (never hand-write index.html). Read only the card, the cheat sheet and `studio words`; never open engine/tool source, the tracker, the build plan or old notes. One image look per check (img sheet, keys_one, cover sheet)."
  ],
  "reports": {
   "script": "SCRIPT PASS - <n> scenes - est. <s> s (budget 60). Then the script table. Flags: max 3 one-line items. Ask only: OK?",
   "vo_and_images": "One message: (1) the VO paste text in a code block, (2) the image table: # - filename - what it shows - REAL or AI (+ Gemini prompt for AI rows). No other text.",
   "ready": "videoNN ready. Drop images in images/ and the single VO take in vo/raw/vo_full.mp3, then open a new chat: Build episode NN.",
   "missing": "Cannot build yet: missing <what>. (one line, then stop)",
-  "preview": "Preview ready: <file> - <s> s - look <palette> - music <music>. Reply 'go ahead' (I continue to cover + finish in this chat) or timestamped notes. (+1 line only if a cut/tempo/fix was a judgement call; +1 line 'time cut: ...' only if there is one)",
-  "cover": "Cover: <one line>. OK? (one series-layout cover; a second only if the creator asks)",
-  "delivered": "Delivered ep NN - <s> s - cover <X> - videoNN/out/. Caveat: <single-source items, 1 line>. Next: <one step>."
+  "preview": "Preview ready: <file> - <s> s - look <palette> - music <music>. Reply 'go ahead' (cover + finish follow here) or timestamped notes. (+1 line only if VO cuts were BEST-ESTIMATE or another judgement call; +1 line 'time cut: ...' only if there is one)",
+  "delivered": "Delivered ep NN - <s> s - videoNN/out/. Cover (baked): <chip> / <line> / <block> - say if you want another. Caveat: <single-source items, 1 line>. Next: <one step>."
  },
  "cards": {
   "plan": [
@@ -43,25 +43,24 @@
    "7. Reply with report 'ready'. Then python3 engine/tools/studio.py close videoNN folders-ready."
   ],
   "build": [
-   "BUILD videoNN  (own chat; claim first)",
-   "0. On the Mac: guard.py claim (REFUSED = stop). Pull (video-preview 0). studio.py status shows the stage. Files present? images/ and vo/raw/vo_full.mp3 - if not, report 'missing' and stop.",
-   "1. vo_split.py then vo_prep.py (AMBIGUOUS: use the best-estimate cuts, say so in one line; never re-ask for a new take). state.py videoNN stage vo-received.",
-   "2. python3 engine/tools/studio.py look videoNN  - prints the palette, ready-made scene themes and motif. Build ONLY from these colours.",
-   "3. Photos: prep_photos.py, cutouts, garbled-text check (video-preview 1).",
-   "4. Scene 1 is loud: big question text + large full-bleed photo from t=0 (the cover opening covers 0-1.6 s, so scene 1 must already be full when it fades in). end_hold 1.0, cover_hold 1.6 in project.json.",
-   "5. audit.py --fast while iterating; full audit.py must PASS. Then audio.py, then: python3 engine/tools/studio.py check videoNN --stage build  must print STUDIO PASS (palette, music, sound effects, moods, ending).",
-   "6. audio.py -> render.py --preview -> drafts/. Style frames and preview are approved together: send the preview only.",
-   "7. Push (video-preview 5). state.py videoNN stage built. Send report 'preview'. Close: studio.py close videoNN built.",
-   "8. On 'go ahead': state.py videoNN approve preview; studio.py close videoNN preview-approved. KEEP the claim (re-claim with the same --who and --stage finish) and continue at once with the FINISH card (studio.py next videoNN) in THIS chat. Never ask the creator to open a new chat for Finish."
+   "BUILD videoNN  (v0.10: Mac shell ONLY — every command runs with device_bash from the VIDEO GEN folder ($HOME/mnt/VIDEO GEN). Never pack/pull the episode to the cloud, never open engine or tool source code.)",
+   "0. bash _series/es.sh version must equal the plugin version (else in the cloud: bash <plugin>/engine/tools/mac/make_kit.sh, commit the 2 files it names, move the old kit to _to_delete/). bash _series/es.sh guard claim videoNN --who 'Build epNN <time>' (REFUSED = stop). images/ and vo/raw/vo_full.mp3 present? If not: report 'missing' and stop.",
+   "1. VO: if videoNN/docs/words.json exists: bash _series/es.sh words_import videoNN --apply; else bash _series/es.sh vo_split videoNN (BEST-ESTIMATE = fine, one line in the report). Then bash _series/es.sh vo_prep videoNN && bash _series/es.sh state videoNN stage vo-received.",
+   "2. bash _series/es.sh studio look videoNN && bash _series/es.sh prep_photos videoNN; stage + look at img/_sheet_0.jpg ONCE (garbled text / odd hands).",
+   "3. bash _series/es.sh studio words videoNN → write videoNN/build.json from the CHEAT SHEET below with ONE device_bash heredoc (one scene per VO clip; scene 1 loud from t = 0; numbers get a src line).",
+   "4. bash _series/es.sh build_scenes videoNN → fix its WARN lines in build.json → bash _series/es.sh audit videoNN (--fast while iterating) until QA PASS. Edit build.json with a small python/sed patch, never rewrite it.",
+   "5. bash _series/es.sh audio videoNN && bash _series/es.sh studio check videoNN --stage build → STUDIO PASS.",
+   "6. bash _series/es.sh render videoNN --preview --name <Slug> (~35-60 s) && bash _series/es.sh review videoNN --one → stage + look at out/keys_one.jpg ONCE; fix only real problems.",
+   "7. mv out/<Slug>_preview.mp4 drafts/; bash _series/es.sh state videoNN stage built; stage the preview and send it (SendUserFile); report 'preview'.",
+   "8. On 'go ahead': bash _series/es.sh state videoNN approve preview && bash _series/es.sh studio close videoNN preview-approved; KEEP the claim and continue at once with the FINISH card in THIS chat. Never ask for a new chat."
   ],
   "finish": [
-   "FINISH videoNN  (same chat as Build, straight after 'go ahead'; a separate chat only if the Build chat was closed or ran out of room. Claim first; a Build-chat claim is re-used with the same --who)",
-   "1. ONE cover in the series layout: python3 engine/tools/cover_series.py videoNN --photo images/<x> --chip '...' --line '...' --block '...' [--dy N] --render  (must print COVER PASS; block on one line; no answer). Look at the sheet. Send report 'cover'.",
-   "2. publish.txt - no placeholder left (video-render 2).",
-   "3. python3 engine/tools/finish.py ... (video-render top). It renders, bakes the cover, packs, tidies. Verify on the Mac: finish.py --verify must print DONE.",
-   "4. python3 engine/tools/studio.py check videoNN --stage final  must print STUDIO PASS.",
-   "5. python3 _series/tools/studio.py close videoNN delivered --note '<single-source caveat>'  (writes state + STATUS.md).",
-   "6. Send the reel (SendUserFile) + report 'delivered'."
+   "FINISH videoNN  (same chat as Build, straight after 'go ahead'; Mac shell only. The cover is baked right away — no cover OK wait.)",
+   "1. ONE cover in the series layout: bash _series/es.sh cover_series videoNN --photo images/<x> --chip '...' --line '...' --block '...' --render → COVER PASS (a too-wide block moves its first words into the line by itself). Stage + look at out/_cover_A_sheet.jpg ONCE.",
+   "2. Write videoNN/out/publish.txt in the layout of the previous episode's out/publish.txt (rules: series-rules.md 'publish.txt'). No placeholders.",
+   "3. bash _series/es.sh finish videoNN --local --slug <Slug> --who '<the claim label>' — run the SAME command again while it prints RESUME; it must end with DONE (render, check, bake, lint, state, tidy, tracker, titles_descriptions.md, lock release).",
+   "4. bash _series/es.sh studio check videoNN --stage final → STUDIO PASS, then bash _series/es.sh studio close videoNN delivered --note '<single-source caveat>'.",
+   "5. Stage the reel + cover, send them (SendUserFile), report 'delivered'. If the creator wants another cover: cover_series again, then the same finish command (it re-bakes)."
   ]
  },
  "stage_card": {
@@ -83,7 +82,7 @@
   "vo-received": "Claude: build",
   "style-approved": "Claude: build",
   "built": "YOU: watch preview, 'go ahead' or notes",
-  "preview-approved": "Claude: cover + finish (same chat as Build); YOU: OK the cover",
+  "preview-approved": "Claude: cover (baked right away) + finish, same chat as Build",
   "delivered": "done"
  },
  "checks": {

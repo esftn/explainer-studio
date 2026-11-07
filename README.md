@@ -61,6 +61,14 @@ After updating, copy `engine/tools/studio.py` and `engine/studio/rules.json` int
 bash engine/tools/setup.sh      # ffmpeg + node required; installs playwright, numpy/scipy, rembg, Bengali fonts
 ```
 
+## Mac shell (v0.10, Build + Finish)
+```bash
+cd "$HOME/mnt/VIDEO GEN" && bash _series/es.sh studio next video36     # card + cheat sheet
+bash _series/es.sh build_scenes video36 && bash _series/es.sh audit video36   # scenes from build.json
+bash _series/es.sh finish video36 --local --slug Slug                    # render, bake, deliver
+```
+Kit: `bash engine/tools/mac/make_kit.sh` (cloud) → `_series/mac_render/engine_kit_v*.tar` + `_series/es.sh` on the Mac.
+
 ## Smoke test
 ```bash
 python3 engine/tools/new_project.py /tmp/smoke --title "পরীক্ষা"

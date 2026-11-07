@@ -8,7 +8,7 @@ usage: python3 engine/tools/cover_series.py videoNN --photo images/x.jpg --chip 
   --dy     shift the photo down (px) so faces/subject sit below the title (the top is filled with a blurred copy)
   --px     horizontal focus of the photo in % (0 = left, 100 = right)
   --block-bg / --chip-bg   palette role (c1..c4) or a hex; default = the two brightest colours of docs/look.json
-Rules: the block must fit on ONE line (shorten it or move words into --line); never show the answer;
+Rules: the block must fit on ONE line (v0.10: if it does not fit at 140 px its first words move into the line automatically); never show the answer;
 faces stay below y ~ 830; bright accents only (no navy/violet/dark-brown base)."""
 import argparse, colorsys, html, json, pathlib, subprocess, sys
 
@@ -61,7 +61,13 @@ html,body{{width:1080px;height:1920px;overflow:hidden;background:#111;font-famil
 <div class="t line" data-cv="note" style="top:{TOP + 125}px">{e(a.line)}</div>
 <div class="t" style="top:{TOP + 270}px"><span class="blk" data-cv="title">{blk}</span></div>
 <script>window.COVER_READY=false;document.fonts.ready.then(()=>{{const b=document.querySelector('.blk');let s={a.block_size};
-while(b.getBoundingClientRect().width>1000&&s>140){{s-=4;b.style.fontSize=s+'px'}}window.COVER_READY=true}})</script>
+while(b.getBoundingClientRect().width>1000&&s>140){{s-=4;b.style.fontSize=s+'px'}}
+/* v0.10: still too wide at 140 px -> move the block's first word(s) up into the white line (no re-run needed) */
+const L=document.querySelector('.line');
+while(b.getBoundingClientRect().width>1000&&b.firstChild&&b.firstChild.nodeType===3&&b.firstChild.textContent.trim().includes(' ')){{
+  const t=b.firstChild.textContent.replace(/^\s+/,''),i=t.indexOf(' ');L.textContent=L.textContent+' '+t.slice(0,i);b.firstChild.textContent=t.slice(i+1);
+  console.log('COVER_FIT moved "'+t.slice(0,i)+'" to the line')}}
+window.COVER_READY=true}})</script>
 </body></html>"""
 out = P / f'cover_{a.name}.html'; out.write_text(page, encoding='utf-8')
 print('wrote', out.name, f'(block {bbg} / chip {cbg})')

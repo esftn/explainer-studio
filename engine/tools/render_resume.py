@@ -4,7 +4,7 @@ usage: python render_resume.py <project> [--workers 2] [--budget 140] [--crf 18]
 Same gates as render.py (fresh audit; out/mix.wav newer than the audit unless --silent). Output = render.py's:
 out/<name>_final.mp4 (or _preview.mp4). If the timeline changes between runs, the chunks are discarded and it starts over."""
 import argparse, json, shutil, subprocess, sys, time
-from es import project, cfg, timeline_hash, page, FPS, TOOLS
+from es import project, cfg, timeline_hash, page, FPS, TOOLS, scratch
 
 ap = argparse.ArgumentParser(); ap.add_argument('project', nargs='?'); ap.add_argument('--workers', type=int, default=2)
 ap.add_argument('--budget', type=float, default=140); ap.add_argument('--crf', type=int, default=18); ap.add_argument('--name')
@@ -18,7 +18,7 @@ mix = O / 'mix.wav'
 if not a.silent and not mix.exists(): sys.exit('BLOCKED: out/mix.wav missing — run audio.py (or pass --silent).')
 if not a.silent and qa.exists() and mix.stat().st_mtime < qa.stat().st_mtime - 1: sys.exit('BLOCKED: mix.wav is older than the last audit — re-run audio.py.')
 fps = 15 if a.preview else FPS; crf = 26 if a.preview else a.crf
-C = O / '_chunks'; C.mkdir(exist_ok=True); stamp = C / 'timeline.txt'
+C = scratch(P) / '_chunks'; C.mkdir(exist_ok=True); stamp = C / 'timeline.txt'
 th = timeline_hash(P) + ('-preview' if a.preview else '') + f'-crf{crf}'
 if not stamp.exists() or stamp.read_text() != th:
     shutil.rmtree(C); C.mkdir(); stamp.write_text(th)
@@ -37,7 +37,7 @@ while True:
                                           + ['--_w', str(f0), str(f1), f'9{k:03d}'], stdout=subprocess.DEVNULL)))
     for k, p in procs:
         if p.wait(): sys.exit(f'chunk {k} failed')
-        (O / f'seg_9{k:03d}.mp4').replace(C / f'c{k:03d}.mp4')
+        shutil.move(str(scratch(P) / f'seg_9{k:03d}.mp4'), str(C / f'c{k:03d}.mp4'))
     batch_s = time.time() - b0
     print(f'  chunks {[k for k, _ in procs]} in {batch_s:.0f} s', flush=True)
 lst = C / 'list.txt'; lst.write_text(''.join(f"file 'c{k:03d}.mp4'\n" for k, _, _ in chunks))
@@ -45,7 +45,7 @@ video = C / 'video_only.mp4'
 subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', str(lst), '-c', 'copy', str(video)], check=True)
 name = a.name or cfg(P).get('slug') or P.name
 final = O / f'{name}_{"preview" if a.preview else "final"}.mp4'
-if a.silent: video.replace(final)
+if a.silent: shutil.move(str(video), str(final))
 else:
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(video), '-i', str(mix), '-map', '0:v', '-map', '1:a', '-c:v', 'copy',
                     '-c:a', 'aac', '-b:a', '256k', '-ar', '48000', '-movflags', '+faststart', '-shortest', str(final)], check=True)

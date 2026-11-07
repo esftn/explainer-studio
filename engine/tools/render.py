@@ -2,8 +2,8 @@
 usage: python render.py <project> [--workers 2] [--crf 18] [--silent] [--cover 2.0] [--name Hadi_Ke_v4]
        python render.py <project> --preview      (15 fps, 540x960, ~4x faster: for the creator's preview gate)
 Output: out/<name>_final.mp4 (+ out/<name>_cover.png) or out/<name>_preview.mp4."""
-import argparse, json, subprocess, sys, pathlib, time
-from es import project, cfg, timeline_hash, page, FPS, TOOLS
+import argparse, json, shutil, subprocess, sys, pathlib, time
+from es import project, cfg, timeline_hash, page, FPS, TOOLS, scratch
 
 
 def worker(P, a, b, out, crf, fps=FPS, scale=None):
@@ -27,7 +27,7 @@ if __name__ == '__main__':
     ap.add_argument('--_w', nargs=3, type=int, help=argparse.SUPPRESS)
     a = ap.parse_args(); P = project(a.project); O = P / 'out'; O.mkdir(exist_ok=True)
     if a._w:
-        worker(P, a._w[0], a._w[1], O / f'seg_{a._w[2]}.mp4', a.crf, 15 if a.preview else FPS, 540 if a.preview else None); sys.exit()
+        worker(P, a._w[0], a._w[1], scratch(P) / f'seg_{a._w[2]}.mp4', a.crf, 15 if a.preview else FPS, 540 if a.preview else None); sys.exit()
     qa = P / '.qa_pass'
     if not a.force:
         if not qa.exists(): sys.exit('BLOCKED: run audit.py first (no .qa_pass).')
@@ -44,17 +44,17 @@ if __name__ == '__main__':
     procs = [subprocess.Popen([sys.executable, str(TOOLS / 'render.py'), str(P), '--crf', str(crf)] + (['--preview'] if a.preview else []) + ['--_w', str(w * per), str(min(N, (w + 1) * per)), str(w)])
              for w in range(a.workers)]
     if any(p.wait() for p in procs): sys.exit('a render worker failed')
-    lst = O / 'list.txt'; lst.write_text(''.join(f"file 'seg_{w}.mp4'\n" for w in range(a.workers)))
-    video = O / 'video_only.mp4'
+    S = scratch(P); lst = S / 'list.txt'; lst.write_text(''.join(f"file 'seg_{w}.mp4'\n" for w in range(a.workers)))
+    video = S / 'video_only.mp4'
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', str(lst), '-c', 'copy', str(video)], check=True)
     final = O / f'{name}_{"preview" if a.preview else "final"}.mp4'
     if a.silent:
-        video.replace(final)
+        shutil.move(str(video), str(final))
     else:
         subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(video), '-i', str(mix), '-map', '0:v', '-map', '1:a', '-c:v', 'copy',
                         '-c:a', 'aac', '-b:a', '256k', '-ar', '48000', '-movflags', '+faststart', '-shortest', str(final)], check=True)
         video.unlink()
-    for w in range(a.workers): (O / f'seg_{w}.mp4').unlink(missing_ok=True)
+    for w in range(a.workers): (S / f'seg_{w}.mp4').unlink(missing_ok=True)
     lst.unlink(missing_ok=True)
     if a.cover is not None:
         with page(P) as pg:
