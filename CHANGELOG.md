@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.9.1 — 2026-11-07
+- **sync_engine.py (new):** brings every episode's own engine copy (`videoNN/engine/`: engine.js, engine.css, presets, scene templates)
+  up to the plugin's template in one command (`sync_engine.py <series root> --apply`); replaced files go to `_to_delete/engine_before_<v>/`;
+  delivered episodes skipped unless `--include-delivered`. `studio.py next` now prints ENGINE OUT OF DATE with the fix command.
+
 ## 0.9.0 — 2026-11-07
 - **Deliverables cut to 9:16 only:** `finish.py` now makes the 9:16 reel, its 9:16 cover and `publish.txt` — no 4:5 feed cut, no 4:5 cover,
   no `captions.bn_IN.srt` / `captions.en_US.srt` and no English caption translation (7 steps instead of 9). `cover.py` writes only the 9:16

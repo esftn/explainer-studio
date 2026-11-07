@@ -1,5 +1,5 @@
 {
- "version": "0.9.0",
+ "version": "0.9.1",
  "_about": "The single source of truth for how an episode is made. studio.py next prints the card for the episode's stage; skills hold the technique, this file holds the order and the creator's rules. Change a rule HERE (one line), not in five skills.",
  "always": [
   "Write instructions, questions and reports in English. Only the script, VO text and on-screen Bangla are Bangla.",
