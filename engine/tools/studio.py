@@ -267,6 +267,10 @@ def cmd_next(a):
     print(f"== {name} · ep {nn} · {st.get('title') or '(no title yet)'} · stage: {stage}"); print(f"   waiting on: {R['stage_waiting_on'].get(stage, '?').replace('NN', nn)}")
     if lk: print(f"   look: {lk.get('label')} ({lk.get('id')}) · music: {lk.get('music')}")
     if not card: print('   Done. Nothing to do; log the cover in the series brief only if the creator asks.'); return
+    try:                                                     # v0.9.1: the episode's own engine copy must match the plugin
+        import sync_engine; old = sync_engine.stale(p) if (p / 'engine').is_dir() else []
+        if old: print(f"\n   ENGINE OUT OF DATE: {len(old)} file(s) differ from plugin {sync_engine.version()} — first run: python3 engine/tools/sync_engine.py {name} --apply")
+    except Exception: pass
     print(); [print(l.replace('videoNN', name).replace('NN', nn)) for l in R['cards'][card]]
     print('\nRULES (always)'); [print(f'- {l}') for l in R['always']]
     keys = {'plan': ['script', 'vo_and_images', 'ready'], 'build': ['missing', 'preview'], 'finish': ['cover', 'delivered']}[card]

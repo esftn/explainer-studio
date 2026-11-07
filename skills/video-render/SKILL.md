@@ -3,7 +3,7 @@ name: video-render
 description: Final audio master, full-resolution render, verification, cover and delivery package for an explainer video. Use when the preview is approved, or the user asks to render, export, finalize, or deliver/send the video.
 ---
 
-# Render → cover → bake → deliver  (Chat 3 · Finish; 1–3 episodes per chat)
+# Render → cover → bake → deliver  (Finish · continues in the Build chat right after "go ahead"; a separate chat only if that chat is gone)
 
 > **v0.9 deliverables: the 9:16 reel, its 9:16 cover and `publish.txt` — nothing else.** No 4:5 feed cut, no 4:5 cover, no SRT files,
 > no English caption translation. (Older episodes may still have them in out/; leave them.) Burned-in captions (`burn_captions.py`) stay optional.
@@ -12,7 +12,7 @@ description: Final audio master, full-resolution render, verification, cover and
 
 ## 0. Start lean
 `claude/series-rules.md` + the generated tracker + `../../docs/audio.md`, `../../docs/cover-design.md`, `../../docs/platform-notes.md`.
-**Claim the episode first** (`python3 _series/tools/guard.py claim videoNN --who "Finish epNN …"` on the Mac — REFUSED = stop; then `guard.py fingerprint videoNN --out videoNN/_to_delete/mac_fp.json` right before pushing). Pull each episode in one verified step
+**Claim the episode first** — in the Build chat, re-claim with the Build label (`--who "Build epNN …" --stage finish`), no new pull needed; in a separate chat (`python3 _series/tools/guard.py claim videoNN --who "Finish epNN …"` on the Mac — REFUSED = stop; then `guard.py fingerprint videoNN --out videoNN/_to_delete/mac_fp.json` right before pushing). Pull each episode in one verified step
 (see video-preview §0). `state.py videoNN show` must say `preview-approved`.
 
 **v0.6: render/check (§1), bake (§3) and delivery (§4) are ONE command, `finish.py`.** Your own work in this chat is only the creative part:

@@ -8,7 +8,7 @@
       "name": "explainer-studio",
       "source": "./",
       "description": "Vox / Johnny-Harris-style explainer shorts (Bangla first) with Claude: same step card every chat, calm rotating palettes, rotating music + automatic SFX, readable on-screen text, hand-designed spoiler-free covers, QA-gated render, auto status.",
-      "version": "0.9.0"
+      "version": "0.9.2"
     }
   ]
 }
