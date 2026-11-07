@@ -16,7 +16,8 @@ CLOUD steps, in order — it stops at the first thing a human must fix and says 
   6  publish.txt    publint.py: no placeholders, all sections — a FAIL stops here, before anything is delivered
   7  deliver        pack.py check --final, state approve cover + stage delivered, state_check --fix, tidy --apply,
                     docs/delivery.md written FROM the measurements, pack --set final (guarded) + the commit plan
-MAC --verify: layout, sizes, first frame = cover, publish lint, state_check --fix, tidy, tracker regenerated, lock released.
+MAC --verify: layout, sizes, first frame = cover, publish lint, state_check --fix, tidy, tracker regenerated,
+              titles_descriptions.md updated from publish.txt (titles_doc.py), lock released.
 Exit 0 = done; 2 = a person must fix something (printed); 1 = a tool failed."""
 import argparse, datetime as dt, json, pathlib, re, shutil, subprocess, sys
 sys.dont_write_bytecode = True      # the Mac folder can't delete: no __pycache__ litter
@@ -216,6 +217,8 @@ def verify(a):
     if bad:
         for b in dict.fromkeys(bad): say('FAIL', b)
         stop('verification failed — do not tell the creator it is done', [])
+    if root:                                   # copy sheet: titles_descriptions.md in the series root gets this episode's publish.txt
+        r = run([sys.executable, HERE / 'titles_doc.py', P], check=False); print((r.stdout or r.stderr).strip())
     if a.who:
         import guard; guard.cmd_release(argparse.Namespace(project=str(P), who=a.who, force=True))
     say('DONE', f"{P.name}: reel {E['dur']:.2f} s, {E['finals']}/{len(st.REQUIRED)} finals, cover baked, publish.txt clean, state consistent")

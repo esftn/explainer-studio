@@ -68,7 +68,8 @@ checks frame 1 first) and records `approve cover`.
    call, check the file really arrived on the Mac** (the unpack in the next step does it: any missing part = FAIL).
 2. On the Mac, from the VIDEO GEN folder: `python3 _series/tools/pack.py unpack videoNN/_to_delete --name finalNN --into videoNN` → must print VERIFIED.
 3. On the Mac: `python3 _series/tools/finish.py videoNN --verify --who "Finish epNN …"` → must print `DONE` (layout, 3 finals, first frame = cover,
-   publish.txt clean, state.json consistent, folders tidied, `_series/episode-tracker.md` regenerated, lock released).
+   publish.txt clean, state.json consistent, folders tidied, `_series/episode-tracker.md` regenerated, title/description/hashtags/pinned comment copied into
+   `titles_descriptions.md` in the VIDEO GEN folder, lock released).
    Anything else: fix and repeat; do NOT tell the creator it is delivered.
 3b. `python3 engine/tools/studio.py check videoNN --stage final` must print STUDIO PASS (finals only in out/, all 3 present, no placeholder).
 3c. On the Mac, last command: `python3 _series/tools/studio.py close videoNN delivered --note "<single-source caveat>"` — writes state, `_series/STATUS.md` and regenerates the tracker. No hand-typed tracker or status.
