@@ -15,7 +15,8 @@ description: Build the animated explainer from an approved script and VO — spl
    **Before the pull**, on the Mac (VIDEO GEN folder): `python3 _series/tools/guard.py claim videoNN --who "Build epNN <date time>"` — REFUSED means another chat holds the
    episode: stop and tell the creator. **Before every push**: `python3 _series/tools/guard.py fingerprint videoNN --out videoNN/_to_delete/mac_fp.json` on the Mac, stage it, then
    `pack.py pack … --guard mac_fp.json --who "Build epNN …"` (refuses if the Mac copy changed). Release at the end of the chat: `python3 _series/tools/guard.py release videoNN --who "…"`.
-3. `vo_split.py` + `vo_prep.py` (see video-script §5). `state.py videoNN stage vo-received`.
+3. If `docs/words.json` (ElevenLabs Speech to Text export) exists: `words_import.py videoNN --apply` (exact cuts + caption timings);
+   else `vo_split.py`. Then `vo_prep.py` (see video-script §5). `state.py videoNN stage vo-received`.
 
 ## 1. Assets
 `prep_photos.py` (contact sheets of the creator's `images/`), cutouts with rembg `isnet-general-use` for
