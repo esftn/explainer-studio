@@ -122,7 +122,7 @@ def cloud(a):
     if not (out / 'publish.txt').exists(): problems.append('out/publish.txt missing — write it from templates/publish.md')
     cands = sorted([*out.glob('_cover_*_9x16.png'), *(P / 'drafts').glob('_cover_*_9x16.png')], key=lambda f: f.stat().st_mtime)
     if not a.cover and not cr.exists() and cands: a.cover = cands[-1].name[len('_cover_'):-len('_9x16.png')]   # v0.10: newest cover
-    if not cr.exists() and not a.cover: problems.append('no cover: make one with cover_series.py (series layout) first')
+    if not cr.exists() and not a.cover: problems.append('no cover: make one with cover_v2.py (cover style v2) first')
     base = P / '.studio_base.json'
     if base.exists() and not a.guard and not a.no_guard and not a.local: problems.append('this folder was pulled with the push guard: run `guard.py fingerprint` on the Mac, stage the file and pass --guard <file> (or --no-guard if the creator said so)')
     if problems: stop('preflight failed', problems)

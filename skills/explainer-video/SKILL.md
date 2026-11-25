@@ -37,6 +37,9 @@ checks, no recap of approved items, no options he did not ask for. Add "time cut
   holds it: stop and tell the creator. The Finish keeps the same claim; `finish --local` releases it.
 - **One copy**: Build and Finish work on the Mac folder itself. Nothing is pushed back, so nothing can be overwritten.
 - **The tracker is generated** (`series_tracker`, run by `finish --local` / `studio close`). Never edit `episode-tracker.md` by hand.
+- **00_HUB is generated too** (v0.11): `VIDEO GEN/00_HUB/` (HUB.html, STATUS, COPY_SHORTS/COPY_LONG, COMMANDS) is rebuilt by es.sh
+  after every state-changing tool (`hub.py`, < 1 s). Never edit it; only `published.txt` (uploads + views) and `IDEAS.md` are the
+  creator's. Asked for a render/cover command, title or description? Point to the hub or read COMMANDS.md / COPY_SHORTS.md.
 - **No number reaches the voice unverified**: `script_check.py` runs the facts gate (video-script §1).
 - **Only DONE from `finish --local` means delivered.**
 - Plugin or engine changes are made in a separate chat, never inside an episode chat. After a plugin update the Mac kit is refreshed
