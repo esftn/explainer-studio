@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.11.0 — 2026-11-26  (one place for everything: 00_HUB)
+- **`hub.py` → `VIDEO GEN/00_HUB/`:** HUB.html (offline page: Status, Copy text with copy buttons, Commands, Covers, Performance,
+  Ideas) + STATUS.md, COPY_SHORTS.md / COPY_LONG.md (title, alt title, description + sources, YouTube/Facebook hashtags, pinned
+  comment, credits — FINAL from titles_descriptions.md, DRAFT from out/publish.txt, else the working title), COMMANDS.md (preview,
+  full render, finish, re-make cover, check — with folder paths; cover words from docs/cover_v2.json, cover_v2.html or the
+  thumbnail_redesign generator). Read-only on the episodes, < 1 s, writes a file only when it changed, atomic swap: safe with
+  several chats at once. Long videos = project.json `"format": "long"`.
+- **Creator-owned files the hub reads:** `00_HUB/published.txt` (uploads + views/stayed/avg per episode → Performance tab with
+  averages vs the 70 % target) and `00_HUB/IDEAS.md` (topic backlog → Ideas tab).
+- **es.sh:** `bash _series/es.sh hub`; the hub is rebuilt after every state-changing tool; tools in `_series/tools` run through
+  es.sh too; when the shell's shared home disk is full ("No space left on device") packages, Chromium, the kit and render scratch
+  move to `/tmp/es_home` by themselves.
+- **Cover style v2 in the plugin:** `cover_v2.py` (approved 24 Nov 2026) replaces `cover_series` on the Finish card, the
+  video-render skill and the PLAYBOOK; it saves its words to `docs/cover_v2.json` so the hub can show the re-make command.
+- **Mac launchers** (`engine/tools/mac/*.command`, copy to VIDEO GEN): `Open Hub.command` (refresh + open HUB.html),
+  `Open Remotion Studio.command` (finds the Remotion project once, remembers it, runs `npx remotion studio`).
+
 ## 0.10.0 — 2026-11-07  (efficiency release: ep 34–36 used ~90–100 tool calls each)
 - **Mac shell only for Build + Finish:** `engine/tools/mac/es.sh` (→ `VIDEO GEN/_series/es.sh`) runs any tool on the episode folder
   itself with the local Chromium kit; `make_kit.sh` builds `engine_kit_v<ver>-<hash>.tar` for `_series/mac_render/`. No pull/push,

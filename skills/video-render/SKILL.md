@@ -8,10 +8,11 @@ description: Final audio master, full-resolution render, verification, cover and
 Runs straight after "go ahead" in the Build chat (keep the claim; no new chat). Every command:
 `cd "$HOME/mnt/VIDEO GEN" && bash _series/es.sh <tool> …` with `device_bash`. Follow the FINISH card from `studio next videoNN`.
 
-1. **Cover** — `cover_series … --render` → COVER PASS; look at `out/_cover_A_sheet.jpg` once. Do NOT wait for an OK:
-   it is baked right away; the creator may ask for another afterwards (then cover_series again + the same finish command).
-   Layout rules: full-bleed real photo, chip, one white line, one bright question block (one line, ≥ 140 px; too-wide blocks move
-   their first words into the line automatically), no answer, no dark base.
+1. **Cover (style v2)** — `cover_v2 videoNN --photo images/x.jpg --chip '…' --line '…' [--hero '<key number>'] --block '<question?>'
+   --color r|g|y --note '<short true hook>' --side l|r` → COVER V2 PASS → `out/cover_reel_9x16.png`; look at it once. Do NOT wait
+   for an OK: it is baked right away; the creator may ask for another afterwards (cover_v2 again + the same finish command).
+   Rules: TakaTheory logo at top, chip, cream line, hero number only if the episode has one, question block (rotate colour vs the
+   previous episode), arrow + green note into a full-bleed real photo from the episode, never the answer. `cover_series` = old look.
 2. **publish.txt** — same layout as the previous episode's `out/publish.txt`; title ≤ 45 chars, a question, no answer;
    description 3 short lines + follow line + sources, no figures; 3 YouTube hashtags + Facebook set; pinned comment holds the
    answer and the single-source notes; photo credits without placeholders.

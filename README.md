@@ -69,6 +69,12 @@ bash _series/es.sh finish video36 --local --slug Slug                    # rende
 ```
 Kit: `bash engine/tools/mac/make_kit.sh` (cloud) → `_series/mac_render/engine_kit_v*.tar` + `_series/es.sh` on the Mac.
 
+## 00_HUB (v0.11) — status, copy text and commands in one place
+`bash _series/es.sh hub` (also automatic after every state-changing tool) writes `VIDEO GEN/00_HUB/`: **HUB.html** (open it in a
+browser: Status · Copy text · Commands · Covers · Performance · Ideas), STATUS.md, COPY_SHORTS.md, COPY_LONG.md, COMMANDS.md.
+Everything is generated from the `videoNN` folders — never edit it. The creator owns `published.txt` (uploads, views, stayed %)
+and `IDEAS.md` (topic backlog). Double-click launchers: `engine/tools/mac/Open Hub.command`, `Open Remotion Studio.command`.
+
 ## Smoke test
 ```bash
 python3 engine/tools/new_project.py /tmp/smoke --title "পরীক্ষা"

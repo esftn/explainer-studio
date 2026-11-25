@@ -20,7 +20,7 @@
   "Every number comes from facts.json (url + quote). Single-source numbers are said in the pinned comment.",
   "Plan runs in its own chat. Build and Finish of an episode run in ONE chat: after 'go ahead' on the preview, continue straight into the FINISH card in the same chat (no new chat, keep the claim). Claim the episode before touching it; close with studio.py close.",
   "Publish title: <= 45 characters, a question with \"আপনি/আপনার\" or a known object + number, never the answer (shown over the Short in the feed).",
-  "ONE cover per episode in the series layout (cover_series.py): full-bleed real photo, chip, one white line, one bright colour block with the question (one line, >=140 px), no answer on the cover; COVER PASS. Baked right away as frame 1, embedded thumbnail and the 1.6 s cover opening; re-bake only if the creator asks for another.",
+  "ONE cover per episode in cover style v2 (cover_v2.py, creator decision 24 Nov 2026): TakaTheory logo at top, chip, cream line, big yellow hero number (only if the episode has one), tilted question block (rotate r/g/y vs the previous episode), arrow + green note into a full-bleed real photo, no answer on the cover; COVER V2 PASS. Baked right away as frame 1, embedded thumbnail and the 1.6 s cover opening; re-bake only if the creator asks for another.",
   "Efficiency (v0.10): Build + Finish run in the Mac shell with bash _series/es.sh <tool>; no cloud copy, no pack/guard pushes. Scenes come from build.json via build_scenes (never hand-write index.html). Read only the card, the cheat sheet and `studio words`; never open engine/tool source, the tracker, the build plan or old notes. One image look per check (img sheet, keys_one, cover sheet)."
  ],
  "reports": {
@@ -56,11 +56,11 @@
   ],
   "finish": [
    "FINISH videoNN  (same chat as Build, straight after 'go ahead'; Mac shell only. The cover is baked right away — no cover OK wait.)",
-   "1. ONE cover in the series layout: bash _series/es.sh cover_series videoNN --photo images/<x> --chip '...' --line '...' --block '...' --render → COVER PASS (a too-wide block moves its first words into the line by itself). Stage + look at out/_cover_A_sheet.jpg ONCE.",
+   "1. ONE cover in style v2: bash _series/es.sh cover_v2 videoNN --photo images/<x> --chip '...' --line '...' [--hero '<key number>'] --block '<question?>' --color r|g|y --note '<short true hook>' --side l|r → COVER V2 PASS → out/cover_reel_9x16.png (words saved to docs/cover_v2.json for the hub). Stage + look at it ONCE.",
    "2. Write videoNN/out/publish.txt in the layout of the previous episode's out/publish.txt (rules: series-rules.md 'publish.txt'). No placeholders.",
    "3. bash _series/es.sh finish videoNN --local --slug <Slug> --who '<the claim label>' — run the SAME command again while it prints RESUME; it must end with DONE (render, check, bake, lint, state, tidy, tracker, titles_descriptions.md, lock release).",
    "4. bash _series/es.sh studio check videoNN --stage final → STUDIO PASS, then bash _series/es.sh studio close videoNN delivered --note '<single-source caveat>'.",
-   "5. Stage the reel + cover, send them (SendUserFile), report 'delivered'. If the creator wants another cover: cover_series again, then the same finish command (it re-bakes)."
+   "5. Stage the reel + cover, send them (SendUserFile), report 'delivered'. If the creator wants another cover: cover_v2 again, then the same finish command (it re-bakes). The 00_HUB overview refreshes by itself."
   ]
  },
  "stage_card": {
